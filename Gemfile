@@ -53,7 +53,7 @@ gem 'rake', '~> 10.3.2'
 gem 'rb-readline'
 gem 'redactor-rails'
 gem 'remotipart', '~> 1.2'
-gem 'rmagick', :require => 'RMagick'
+gem 'rmagick', :require => 'rmagick'
 #gem 'rmagick', require: false
 gem 'rufus-scheduler' ,'~>2.0.24'
 gem 'similar_text', '~> 0.0.4'
