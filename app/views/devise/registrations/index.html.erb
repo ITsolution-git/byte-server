@@ -1,0 +1,7 @@
+<div class="well">
+  <ul>
+    <% @plans.each do |plan| %>
+      <li><%= link_to plan.name, service_user_registration_path(plan) %></li>
+    <% end %>
+  </ul>
+</div>

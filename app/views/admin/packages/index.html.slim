@@ -1,0 +1,22 @@
+table.table.table-striped.table-hover#packages-table
+  thead
+    tr
+      td.aligncenter Package
+      td.aligncenter DateCreated
+      td.aligncenter Price
+      td.aligncenter Billing
+      td.aligncenter Active Accounts
+      td.aligncenter Trial Accounts
+      td.aligncenter Status
+      / td
+  tbody
+    - @packages.each do |package|
+      tr
+        td.aligncenter= package[:name]
+        td.aligncenter= package[:time]
+        td.aligncenter= package[:price]
+        td.aligncenter= package[:billing_frequency]
+        td.aligncenter= package[:active_accounts]
+        td.aligncenter= package[:trial_accounts]
+        td.alignright= render 'on_off_switch', package_id: package[:id], package_status: package[:status]
+        / td.aligncenter= link_to image_tag('delete_icon.png'), '#', method: :delete, title: 'Delete', remote: true, confirm: 'Are you sure you want to delete this Package?'

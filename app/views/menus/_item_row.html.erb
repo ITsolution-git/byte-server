@@ -1,0 +1,28 @@
+<div class="dotted-bottom clearfix right_item_row" style='text-align: left' id="menu_item_<%= item.id %>_row" item-id="<%= item.id %>" item-id="<%= item.id %>" >
+  <span class="hide item_combo_type_icon inactive">S</span>
+  <span class="hide item_combo_type_sub_icon"></span>
+  <!-- <div class="line-vertical"></div> -->
+<% if false %>
+  <% if item.cmi?(menu.id) %>
+    <%= image_tag('label_C.png', type_combo: 'cmi', class: "item_combo_type cmi", 'combo-item-id' => item.combo_item(menu.id).id) %>
+  <% end %>
+  <% if item.pmi?(menu.id) %>
+    <%= image_tag('label_P.png', type_combo: 'pmi', class: "item_combo_type pmi", 'combo-item-id' => item.combo_item(menu.id).id) %>
+  <% end %>
+
+  <% if item.gmi?(menu.id) %>
+    <%= image_tag('label_G.png', type_combo: 'gmi', class: "item_combo_type gmi", 'combo-item-id' => item.combo_item(menu.id).id) %>
+  <% end %>
+<%end%>
+  <span><strong><%= item.name.to_s.capitalize%></strong></span>
+  <span class="muted"><small><em>- <%= item.description.truncate(30)%></em></small></span>
+    <% unless @shared_menus.present? && @shared_menus.include?(menu) %>
+      <span class="btn-action floatright">
+          <%= link_to image_tag('edit_icon.png'),edit_menu_item_path(item), remote: true, :title => 'Edit' %>
+          <% unless menu.published? %>
+            <%= link_to image_tag('delete_icon.png'), remove_item_from_build_menu_restaurant_menu_path(:restaurant_id => restaurant.id, :id => menu.id, :category_id => category.id, :item_id => item.id), method: :delete, remote: true, :title => 'Delete', :confirm => 'Are you sure you want to remove item from menu built?' %>
+            <%= image_tag('scroll_ico.png', :class => 'handle-drag') %>
+          <% end %>
+      </span>
+    <% end %>
+</div>

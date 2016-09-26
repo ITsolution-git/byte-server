@@ -1,0 +1,5 @@
+$("#modal_holder_user_account_app").html("<%= j render partial: "layouts/un_suspend_customer",locals: {
+    :heading => "",
+    :customer_id => @customer_id
+    } %>");
+$("#myModal").modal();

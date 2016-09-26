@@ -1,0 +1,6 @@
+//load modal
+$("#modal_holder").html("<%= j render partial: "layouts/add_publish_date",locals: {
+    :heading => "Menu Published Calendar",
+    :menu_id => @menu.id
+    } %>");
+$("#myModal").modal();

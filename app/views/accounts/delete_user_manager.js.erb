@@ -1,0 +1,3 @@
+<%@info = Info.new%>
+$('.roles_form_block_container #roles_form_toggle').html("<%= j render partial: "accounts/roles_form_primary", locals: {info: @info}%>");
+$(".roles_form_errors_container").html("<%= j render("layouts/form_success", :message => "Account is deleted successfully")%>").show().delay(3000).fadeOut();

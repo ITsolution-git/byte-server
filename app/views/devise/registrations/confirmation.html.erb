@@ -1,0 +1,98 @@
+<%
+  plan_name = ''
+  plan_price = 0
+  setup_fee = 0
+  total = 0
+  unless @plan.nil?
+    plan_name = @plan.name
+    plan_price = @plan.price
+  end
+  unless @setup_fee.nil?
+    setup_fee = @setup_fee.amount
+  end
+  total = plan_price.to_f unless setup_fee.nil?
+  total += setup_fee.to_f unless setup_fee.nil?
+  credit_card_number = resource.credit_card_number
+  credit_card_number = '***' + credit_card_number[-4..-1]
+%>
+<style type="text/css">
+  #myModal > div p {
+    margin-bottom: 2px;
+  }
+</style>
+<div class="well">
+  <div class="row-fluid">
+    <div class="span12">
+      <h2>Confirm Your Information</h2>
+    </div>
+
+    <div class="span12">
+      <p>Email: <%= resource.email %></p>
+    </div>
+
+    <div class="span12">
+      <p>Service: <%= plan_name %></p>
+    </div>
+
+    <div class="span12">
+      <p>Total Price: <%= number_to_currency(total, precision: 2)  %></p>
+    </div>
+
+    <div class="span12">
+      <p>Setup Payment: <%= number_to_currency(setup_fee, precision: 2) %></p>
+    </div>
+
+    <div class="span12">
+      <p>Monthly Payment: <%= number_to_currency(plan_price, precision: 2) %></p>
+    </div>
+
+    <div class="span12">
+      <p>Number: <%= credit_card_number %></p>
+      <p>Type: <%= resource.credit_card_type %></p>
+      <p>Expiration Date: <%= resource.credit_card_expiration_date %></p>
+      <p>Billing Address:
+      <%= (resource.billing_address ||= ' ') + ' ' + (resource.billing_zip ||= ' ') + ' ' + (resource.billing_city ||= ' ') + ' ' + (resource.billing_state ||= ' ') + ' ' + (resource.billing_country ||= ' ')
+      %> </p>
+      <p>Note: NO CONTRACT Required. If you cancel, you must cancel before the next billing date starts.</p>
+    </div>
+
+    <!-- <%= form_tag(setup_account_path, method: "post") do %> -->
+      <div class="span12">
+        <%= submit_tag "Submit",:class=> "btn btn-primary", :id=>'submit_regis_btn'%>
+        <%= link_to "Cancel", :back, :class=>"btn", :style => 'color: #333333' %>
+      </div>
+    <!-- <% end %> -->
+  </div>
+</div>
+
+<div id="myModal" style="width:520px" class="modal hide fade bottom0 modal-rating-receipt" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-body">
+    <div class="well aligncenter">
+    <img src="/assets/Byte_Logos-01-300x300.png" style="width: 100px;">
+      <h1 style="color: #cc0000;">CONGRATULATIONS!</h1>
+      <p>You are now the newest member of the Byte Community.</p>
+      <p>An email has been sent to your inbox with a temporary</p>
+      <p>password and a link to confirm your account.</p>
+      <p><a href="http://mybyteapp.com/" class="btn btn-primary" style="margin-top:30px;">CLOSE</a></p>
+    
+
+  </div>
+</div>
+<script type="text/javascript">
+  (function() {
+    $(document).ready(function() {
+      $("#submit_regis_btn:not(.clicked)").on("click", function(){
+        $(this).addClass('clicked');
+        $('#primary-layout').append('<img src="/assets/images/ajax-loader_register.gif" alt="" id="loading_image_register" />');
+        $.ajax({
+          url: '<%= setup_account_path %>',
+          type: 'POST',
+          success: function(){
+            $('#myModal').modal({'backdrop': 'static'});
+            $("#loading_image_register").remove();
+          }
+        });
+      })
+    });
+  })();
+</script>

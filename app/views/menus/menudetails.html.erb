@@ -1,0 +1,23 @@
+<%
+    
+     	case @menu.publish_status
+		when 0 then  status = "Pending" 
+		when 1 then  status = "Approved"
+		when 2 then  status = "Active"
+	    
+		end
+    
+     %>
+<div class="row">
+  <div class="span12" >
+    <div class="well">
+    	<h3>Menu Details</h3>
+    	<span>
+    		<strong>Menu name : </strong><%= @menu.name %><br/>
+    		<strong>Menu Published Date : </strong><%= @menu.publish_start_date.strftime("%d %b %Y %H:%M:%S") %></br/>
+    		<strong>Menu Status : </strong><%=status %></br/>
+    	</span>
+    	<%= link_to "Go Back to MyDashboard",mydashboard_restaurants_path%>
+    </div>
+ </div>
+</div>

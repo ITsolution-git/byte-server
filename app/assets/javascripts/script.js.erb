@@ -1,0 +1,15 @@
+$(document).ready(function (){
+  var docHref = $(location).attr("href");
+	var domainVal = "http://"+document.domain;
+	var docVal = docHref.replace(domainVal,'');
+	$(".navbar-inner ul li a").each(function() {
+		var thisHref = $(this).attr("href");
+		var controller = thisHref.split('/');
+		var thisVal = controller['1'];
+		if(thisHref == docVal) {
+			$(this).parent().addClass("active");
+		}
+	});
+	$.cloudinary.config({ cloud_name: "<%=Figaro.env.cloudinary_cloud_name%>", api_key: "<%=Figaro.env.cloudinary_api_key%>"})
+    //$.cloudinary.config({ cloud_name: "byte2", api_key: "145452685587698"})
+});

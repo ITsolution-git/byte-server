@@ -1,0 +1,7 @@
+$("#modal_holder_contact_app").html("<%= j render partial: "layouts/suspend_customer",locals: {
+    :heading => "",
+    :customer_id => @customer_id,
+    :restaurant => @restaurant,
+    :group_id => @group_id
+    } %>");
+$("#myModal").modal();

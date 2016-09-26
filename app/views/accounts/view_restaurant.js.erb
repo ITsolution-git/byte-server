@@ -1,0 +1,5 @@
+<%
+  current_user.app_service_id = @new_app_service_id
+ %>
+$('.package_form_block_container #package_form_toggle').html("<%= j render partial: "accounts/edit_package_form_primary", locals: {user: current_user, locations: @locations}%>");
+$('#myModalUpdatePackageBasic').modal('show')

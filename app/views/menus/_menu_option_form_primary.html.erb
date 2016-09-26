@@ -1,0 +1,128 @@
+<%
+  url = item_option.new_record? ?  add_item_option_restaurant_menus_path(@restaurant) : item_option_path(item_option)
+  submit_val = item_option.new_record? ? "Save" : "Update"
+%>
+<div class="row-fluid">
+	<div class="menu_option_form_errors_container"></div>
+	<div class="menu_option_form_errors_container2"></div>
+	<div class="span12">
+		<%= form_for item_option, :url=>url,:html=>{:id=>"menu_option_form"},:remote=>true do |f| %>
+			<% if not item_option.new_record? %>
+				<div class="row-fluid top20">
+					<div class="span8 controls">
+						<%= f.text_field :name,:placeholder=>"Menu Option Name"%>
+					</div>
+					<div class="span8 hide item_option_name_error" style="color: red; margin-left: 0;"></div>
+				</div>
+				<div class="row-fluid">
+					<div class="span12">
+						<b class="option_label">OPTIONS</b>
+						<label class="checkbox">
+							<% if item_option.only_select_one == 1%>
+								<input type="checkbox" name="item_option[select_one]" id="item_option_select_one"/ checked="checked">
+							<%else%>
+								<input type="checkbox" name="item_option[select_one]" id="item_option_select_one"/>
+							<%end%>
+							 Customer can only select one option
+						</label></br>
+						<span class="help-block select_on_help_block" style="font-size: 16px; margin-left: 0px;">Please select default Add on / topping(s).</span>
+					</div>
+				</div>
+				<div>
+					<% item_option.item_option_addons.sort_by!{|m|m.id}.each_with_index do |opt, index|%>
+						<div class="row-fluid add-on">
+							<div class="span1">
+								<input type="hidden" name="item_option[group][][selected]" value="off"/>
+								<%if opt.is_selected == 1%>
+									<input class="selected" type="checkbox" name="item_option[group][][selected]" checked/>
+								<%else%>
+									<input class="selected" type="checkbox" name="item_option[group][][selected]"/>
+								<%end%>
+							</div>
+							<div class="span5">
+								<input class="input-block-level add_on_name" type="text" placeholder="Add-on name" name="item_option[group][][add_on]" value="<%=opt.name%>">
+							</div>
+							<div class="span4">
+								<input class="input-block-level price" type="text" placeholder="$0.00" name="item_option[group][][price]" value="<%=number_with_precision(opt.price, precision: 2 )%>">
+							</div>
+							<div class="span2" style="padding-left: 18px;">
+								<i class="icon-remove-sign menu_option_icon delete-add-on"></i>
+								<% if index == (item_option.item_option_addons.size - 1)%>
+									<i class="icon-plus-sign clone add-add-on menu_option_icon"></i>
+								<% else %>
+									<i class="icon-plus-sign clone add-add-on menu_option_icon hide"></i>
+								<% end %>
+							</div>
+							<div class="errors-area hide">
+								<div class="span1"></div>
+								<div class="span5 add_on_name_error"></div>
+								<div class="span4 price_error"></div>
+							</div>
+						</div>
+					<%end%>
+				</div>
+			<%else%>
+				<div class="row-fluid top20">
+					<div class="span8 controls">
+						<%= f.text_field :name,:placeholder=>"Menu Option Name"%>
+					</div>
+					<div class="span8 hide item_option_name_error" style="color: red; margin-left: 0;"></div>
+				</div>
+				<div class="row-fluid">
+					<div class="span12">
+						<b class="option_label">OPTIONS</b>
+						<label class="checkbox">
+							<input type="checkbox" name="item_option[select_one]" id="item_option_select_one"/> Customer can only select one option
+						</label></br>
+						<span class="help-block select_on_help_block" style="font-size: 16px; margin-left: 0px;">Please select default Add on / topping(s).</span>
+					</div>
+				</div>
+				<div>
+					<div class="row-fluid add-on">
+						<div class="span1">
+							<input type="hidden" name="item_option[group][][selected]" value="off"/>
+							<input class="selected" type="checkbox" name="item_option[group][][selected]"/>
+						</div>
+						<div class="span5">
+							<input class="input-block-level add_on_name" type="text" placeholder="Add-on name" name="item_option[group][][add_on]"/>
+						</div>
+						<div class="span4">
+							<input class="input-block-level price" type="text" placeholder="$0.00" name="item_option[group][][price]"/>
+						</div>
+						<div class="span2" style="padding-left: 18px;">
+							<i class="icon-remove-sign menu_option_icon delete-add-on"></i>
+							<i class="icon-plus-sign clone menu_option_icon add-add-on"></i>
+						</div>
+						<div class="errors-area hide">
+							<div class="span1"></div>
+							<div class="span5 add_on_name_error"></div>
+							<div class="span4 price_error"></div>
+						</div>
+					</div>
+				</div>
+			<%end%>
+			<div class="row-fluid">
+				<div class="span6"></div>
+				<div class="span6">
+					<% if not item_option.new_record? %>
+						<a href="<%=cancel_item_option_restaurant_menus_path(@restaurant)%>" data-remote="true" class="span6 btn btn-cancel">Cancel</a>
+					<% end %>
+					<span class="btn btn-primary span6" id="submit_menu_option_form"><%= submit_val%></span>
+				</div>
+			</div>
+		<% end %>
+			<% if not @item_option_array.empty? %>
+				<div class="row-fuild">
+					<div class="span12">
+						<%= render partial: 'menus/item_option_all', locals: {:item_option => item_option}%>
+					</div>
+				</div>
+			<% end %>
+	</div>
+</div>
+<script type="text/javascript">
+
+	
+
+
+</script>

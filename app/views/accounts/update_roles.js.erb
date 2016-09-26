@@ -1,0 +1,46 @@
+<%
+  is_equal = @info_new == @info_old
+%>
+// console.log("new info :<%=@info_new.inspect%>")
+// console.log("old info :<%=@info_old.inspect%>")
+// console.log("<%=is_equal%>")
+ <% if @info.errors.full_messages.any? %>
+  <% if remotipart_submitted? %>
+      $(".roles_form_errors_container").html("<%= j "#{render('layouts/form_errors', :object=>@info)}" %>").show().delay(3000).fadeOut();
+  <% else %>
+      $(".roles_form_errors_container").html('<%= j render("layouts/form_errors",:object=>@info) %>').show().delay(3000).fadeOut();
+  <% end %>
+<% else %>
+  angle = $('.rotate_info_image').attr('angle');
+  if (angle != undefined) {
+    <% @info = Info.new%>
+    $('.roles_form_block_container #roles_form_toggle').html("<%= j render partial: "accounts/roles_form_primary", locals: {info: @info}%>");
+    $(".roles_form_errors_container").html("<%= j render("layouts/form_success", :message => "Account is updated successfully")%>").show().delay(3000).fadeOut();
+  }else {
+    <% unless is_equal %>
+      <% @info = Info.new%>
+      $('.roles_form_block_container #roles_form_toggle').html("<%= j render partial: "accounts/roles_form_primary", locals: {info: @info}%>");
+      $(".roles_form_errors_container").html("<%= j render("layouts/form_success", :message => "Account is updated successfully")%>").show().delay(3000).fadeOut();
+    <% else %>
+      <% @info = Info.find(@info_id)%>
+      <%   @info_avatar = InfoAvatar.where('info_token = ? and info_id=?', @info.token,@info.id).last%>
+        $('.roles_form_block_container #roles_form_toggle').html("<%= j render partial: "accounts/roles_form_primary", locals: {info: @info}%>");
+        $(".roles_form_errors_container").html("<%= j render("layouts/form_warning", :message => "There are no changes on this screen to be saved. Please make any changes to update.")%>").show().delay(3000).fadeOut();
+      <% if @info_avatar.image.file %>
+        $('#info_avatar_form .crop-btn').html('<a href="#" class="btn"></a><%=image_tag("btn_rotate.png", :id => @info_avatar.id, :class => 'rotate_info_image top10 ')%>');
+        $('#info_avatar_form').find(".selectedfile").text('<%= @info_avatar.image.file.filename %>');
+        $('#info_avatar_form').find('.img-item-preview').html('<%= image_tag(@info_avatar.image_url(:primary) + "?time=#{DateTime.now.second}", :id=>'image_info_image', :class => @info_avatar.id) if @info_avatar.image.file %>');
+        
+        $("#modal_holder_info_avatar_form").html("<%= j render partial: "layouts/modal_image_crop",locals: {
+          heading: "Preview",
+          form: "info_avatar_form"
+          } %>");
+        var image = Util.resize_image(<%= @info_avatar.image.width %>, <%= @info_avatar.image.height %>);
+        $('#info_avatar_form #info_avatar_rate').val(image['rate']);
+
+        $('#myModal_image_info_avatar_form .modal-body p').html('<img width="' + image['width'] + '" height="' + image['height'] + '"  width_image="' + image['width'] + '" height_image="' + image['height'] + '" src="<%= @info_avatar.image.url if @info_avatar.image.file %>" />');
+        $('.crop-helper').html("<%= j render partial: 'shared/crop_helper', locals: {:model => 'info_avatar'} %>");
+      <% end %>
+    <% end %>
+  }
+<% end %>

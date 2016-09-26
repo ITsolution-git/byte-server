@@ -1,0 +1,73 @@
+<h2>Register</h2>
+<div class="well">
+  <div style="margin:0px 20px">
+    <%= form_for @user, :url => {:action => "friend_regis", :access_token => @user.authentication_token}, :method => "post", html: {id: 'regis_invited'} do |f| %>
+        <div><%= render 'shared/error_messages', :object => @user %></div>
+        <%= hidden_field_tag :friend_id, @friendship.id %>
+        <div class="row top10">
+          <div class="span6">
+            <label>Username (*): </label>
+            <%= f.text_field :username, :autofocus => true,:placeholder=>"Username",:class=>"input-block-level" %>
+          </div>
+        </div>
+        <div class="row top10">
+          <div class="span6">
+            <label>Email (*): </label>
+            <%= f.email_field :email,:placeholder=>"Email",:class=>"input-block-level", :id => "user_email" %>
+          </div>
+        </div>
+        <div class="row top10">
+          <div class="span6">
+            <label>Zipcode (*): </label>
+            <%= f.text_field :zip,:placeholder=>"Zipcode",:class=>"input-block-level" %>
+          </div>
+        </div>
+        <div class="row top10">
+          <div class="span3">
+            <label>First Name (*): </label>
+            <%= f.text_field :first_name,:autocomplete => :off,:placeholder=>"First Name",:class=>"input-block-level" %>
+          </div>
+          <div class="span3">
+            <label>Last Name (*): </label>
+            <%= f.text_field :last_name,:autocomplete => :off, :placeholder=>"Last Name",:class=>"input-block-level" %>
+          </div>
+        </div>
+        <div class="row top10">
+          <div class="span6">
+            <label>Password (*): </label>
+            <%= f.password_field :password,:autocomplete => :off,:placeholder=>"Password",:class=>"input-block-level" %>
+          </div>
+        </div>
+        <div class="row top10">
+          <div class="span6">
+            <label>Confirm Password (*): </label>
+            <%= f.password_field :password_confirmation,:autocomplete => :off,:placeholder=>"Confirm Password",:class=>"input-block-level" %>
+          </div>
+        </div>
+        <%= f.submit "Sign Up", :class=> "btn btn-primary", :id =>"signup_invited"%>
+    <% end %>
+  </div>
+</div>
+<!-- <% check_manager_link = check_manager_path("mike.little@mymenu.us") %> -->
+
+<% content_for :scripts do %>
+  <script type="text/javascript">
+   var params = {
+    'from_user':'<%=@friendship.friendable_id%>',
+    'to_user':'<%=@user.email%>',
+    'username':'<%=@share.username%>',
+    'friendship_id':'<%=@friendship.id %>'
+  }
+  var link = '<%= check_manager_link %>'
+  var invitedFormObj = {
+    'submit': '#signup_invited',
+    'add_friend_link': '<%=request_friend_path%>',
+    'signed_up': <%= @check_signup %>,
+     'params':params,
+    'form': '#regis_invited',
+    // 'check_manager_link': '<%= check_manager_link %>'
+    
+  }
+  </script>
+<% end %>
+<%= javascript_include_tag "invited_regis_form" %>

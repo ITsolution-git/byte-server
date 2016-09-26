@@ -1,0 +1,28 @@
+<% if @check == true %>
+  <% if @server.errors.full_messages.any? %>
+    <% if remotipart_submitted? %>
+      $(".server_form_errors_container").html("<%= j "#{render('layouts/form_errors', :object=>@server)}" %>").show().delay(3000).fadeOut();
+    <% else %>
+      $(".server_form_errors_container").html('<%= j render("layouts/form_errors",:object=>@server) %>').show().delay(3000).fadeOut();
+    <% end %>
+  <% else %>
+    <% if remotipart_submitted? %>
+      $(".menu_form_block_container .wrap_title_form").html("<%= j "#{render('menu_title_form')}" %>");
+      $(".menu_form_block_container #menu_form_toggle").html("<%= j "#{render('menu_form_primary')}" %>");
+    <% else %>
+      $(".menu_form_block_container .wrap_title_form").html("<%= j render('menu_title_form') %>");
+      $(".menu_form_block_container #menu_form_toggle").html("<%= j render('menu_form_primary') %>");
+    <% end %>
+    <%
+      @server = Server.new
+      @server_avatar = ServerAvatar.new
+    %>
+    $(".server_form_block_container .wrap_title_form").html("<%= j render "menus/server_title_form" %>");
+    $(".server_form_block_container #server_form_toggle").html("<%= j render "menus/server_form_primary" %>");
+    $(".server_form_errors_container").html('<%= j render("layouts/form_success", :message=> "Server is created successfully.") %>').show().delay(3000).fadeOut();
+    $('.server_form_block_container #server_form .edit-items-form').html("<%= j render partial: 'menus/server_records' %>");
+  <% end %>
+<% else %>
+  $(".server_form_errors_container").html("<%= j render("layouts/form_error_agreement", :message => "The restaurant you were looking for doesn't exist in current user.")%>").show().delay(3000).fadeOut();
+<% end %>
+

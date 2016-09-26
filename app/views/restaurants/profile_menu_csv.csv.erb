@@ -1,0 +1,45 @@
+Restaurant Profile
+------------------------
+<% profileHeaders = ['Name', 'Address', 'City', 'State', 'Primary Cuisine Type', 'Secondary Cuisine Type', 'Description', 'Phone', 'Website', 'Facebook', 'Twitter', 'Google Plus', 'Instagram', 'Images'] %>
+<%= CSV.generate_line profileHeaders %>
+<% row = ["#{@restaurant.name}"] %>
+<% row << "#{@restaurant.address}" %>
+<% row << "#{@restaurant.city}" %>
+<% row << "#{@restaurant.state}" %>
+<% row << "#{@restaurant.primary_cuisine}" %>
+<% row << "#{@restaurant.secondary_cuisine}" %>
+<% row << "#{@restaurant.bio}" %>
+<% row << "#{@restaurant.phone}" %>
+<% row << "#{@restaurant.com_url}" %>
+<% row << "#{@restaurant.facebook_url}" %>
+<% row << "#{@restaurant.twiter_url}" %>
+<% row << "#{@restaurant.google_url}" %>
+<% row << "#{@restaurant.instagram_username}" %>
+<% row << (@restaurant.images.size >= 5).to_s %>
+<% row.collect! {|string| (string == "") ? "None" : string} %>
+<%= CSV.generate_line(row).strip.html_safe %>
+
+Restaurant Menu Items
+------------------------
+<% menuHeaders = ['Name', 'Description', 'Price', 'Keys', 'Menu Item Type', 'Image', 'Special MSG', 'Ingrediens'] %>
+<%= CSV.generate_line menuHeaders %>
+<% @items.each do |item| %>
+  <% row = [ "#{item.name}"] %>
+  <% row << "#{item.description}" %>
+  <% row << "#{item.price}" %>
+  <% if item.item_keys.empty? %>
+    <% row << "N/A" %>
+  <% else %>
+    <% row << "#{item.item_keys.first.name}" %>
+  <% end %>
+  <% if item.item_type.nil? %>
+    <% row << "None Selected" %>
+  <% else %>
+    <% row << "#{item.item_type.name}" %>
+  <% end %>
+  <% row << "#{item.images.present?}" %>
+  <% row << "#{item.special_message}" %>
+  <% row << "#{item.ingredients}" %>
+  <% row.collect! {|string| (string == "") ? "None" : string} %>
+  <%= CSV.generate_line(row).strip.html_safe %>
+<% end %>

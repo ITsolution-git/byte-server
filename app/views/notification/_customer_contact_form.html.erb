@@ -1,0 +1,36 @@
+<table class="table_search_contact table table-striped table-hover">
+    <tbody>
+       <tr>
+          <th></th>
+          <th></th>
+          <th>Name</th>
+          <th>Username</th>
+       </tr>
+       <% if !@customer.empty? %>
+          <% @customer.each do |user| %>
+            <% unless user.nil?%>
+              <% unless user.admin? || user.owner? %>
+                <tr id="view_customer_contact" class="">
+                    <td class="padding_bottom" style="width: 20px;"><%=check_box_tag "customer_contact_message[]", user.id, false, :class => 'check_user_contact_app_message nested-item' %></td>
+                    <td class="image_content">
+                       <% if !user.avatar.nil? && !user.avatar.path.nil? %>
+                          <% if File.exist?(user.avatar.path) %>
+                           <%= image_tag user.avatar.url,:class=>"image_avatar_contact" ,:alt=>'UserImage', :id => 'user-image-rating' %>
+                          <% else %>
+                            <%= image_tag 'avatar_profile.png',:class=>"image_avatar_contact" ,:alt=>'UserImage' , :id => 'user-image-rating'%>
+                          <% end %>
+                        <% else %>
+                          <%= image_tag 'avatar_profile.png',:class=>"image_avatar_contact" ,:alt=>'UserImage' , :id => 'user-image-rating'%>
+                        <% end %>
+                    </td>
+                    <td class="padding_bottom"><%=user.first_name %>  <%=user.last_name %></td>
+                    <td class="padding_bottom"><%=user.username%></td>
+                </tr>
+              <%end%>
+            <%end%>
+          <%end%>
+        <% else %>
+          <tr id="view_customer_contact" class="no_customer_contact"><td>No result found.</td><td></td><td></td></tr>
+        <%end%>
+    </tbody>
+  </table>

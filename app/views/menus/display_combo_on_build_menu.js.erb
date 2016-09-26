@@ -1,0 +1,38 @@
+<% menu =  @combo_item.menu %>
+var $menu = $('#wrapper_menu_container_<%= menu.id %>');
+<% if @combo_item.gmi? %>
+  <% @categories.each do |c| %>
+    $menu.find('#Category_<%= c.category_id %> .remove-margin-bottom .category_combo_type_icon').removeClass('hide').removeClass('cmi').addClass('gmi').text('<%= c.quantity %>');
+  <% end %>
+<% end %>
+<% if @combo_item.pmi? %>
+  var item;
+  var $category_wrapper;
+  <% @items.each do |i| %>
+    $category_wrapper = $($menu.find('#menu_item_<%= i.item.id %>_row')[0]).parent().parent().find('.icon-menu-collapsu');
+    if ($category_wrapper.hasClass('icon-plus')) {
+      $category_wrapper.click();
+    }
+
+    item = $menu.find('#menu_item_<%= i.item.id %>_row .item_combo_type_sub_icon')[0];
+    $(item).removeClass('hide').removeClass('cmi').addClass('pmi');
+  <% end %>
+<% end %>
+<% if @combo_item.cmi? %>
+  // console.log('testtrantran');
+  <% @categories.each do |c| %>
+    $menu.find('#Category_<%= c.category_id %> .remove-margin-bottom .category_combo_type_icon').removeClass('hide').removeClass('gmi').addClass('cmi').text('<%= c.quantity %>');
+  <% end %>
+  var item;
+  var $category_wrapper;
+  <% @items.each do |i| %>
+    $category_wrapper = $($menu.find('#menu_item_<%= i.item.id %>_row')[0]).parent().parent().find('.icon-menu-collapsu');
+    if ($category_wrapper.hasClass('icon-plus')) {
+      $category_wrapper.click();
+    }
+
+    item = $menu.find('#menu_item_<%= i.item.id %>_row .item_combo_type_sub_icon')[0];
+    $(item).removeClass('hide').removeClass('pmi').addClass('cmi');
+  <% end %>
+
+<% end %>

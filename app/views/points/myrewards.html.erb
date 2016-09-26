@@ -1,0 +1,46 @@
+<div class="statusHolder">
+  <table class= "reward_status_table">
+    <tr>
+     <td  class = "reward_status_td">Total Points = <%=number_with_delimiter(@total_points.to_i, :delimiter => ',') %></td>
+     <td  class = "reward_status_td">Share Points = 0</td>
+     <td  class = "reward_status_td">Check-In Points = 0</td>
+   </tr>
+   <tr>
+     <td  class = "reward_status_td">Total Rating Points = <%=number_with_delimiter(@total_rating_points.to_i, :delimiter => ',')%></td>
+     <td  class = "reward_status_td">Cust Sat Points = 0</td>
+     <td  class = "reward_status_td">Social Points = 0</td>
+   </tr>
+ </table>
+</div>
+</br>
+
+<div class="searchHolder">
+  <%= form_tag search_myrewards_points_path() ,:class => "span12", :method => :get do %>
+  <div class="row-fluid">
+    <div class="span5">
+      <%= text_field_tag :search,"",:class=>"input-block-level",:placeholder=>"Search"%>
+    </div>
+    <%= submit_tag "Submit" , :class=>"btnSearch", :title=>"Go", :value => '' %>
+    <% if @is_my_rewards_page %>
+      <%= link_to 'Show All', show_all_my_reward_points_path,:style => "margin-left :5px" %>
+    <% end %>
+    <div class="floatright">
+      <% if !@item_comments.blank? %>
+        <span class="reward-action-items"><%= link_to image_tag("/assets/PDF.png"), my_reward_export_pdf_points_path %></span>
+        <span class="reward-action-items"><%= link_to image_tag("/assets/XLS.png"), my_reward_export_xls_points_path %></span>
+        <span class="reward-action-items"><%= link_to image_tag("/assets/CSV.png"), my_reward_export_csv_points_path %></span>
+      <% else %>
+        <span class="reward-action-items"><%= link_to image_tag("PDF_disable.png"),'#'  %></span>
+        <span class="reward-action-items"><%= link_to image_tag("XLS_disable.png"), '#' %></span>
+        <span class="reward-action-items"><%= link_to image_tag("CSV_disable.png"), '#' %></span>
+      <%end %>
+    </div>
+  </div>
+<% end %>
+  <div class="clear"></div>
+</div>
+
+<%= render :partial=>"body_data" %>
+<div id="paginator">
+  <%= render :partial => "pagination" %>
+</div>

@@ -1,0 +1,67 @@
+<div class="row-fluid">
+  <div class="billing_form_errors_container">
+
+  </div>
+ <%= form_for @user_billing, :url => check_login_billing_accounts_path, :html => {:autocomplete => "off"}, :remote => true do |f| %>
+  <div class="span12">
+    <div class="row-fluid top10 span12" style="margin-top:30px !important;">
+        <div class="span6" style="margin-left:26%">
+          Please enter email and password to view and update billing info.
+        </div>
+    </div>
+    <div class="row-fluid top10 span12" style="margin-bottom:20px !important;">
+        <div class="span12">
+          <div class="span6 top10 pad10" style="margin-left:26%">
+             <%= text_field_tag :billing_email, "", placeholder:"email@email.com"%>
+          </div>
+        </div>
+        <div class="span12">
+          <div class="span6 top10 pad10" style="margin-left:26%">
+             <%= password_field_tag :billing_password, "", placeholder:"Password"%>
+          </div>
+        </div>
+        <div class="span12" style="text-align:center;"><br>
+          <a href="#" class="link_login_help" style="color:blue;">Login Help?</a>
+        </div>
+     </div>
+     <div class="row-fluid top10">
+       <div class="span4 pull-right">
+           <%= submit_tag('Submit', :class => 'btn span12 btn-primary', :remote => true, disable_with: "Please wait...", :id => 'login_billing_form_submit') %>
+       </div>
+       <div class="span4 pull-left">
+           <%= link_to 'Cancel', canel_billing_accounts_path, :class => 'btn btn-cancel', id: "cancel_service", :remote => true ,disable_with: "Please wait..." %>
+       </div>
+     </div>
+   </div>
+<% end %>
+</div>
+<script>
+  $(".link_login_help").click(function() {
+    if($("#billing_email").val()) {
+      if(confirm("Would you like to reset your password?")) {
+        var email = $("#billing_email").val();
+        var user_id = <%=current_user.id%>;
+        $.ajax({
+            url: "accounts/reset_password",
+            data: {
+              email: email,
+              user_id: user_id
+            },
+            error: function() {
+                alert("Error is occured. Please try again.");
+            },
+            success: function(data) {
+                if(data == "success") {
+                  alert("The reset password email is sent.");
+                } else {
+                  alert("Email address is not valid.");
+                }
+            },
+            type: 'POST'
+        });
+      }
+    } else {
+      alert("Please type your email address of billing login.");
+    }
+  });
+</script>

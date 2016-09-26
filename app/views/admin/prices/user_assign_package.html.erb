@@ -1,0 +1,26 @@
+<h2>Assign package to User</h2>
+<%= form_for :package, url: assign_package_admin_prices_path do |f| %>
+  <div class="row offset2">
+    <div class="row">
+      <div class="span2">
+        <%= f.label "User List" %>
+      </div>
+      <div class="span2">
+        <%= f.select(:user_id, User.find(:all).collect {|u| [u.email, u.id]}, :prompt => 'Select') %>
+      </div>  
+    </div>
+    <div class="row">
+      <div class="span2">
+        <%= f.label "Package List" %>
+      </div>  
+      <div class="span2">
+        <%= f.select(:price_id, Price.find(:all).collect {|u| ["$#{u.try(:plan).try(:name)}-#{u.try(:app_service).try(:name)}", u.id]}, :prompt => 'Select') %>
+      </div>  
+    </div>
+    <div class="row">
+      <div class="span2">
+        <%= f.submit %>
+      </div>  
+    </div>  
+  </div>  
+<% end %>

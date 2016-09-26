@@ -1,0 +1,86 @@
+$('#location_image_<%= @location_image.index %>_form .crop-btn').html('<a href="#" class="btn"></a><%=image_tag("btn_rotate.png", :id => @location_image.id, :class => "rotate_location_image_#{@location_image.index} top10 ")%>');
+$('#location_image_<%= @location_image.index %>_form').find(".selectedfile").text('<%= @location_image.image.file.filename %>');
+$('#location_image_<%= @location_image.index %>_form').find('.img-item-preview').html('<%= image_tag(@location_image.image_url(:primary) + "?time=#{DateTime.now.second}", :id=>"image_location_image_#{@location_image.index}", :class => @location_image.id) if @location_image.image.file %>');
+$("#modal_holder_location_image_<%= @location_image.index %>_form").html("<%= j render partial: "layouts/modal_image_crop",locals: {
+  heading: "Preview",
+  form: "location_image_#{@location_image.index}_form"
+  } %>");
+var image = Util.resize_image(<%= @location_image.image.width %>, <%= @location_image.image.height %>);
+$('#location_image_<%= @location_image.index %>_form #location_image_rate').val(image['rate']);
+$('#myModal_image_location_image_<%= @location_image.index %>_form .modal-body p').html('<img width="' + image['width'] + '" height="' + image['height'] + '" width_image="' + image['width'] + '" height_image="' + image['height'] + '" src="<%= @location_image.image.url if @location_image.image.file %>" />');
+$('.crop-helper').html("<%= j render partial: 'shared/crop_helper', locals: {:model => "location_image_#{@location_image.index}"} %>");
+  
+
+
+  // var valRotateUpload1 = 0;
+  // $(".rotate_location_image_1").click(function(){
+  //   console.log('vao')
+  //    valRotateUpload1 +=90;
+  //    // if(valRotateUpload1 > 360){
+  //    //  valRotateUpload1 = 90;
+  //    // }
+  //     console.log(valRotateUpload1)
+  //    $("#image_location_image_1").rotate({ angle:valRotateUpload1});
+  //    $('#myModal_image_location_image_1_form .modal-body img').rotate({ angle:valRotateUpload1});
+
+  //    var image_id_upload_1 =$('#image_location_image_1').attr('class');
+  //   $.ajax({
+  //     url: '/restaurants/rotate_image',
+  //     data: {image: image_id_upload_1, direction: valRotateUpload1}, 
+  //     type: 'POST'
+  //   });
+  // });
+
+  // var valRotateUpload2 = 0;
+  // $(".rotate_location_image_2").click(function(){
+  //   console.log('vao')
+  //    valRotateUpload2 +=90;
+  //    // if(valRotateUpload2 > 360){
+  //    //  valRotateUpload2 = 90;
+  //    // }
+  //    $("#image_location_image_2").rotate({ angle:valRotateUpload2});
+  //    $('#myModal_image_location_image_2_form .modal-body img').rotate({ angle:valRotateUpload2});
+
+  //    var image_id_upload_2 =$('#image_location_image_2').attr('class');
+  //   $.ajax({
+  //     url: '/restaurants/rotate_image',
+  //     data: {image: image_id_upload_2, direction: valRotateUpload2}, 
+  //     type: 'POST'
+  //   });
+  // });
+
+  //  var valRotateUpload3 = 0;
+  // $(".rotate_location_image_3").click(function(){
+  //   console.log('vao')
+  //    valRotateUpload3 +=90;
+  //    // if(valRotateUpload3 > 360){
+  //    //  valRotateUpload3 = 90;
+  //    // }
+  //    $("#image_location_image_3").rotate({ angle:valRotateUpload3});
+  //    $('#myModal_image_location_image_3_form .modal-body img').rotate({ angle:valRotateUpload3});
+
+  //    var image_id_upload_3 =$('#image_location_image_3').attr('class');
+  //   $.ajax({
+  //     url: '/restaurants/rotate_image',
+  //     data: {image: image_id_upload_3, direction: valRotateUpload3}, 
+  //     type: 'POST'
+  //   });
+  // });
+
+  // var valRotateUpload4 = 0;
+  // $(".rotate_location_image_4").click(function(){
+  //   console.log('vao')
+  //    valRotateUpload4 +=90;
+  //    // if(valRotateUpload4 > 360){
+  //    //  valRotateUpload4 = 90;
+  //    // }
+  //    $("#image_location_image_4").rotate({ angle:valRotateUpload4});
+  //    $('#myModal_image_location_image_4_form .modal-body img').rotate({ angle:valRotateUpload4});
+
+  //    var image_id_upload_4 =$('#image_location_image_4').attr('class');
+  //   $.ajax({
+  //     url: '/restaurants/rotate_image',
+  //     data: {image: image_id_upload_4, direction: valRotateUpload4}, 
+  //     type: 'POST'
+  //   });
+  // });

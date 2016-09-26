@@ -1,0 +1,23 @@
+$('.address_form_block_container #address_form_toggle').html("<%= j render partial: "accounts/edit_address_form_primary", locals: {user: current_user} %>");
+  // var account = new AccountForm();
+  // account.loadAllCountriesFromWS('#user_profile_attributes_physical_country');
+  // account.loadAllMailingCountriesFromWS('#user_profile_attributes_mailing_country');
+  // Util.validate(account, {
+  //   profile_attributes_restaurant_name: [Validate.Presence],
+  //   profile_attributes_physical_address: [Validate.Presence],
+  //   profile_attributes_mailing_address: [Validate.Presence],
+  //   profile_attributes_physical_zip: [
+  //     Validate.Presence,
+  //     Validate.Numericality,
+  //     [Validate.Length, {is: 5}]
+  //   ],
+  //   profile_attributes_mailing_zip: [
+  //     Validate.Presence,
+  //     Validate.Numericality,
+  //     [Validate.Length, {is: 5}]
+  //   ],
+  //   full_name: [
+  //     Validate.Presence,
+  //      // [Validate.Format, {pattern: /(((\S+) (\S+))|(\S+))/, failureMessage: "Invalid full name. Use: first name and last name"}]
+  //   ]
+  // });

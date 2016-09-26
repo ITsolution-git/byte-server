@@ -1,0 +1,6 @@
+//alert('fhdjfgd')
+var image = Util.resize_image(<%= @location_image.image.width %>, <%= @location_image.image.height %>);
+$('#location_image_<%= @location_image.index %>_form #location_image_rate').val(image['rate']);
+
+$('#myModal_image_location_image_<%= @location_image.index %>_form .modal-body p').html('<img width="' + image['width'] + '" height="' + image['height'] + '" width_image="' + image['width'] + '" height_image="' + image['height'] + '" src="<%= @location_image.image.url if @location_image.image.file %>" />');
+$('.crop-helper').html("<%= j render partial: 'shared/crop_helper', locals: {:model => "location_image_#{@location_image.index}"} %>");

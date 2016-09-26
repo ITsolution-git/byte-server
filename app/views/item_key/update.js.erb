@@ -1,0 +1,50 @@
+<% if @itemKey.errors.full_messages.any? %>
+    $(".itemKey_form_errors_container").html("<%= j render("layouts/form_errors",:object=>@itemKey) %>").show().delay(3000).fadeOut();
+<% else %>
+  <%
+    is_equal = @itemKey == @itemKey_old
+    @itemKey = ItemKey.new
+    @item_key_image = ItemKeyImage.new
+  %>
+
+  angle = $('.rotate_item_key_image').attr('angle');
+  if (angle != undefined) {
+    $(".item_key_form_block_container .wrap_title_form").html("<%= j render partial: "menus/item_key_title_form" ,locals:{:item_key=> @itemKey, :item_key_image => @item_key_image} %>");
+    $(".item_key_form_block_container #itemkey_toggle").html("<%= j render partial: "menus/item_key_form_primary" ,locals:{:item_key=> @itemKey, :item_key_image => @item_key_image} %>");
+
+    <% if remotipart_submitted? %>
+      $(".itemKey_form_errors_container").html("<%= j "#{render('layouts/form_success', :message => 'Updated item key.Item Key is updated successfully.')}" %>").show().delay(3000).fadeOut();
+      $(".item_form_block_container .wrap_title_form").html("<%= j "#{render partial: 'menus/item_title_form',locals: {:item=>@item, :item_image => @item_image}}" %>");
+      $(".item_form_block_container #item_form_toggle").html("<%= j "#{render partial: 'menus/item_form_primary',locals: {:item=>@item, :item_image => @item_image}}" %>");
+    <% else %>
+      $(".itemKey_form_errors_container").html("<%= j render('layouts/form_success', :message => 'Item Key is updated successfully.') %>").show().delay(3000).fadeOut();
+      $(".item_form_block_container .wrap_title_form").html("<%= j render partial: 'menus/item_title_form',locals: {:item=>@item, :item_image => @item_image} %>");
+      $(".item_form_block_container #item_form_toggle").html("<%= j render partial: 'menus/item_form_primary',locals: {:item=>@item, :item_image => @item_image} %>");
+    <% end %>
+  } else {
+    <%
+      @item = Item.new
+      @item_image = ItemImage.new
+    %>
+    <% if is_equal %>
+      <% if remotipart_submitted? %>
+        $(".itemKey_form_errors_container").html("<%= j "#{render('layouts/form_warning', :message => 'There are no changes on this screen to be saved. Please make any changes to update')}" %>").show().delay(3000).fadeOut();
+      <% else %>
+        $(".itemKey_form_errors_container").html("<%= j render('layouts/form_warning', :message => 'There are no changes on this screen to be saved. Please make any changes to update') %>").show().delay(3000).fadeOut();
+      <% end %>
+    <% else %>
+      $(".item_key_form_block_container .wrap_title_form").html("<%= j render partial: "menus/item_key_title_form" ,locals:{:item_key=> @itemKey, :item_key_image => @item_key_image} %>");
+      $(".item_key_form_block_container #itemkey_toggle").html("<%= j render partial: "menus/item_key_form_primary" ,locals:{:item_key=> @itemKey, :item_key_image => @item_key_image} %>");
+
+      <% if remotipart_submitted? %>
+        $(".itemKey_form_errors_container").html("<%= j "#{render('layouts/form_success', :message => 'Updated item key.Item Key is updated successfully.')}" %>").show().delay(3000).fadeOut();
+        $(".item_form_block_container .wrap_title_form").html("<%= j "#{render partial: 'menus/item_title_form',locals: {:item=>@item, :item_image => @item_image}}" %>");
+        $(".item_form_block_container #item_form_toggle").html("<%= j "#{render partial: 'menus/item_form_primary',locals: {:item=>@item, :item_image => @item_image}}" %>");
+      <% else %>
+        $(".itemKey_form_errors_container").html("<%= j render('layouts/form_success', :message => 'Item Key is updated successfully.') %>").show().delay(3000).fadeOut();
+        $(".item_form_block_container .wrap_title_form").html("<%= j render partial: 'menus/item_title_form',locals: {:item=>@item, :item_image => @item_image} %>");
+        $(".item_form_block_container #item_form_toggle").html("<%= j render partial: 'menus/item_form_primary',locals: {:item=>@item, :item_image => @item_image} %>");
+      <% end %>
+    <% end %>
+  }
+<% end %>

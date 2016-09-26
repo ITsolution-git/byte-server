@@ -1,0 +1,17 @@
+$('.roles_form_block_container #roles_form_toggle').html("<%= j render partial: "accounts/roles_form_primary", locals: {info: @info}%>");
+<% if @info_avatar.image.file %>
+  $('#info_avatar_form .crop-btn').html('<a href="#" class="btn"></a></a><%=image_tag("btn_rotate.png", :id => @info_avatar.id, :class => 'rotate_info_image top10 ')%>');
+  
+  $('#info_avatar_form').find(".selectedfile").text('<%= @info_avatar.image.file.filename %>');
+  $('#info_avatar_form').find('.img-item-preview').html('<%= image_tag(@info_avatar.image_url(:primary) + "?time=#{DateTime.now.second}", :id=>'image_info_image', :class => @info_avatar.id) if @info_avatar.image.file %>');
+
+  $("#modal_holder_info_avatar_form").html("<%= j render partial: "layouts/modal_image_crop",locals: {
+    heading: "Preview",
+    form: "info_avatar_form"
+    } %>");
+  var image = Util.resize_image(<%= @info_avatar.image.width %>, <%= @info_avatar.image.height %>);
+  $('#info_avatar_form #info_avatar_rate').val(image['rate']);
+
+  $('#myModal_image_info_avatar_form .modal-body p').html('<img width="' + image['width'] + '" height="' + image['height'] + '" width_image="' + image['width'] + '" height_image="' + image['height'] + '" src="<%= @info_avatar.image.url if @info_avatar.image.file %>" />');
+  $('.crop-helper').html("<%= j render partial: 'shared/crop_helper', locals: {:model => 'info_avatar'} %>");
+<% end %>

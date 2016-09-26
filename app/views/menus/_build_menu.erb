@@ -1,0 +1,32 @@
+<div class="block-head clearfix header-menu-mgt">
+  <span class="icon-plus btn togglebtn" data-toggle="collapse" data-target="#build_menu_toggle"></span>
+  <span class="wrap_title_form">
+    <span class="btn btn-link collapsu" id="build_menu_title">7. Build Menus</span>
+  </span>
+
+  <% if ( v = @tutorialVideos.find { |v| v['title'] == "Build Menus" } ) && ( v['url'] != '' ) %>
+    <% @hasVideo = true %>
+    <% @url = v['url'] %>
+  <% else %>
+    <% @hasVideo = false %>
+    <% @url = '' %>
+  <% end %>
+
+  <% if @hasVideo %>
+    <%= image_tag("play_icon.png", :class => "playTutorial playTutorialBtn floatright", :id => "7") %>
+  <% end %>
+
+  <%= link_to "","#",:class=>"icon-question-sign btn floatright", :id => 'build_menu_tooltip', :title => load_content_of_file('/public/tooltip/buildmenu.html'),:"data-toggle"=>"tooltip","data-placement"=>"right","data-html"=>"true",:rel=>"tooltip",:style=>"color:#333;" %>
+
+  <div class="tutorialVideo" id="7" style="display:none;">
+    <br>
+    <iframe width="100%" height="400" src="<%= @url %>" frameborder="0" allowfullscreen></iframe>
+  </div>
+
+</div>
+<div id="build_menu_toggle" class="collapse">
+  <%= render 'menus/build_menu_form_primary' %>
+</div>
+<script type="text/javascript">
+  $('#build_menu_tooltip').tooltip();
+</script>

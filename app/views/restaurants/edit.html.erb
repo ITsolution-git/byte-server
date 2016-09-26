@@ -1,0 +1,14 @@
+<div class="row-fluid">
+  <div class="span12">
+    <%= render :partial=>"form" %>
+  </div>
+  <!-- <div class="spacer" style="height: 300px; margin-top:70px;"></div> -->
+  <div class="span6 hide">
+     <div class="row-fluid how_it_works pad40 top20">
+         <div class="span12">
+           <%= raw @page.body unless @page.nil? %>
+         </div>
+     </div>
+  </div>
+</div>
+

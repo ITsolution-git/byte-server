@@ -1,0 +1,26 @@
+<h1>Plan</h1>
+<br />
+
+<%= link_to 'New Plan', new_admin_plan_path %>
+
+<br/>
+<br/>
+
+<table class="table">
+  <tr>
+    <th>Plan Name</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @plans.each do |plan| %>
+  <tr>
+    <td><%= plan.name %></td>
+    <td><%= link_to 'Show', admin_plan_path(plan) %></td>
+    <td><%= link_to 'Edit', edit_admin_plan_path(plan) %></td>
+    <td><%= link_to 'Destroy', admin_plan_path(plan), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+

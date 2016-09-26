@@ -1,0 +1,13 @@
+var mainDishWrapper = $('.combo_sub_categories_wrapper_extend .combo_sub_categories');
+// var btnAdd = $('.choose_combo .dropdown-toggle');
+var html = '<div class="checkbox-dropdownlist">'
+  + '<span class="btn add-nested-attributes">Select Menu Items</span>'
+  + '<div class="wrapper-checkbox close">'
+<% @items.each do |item| %>
+  html += '<input type="checkbox" name="items[]" id="combo_item_<%= item.id %>" value="<%= item.id %>" class="nested-item" /> <%= item.name %><br/>';
+<% end %>
+html += '</div></div';
+mainDishWrapper.html(html);
+$('.combo_sub_categories_wrapper_extend').removeClass('hide');
+// btnAdd.attr('disabled', 'disabled');
+// $('.combo_main_dish_built_wrapper').removeClass('hide');

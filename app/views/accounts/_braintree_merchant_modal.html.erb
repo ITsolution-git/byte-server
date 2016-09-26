@@ -1,0 +1,33 @@
+<%= form_tag '/location_merchants', method: :post do %>
+  <div style="display: none" class="modal fade merchant-modal" id="create_braintree_merchant_<%= location_id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Create Merchant Account</h4>
+        </div>
+        <div class="modal-body">
+          <%= label_tag :birthday %>
+          <input type="date" name="birthday">
+          <%= label_tag :account_number %>
+          <%= text_field_tag :account_number, nil, {required: true } %>
+          <%= label_tag :routing_number %>
+          <%= text_field_tag :routing_number, nil, {required: true, pattern: '^\d{9}$'} %>
+          <%= label_tag :owner_address %>
+          <%= text_field_tag :owner_address, nil, required: true  %>
+          <%= label_tag :owner_city %>
+          <%= text_field_tag :owner_city, nil, required: true  %>
+          <%= label_tag :owner_state %>
+          <%= select_tag :owner_state, options_from_collection_for_select(State.all, 'state_code', 'name') %>
+          <%= label_tag :owner_zip %>
+          <%= text_field_tag :owner_zip, nil, {required: true, pattern: '^\d{5}$'}  %>
+          <%= hidden_field_tag :location_id, location_id %>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <%= submit_tag 'Create Account', class: 'btn btn-default' %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

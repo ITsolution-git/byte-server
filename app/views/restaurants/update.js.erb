@@ -1,0 +1,5 @@
+<% if @restaurant.errors.full_messages.any? %>
+  $(".restaurant_form_errors_container").html("<%= j render("layouts/form_errors",:object=>@restaurant) %>").show().delay(3000).fadeOut();
+<% else %>
+  window.location = '/restaurants';
+<% end %>

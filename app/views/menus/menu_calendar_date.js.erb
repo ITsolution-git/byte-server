@@ -1,0 +1,10 @@
+<% if @menu.errors.full_messages.any? %>
+  $(".menu_calendar_message").html("<%= j render('layouts/form_errors', :object => @menu) %>");
+<% else %>
+  $("#myModal").modal('hide');
+  $("#modal_holder").html("<%= j render partial: "layouts/modal_message",locals: {
+    heading: "Published Calendar",
+    body: "Published calendar was saved."
+    } %>");
+  $("#myModal").modal();
+<% end %>

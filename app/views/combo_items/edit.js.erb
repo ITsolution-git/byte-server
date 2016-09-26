@@ -1,0 +1,28 @@
+$(".combo_item_form_block_container").html("<%= j render partial: "menus/combo_item_form",locals: {combo_item: @combo_item }%>");
+$('#combo_item_form').attr('menu_id', '<%= @combo_item.menu_id %>');
+
+var comboItemForm = new Menu.ComboItem();
+var check_menu_id = $('#combo_item_form').attr('menu_id');
+var combo_type = '<%= @combo_item.combo_type%>'
+// console.log(combo_type)
+if (combo_type === 'GMI'){
+ comboItemForm.displayItemsExtend(check_menu_id);
+ $('.choose_combo_extend .dropdown-toggle').text('PMI');
+ $('.choose_combo_extend .dropdown-toggle').val('pmi');
+ $('.is_not_pmi_and_gmi').removeClass('hide');
+} else if (combo_type === 'PMI'){
+  comboItemForm.displayCategoriesExtend(check_menu_id);
+ $('.choose_combo_extend .dropdown-toggle').text('GMI');
+ $('.choose_combo_extend .dropdown-toggle').val('gmi');
+ $('.is_not_pmi_and_gmi').removeClass('hide');
+} else if (combo_type === 'PMI,GMI'){
+   // comboItemForm.displayCategoriesExtend(check_menu_id);
+   $('.choose_combo_extend .dropdown-toggle').text('GMI');
+   $('.choose_combo_extend .dropdown-toggle').val('gmi');
+   $('.combo_main_dish_second').removeClass('hide');
+ } else if (combo_type === 'GMI,PMI'){
+   // comboItemForm.displayItemsExtend(check_menu_id);
+   $('.choose_combo_extend .dropdown-toggle').text('PMI');
+   $('.choose_combo_extend .dropdown-toggle').val('pmi');
+   $('.combo_main_dish_second').removeClass('hide');
+ }

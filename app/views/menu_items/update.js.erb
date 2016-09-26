@@ -1,0 +1,70 @@
+<% if @item.errors.full_messages.any? %>
+    $(".item_form_errors_container").html("<%= j render("layouts/form_errors",:object=>@item) %>").show().delay(3000).fadeOut();
+<% else %>
+  <% @item.menus.each do |menu| %>
+    <% menu.categories.each do |category| %>
+      $('#menu_<%= menu.id %>_category_<%= category.id %> #menu_item_<%=@item.id %>_row').replaceWith("<%= j render partial: "menus/item_row",locals:{:item=>@item, menu: menu, restaurant: @restaurant, category: category} %>");
+    <% end %>
+  <% end %>
+  <%
+    is_equal = @item == @item_old
+  %>
+
+angle = $('.rotate_item_image').attr('angle');
+if (angle != undefined) {
+    <% @item.menus.each do |menu| %>
+      <% menu.categories.each do |category| %>
+        $('#menu_<%= menu.id %>_category_<%= category.id %> #menu_item_<%=@item.id %>_row').replaceWith("<%= j render partial: "menus/item_row",locals:{:item=>@item, menu: menu, restaurant: @restaurant, category: category} %>");
+      <% end %>
+    <% end %>
+
+    <% if remotipart_submitted? %>
+      $(".build_menu_block_container #build_menu_toggle").html("<%= j "#{render 'menus/build_menu_form_primary'}" %>");
+    <% else %>
+      $(".build_menu_block_container #build_menu_toggle").html("<%= j render "menus/build_menu_form_primary" %>");
+    <% end %>
+
+    <%
+      @item = Item.new
+      @item_image = ItemImage.new
+      combo_item = ComboItem.new
+    %>
+    $(".item_form_block_container .wrap_title_form").html("<%= j render partial: "menus/item_title_form",locals: {:item => @item} %>");
+    $(".item_form_block_container #item_form_toggle").html("<%= j render partial: "menus/item_form_primary",locals: {:item => @item, :item_image => @item_image} %>");
+
+    $(".combo_item_form_block_container .wrap_title_form").html("<%= j render partial: "menus/combo_item_title_form", locals: {combo_item: combo_item} %>");
+    $(".combo_item_form_block_container #combo_item_form_toggle").html("<%= j render partial: "menus/combo_item_form_primary", locals: {combo_item: combo_item} %>");
+
+    $(".item_form_errors_container").html("<%= j render("layouts/form_success", :message => "Menu Item is updated successfully.") %>").show().delay(3000).fadeOut();
+} else {
+  <% if is_equal and !@is_changed%>
+    $(".item_form_errors_container").html("<%= j render("layouts/form_warning",:message=>"There are no changes on this screen to be saved. Please make any changes to update") %>").show().delay(3000).fadeOut();
+  <% else %>
+    <% if remotipart_submitted? %>
+      $(".build_menu_block_container #build_menu_toggle").html("<%= j "#{render 'menus/build_menu_form_primary'}" %>");
+    <% else %>
+      $(".build_menu_block_container #build_menu_toggle").html("<%= j render "menus/build_menu_form_primary" %>");
+    <% end %>
+
+    <%
+      @item = Item.new
+      @item.item_photos.build
+      combo_item = ComboItem.new
+      @item_option = ItemOption.new
+    %>
+    $(".item_form_block_container .wrap_title_form").html("<%= j render partial: "menus/item_title_form",locals: {:item => @item} %>");
+    $(".item_form_block_container #item_form_toggle").html("<%= j render partial: "menus/item_form_primary",locals: {:item => @item, :item_image => @item_image} %>");
+
+    $(".combo_item_form_block_container .wrap_title_form").html("<%= j render partial: "menus/combo_item_title_form", locals: {combo_item: combo_item} %>");
+    $(".combo_item_form_block_container #combo_item_form_toggle").html("<%= j render partial: "menus/combo_item_form_primary", locals: {combo_item: combo_item} %>");
+
+    $(".item_form_errors_container").html("<%= j render("layouts/form_success", :message => "Menu Item is updated successfully.") %>").show().delay(3000).fadeOut();
+
+    $(".menu_option_form_block_container .wrap_title_form").html("<%= j render partial: 'menus/menu_option_title_form' ,locals:{:item_option=> @item_option} %>");
+    $(".menu_option_form_block_container #menu_option_toggle").html("<%= j render partial: 'menus/menu_option_form_primary' ,locals:{:item_option=> @item_option} %>");
+
+  <% end %>
+}
+<% end %>
+
+new app.classes.MenuManagement('.menus_container');

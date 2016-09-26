@@ -1,0 +1,7 @@
+<% if @result %>
+  $('.billings_form_block_container #billings_form_toggle').html("<%= j render partial: "accounts/edit_billing_form_primary", locals:{customer: @customer, dates: @dates}%>");
+  $(".billing_form_errors_container").html("<%= j render("layouts/form_success", :message => "Logged in successfully.")%>").show().delay(3000).fadeOut();
+<% else %>
+  $('.billings_form_block_container #billings_form_toggle').html("<%= j render partial: "accounts/login_billing"%>");
+  $(".billing_form_errors_container").html("<%= j render("layouts/form_warning", :message => "Login information is not correct.")%>").show().delay(3000).fadeOut();
+<% end %>

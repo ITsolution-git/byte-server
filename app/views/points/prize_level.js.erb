@@ -1,0 +1,6 @@
+//load modal
+$("#modal_holder_prize_level").html("<%= j render partial: "layouts/update_prize_level",locals: {
+    :heading => "Save",
+    :params => @params
+    } %>");
+$("#myModal").modal();

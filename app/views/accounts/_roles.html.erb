@@ -1,0 +1,17 @@
+<div class="block-head clearfix header-menu-mgt">
+  <span class="icon-plus btn togglebtn" data-toggle="collapse" data-target="#roles_form_toggle"></span>
+  <span class="wrap_title_form">
+    <span class="btn btn-link collapsu" id="build_menu_title">
+        Restaurant Roles
+    </span>
+  </span>
+</div>
+<div id="roles_form_toggle" class="collapse">
+  <%= render :partial=>'roles_form_primary',locals:{info: @info} %>
+</div>
+
+<% content_for :scripts do %>
+  <script type="text/javascript">
+
+  </script>
+<% end %>

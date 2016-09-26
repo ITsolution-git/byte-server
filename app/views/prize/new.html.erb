@@ -1,0 +1,137 @@
+<h2>Register</h2>
+<div class="well">
+  <div style="margin:0px 20px">
+    <%= form_for @user, :url => register_prize_index_path, :method => "post", html: {id: 'register_form', :autocomplete=>:off}, :validate => true do |f| %>
+    <div id="prize_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">BYTE APP</h3>
+  </div>
+  <div class="modal-body">
+    <p>
+      This email has been used on BYTE App.
+    </p>
+  </div>
+  <div class="modal-footer">
+    <button id="close-modal" class="btn btn-success" data-dismiss="modal" aria-hidden="true">Close</button>
+  </div>
+</div>
+        <div><%= render 'shared/error_messages', :object => @user %></div>
+        <%= hidden_field_tag :prize_token, @prize_token%>
+        <%= hidden_field_tag :location_id, @location.id%>
+        <%= hidden_field_tag :friend_id, @friendship.id %>
+        <div class="row top10">
+          <div class="span6">
+            <label>Username (*): </label>
+            <%= f.text_field :username, :autofocus => true, :placeholder=>"Username",:class=>"input-block-level", :required => 'required' %>
+          </div>
+        </div>
+        <div class="row top10">
+          <div class="span6">
+            <label>Email (*): </label>
+            <%= f.email_field :email, :placeholder=>"Email",:class=>"input-block-level", :required => 'required' %>
+          </div>
+        </div>
+        <div class="row top10">
+          <div class="span6">
+            <label>Zipcode (*): </label>
+            <%= f.text_field :zip, :placeholder=>"Zipcode",:class=>"input-block-level", :required => 'required' %>
+          </div>
+        </div>
+        <div class="row top10">
+          <div class="span3">
+            <label>First Name (*): </label>
+            <%= f.text_field :first_name, :placeholder=>"First Name",:class=>"input-block-level", :required => 'required' %>
+          </div>
+          <div class="span3">
+            <label>Last Name (*): </label>
+             <input style="display:none" type="text" name="user[last_name]"/>
+            <%= f.text_field :last_name, :placeholder=>"Last Name",:class=>"input-block-level", :required => 'required' %>
+          </div>
+        </div>
+        <div class="row top10">
+          <div class="span6">
+            <label>Password (*): </label>
+            <%= f.password_field :password, :placeholder=>"Password",:class=>"input-block-level", :required => 'required' %>
+          </div>
+        </div>
+        <div class="row top10">
+          <div class="span6">
+            <label>Confirm Password (*): </label>
+            <%= f.password_field :password_confirmation, :placeholder=>"Confirm Password",:class=>"input-block-level", :required => 'required' %>
+          </div>
+        </div>
+        <%= f.submit "Sign Up", :class=> "btn btn-primary" %>
+    <% end %>
+  </div>
+</div>
+<script type="text/javascript">
+  $(function(){
+    $("#register_form").validate({
+      rules: {
+        'user[email]': {
+          required: true,
+          email: true,
+          remote: {
+              url: "<%= check_email_prize_index_path %>",
+              type: "get",
+              data: {
+                email: function() {
+                  return $( "#user_email" ).val();
+                },
+                user_id: function() {
+                  return "<%= @user.id %>";
+                }
+              }
+          }
+        },
+        'user[password]': "required",
+        'user[password_confirmation]': {
+          equalTo: "#user_password"
+        },
+        'user[zip]':{
+          digits: true,
+          minlength: 5,
+          maxlength: 5
+        },
+        'user[username]': {
+          required: true,
+          remote: {
+              url: "<%= check_username_prize_index_path %>",
+              type: "get",
+              data: {
+                username: function() {
+                  return $( "#user_username" ).val();
+                }
+              }
+          }
+        }
+      },
+      messages:{
+        'user[username]':{
+          remote: 'Username is already registered.'
+        },
+        'user[email]':{
+          remote: 'Email is already registered.'
+        }
+      },
+      submitHandler: function(form) {
+        form.submit();
+    }
+   });
+  })
+
+</script>
+<%= javascript_include_tag "prize_form" %>
+<% content_for :scripts do %>
+  <script type="text/javascript">
+  var PrizeObject = {
+    'prize_token': '<%= @prize_token %>',
+    'location_id': '<%= @location.id %>',
+    'signed_up': <%= @user.is_register %>,
+    'is_receive': <%= @is_receive %>,
+    'modal': '#prize_modal',
+    'add_prize_link': '<%=addPrize_path%>',
+  }
+  </script>
+<% end %>

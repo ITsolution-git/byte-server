@@ -1,0 +1,85 @@
+<div class="manage_profiles row-fluid">
+  <div class="user_profiles span7">
+    <div class="row-fluid">
+      <%= link_to "Create Profile", new_admin_profile_path, :class => "btn btn-profile" %>
+    </div>
+    <div class="row-fluid">
+      <div class="dropdown">
+        <button class="btn btn-profile dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          Edit Profiles
+          <span class="caret" style="border-top: 4px solid #ffffff;"></span>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+          <% @profiles.each do |p| %>
+            <li><a href="<%=edit_admin_profile_path(p.id) %>"><%= p.name %></a></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+    <div class="create-profile-form row-fluid">
+
+    </div>
+  </div>
+  <div class="published_content span5">
+    <h4 align="center">Published Home Screen</h4>
+    <%= render 'profile_list' %>
+
+  </div>
+  <!-- <div class="spacer" style="height: 300px; margin-top:70px;"></div> -->
+</div>
+
+<script type="text/javascript">
+
+    $(document).on("page:load ready", function(){
+        $( ".profile_list" ).sortable({
+            stop: function(event, ui) {
+                change_order();
+            }
+        });
+
+        $(".unpublish-profile").click(function() {
+            change_status($(this).closest("li").attr("data-id"), 0);
+        })
+        $(".publish-profile").click(function() {
+            change_status($(this).closest("li").attr("data-id"), 1);
+        })
+        $(".delete-profile").click(function() {
+            if(confirm("You're gonna remove this profile. right?"))
+                change_status($(this).closest("li").attr("data-id"), 2);
+        })
+        function change_status(profileid, status) {
+            $.ajax({
+                url: 'profiles/show',
+                data: {
+                    status: profileid+"_"+status,
+                },
+                error: function() {
+                },
+                success: function(data) {
+                    setTimeout(function() {
+                        location.href = 'profiles';
+                    }, 500)
+
+                },
+                type: 'GET'
+            });
+        }
+        function change_order() {
+            var profile_order = [];
+            $( ".profile_list li").each(function() {
+                profile_order.push($(this).attr("data-id"))
+            })
+            $.ajax({
+                url: 'profiles/show',
+                data: {
+                    profile_order: profile_order
+                },
+                error: function() {
+                },
+                success: function(data) {
+                },
+                type: 'GET'
+            });
+        }
+    });
+</script>

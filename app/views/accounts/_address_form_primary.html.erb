@@ -1,0 +1,158 @@
+<div class="row-fluid">
+  <div class="accounts_form_errors_container">
+
+  </div>
+ <div class="row-fluid">
+
+   <div class="span4 title-address">
+      <h6>Account Status</h6>
+   </div>
+   <div class="span3 top10 left30">
+     <%= get_active(current_user.active_braintree) %>
+   </div>
+
+
+  <div class="span12">
+     <div class="span4 title-address">
+        <h6>Start Date</h6>
+     </div>
+     <div class="span6 top10 left30">
+       <%= get_date(current_user) %>
+     </div>
+  </div>
+  <div class="span12">
+    <div class="span4 title-address">
+        <h6>Username</h6>
+     </div>
+     <div class="span6 top10 left30">
+       <%= current_user.username %>
+     </div>
+  </div>
+  <div class="span12">
+     <div class="span4 title-address">
+        <h6>Account Number</h6>
+     </div>
+     <div class="span6 top10 left30">
+       <%= get_account_number(current_user.account_number.to_i) %>
+     </div>
+  </div>
+  <div class="span12">
+     <div class="span4 title-address">
+        <h6>Phone Number</h6>
+     </div>
+     <div class="span6 top10 left30">
+       <%= current_user.phone %>
+     </div>
+  </div>
+
+  <div class="span12">
+     <div class="span4 title-address">
+        <h6>Primary Contact</h6>
+     </div>
+     <div class="span6 top10 left30">
+       <%= get_primary_contact(current_user) %>
+     </div>
+  </div>
+
+  <div class="span12">
+     <div class="span4 title-address">
+        <h6>Primary Email</h6>
+     </div>
+     <div class="span6 top10 left30">
+       <%= current_user.email %>
+     </div>
+  </div>
+
+  <div class="span12">
+     <div class="span4 title-address">
+        <h6>Restaurant Name</h6>
+     </div>
+     <div class="span6 top10 left30">
+       <%= current_user.profile.try(:restaurant_name) %>
+     </div>
+  </div>
+
+  <div class="span12">
+     <div class="span4 title-address">
+        <h6>Physical Address</h6>
+     </div>
+     <div class="span6 top10 left30">
+       <%= current_user.profile.physical_address %>
+     </div>
+  </div>
+  <!-- <div class="span12">
+     <div class="span4 title-address">
+        <h6>Physical City</h6>
+     </div>
+     <div class="span6 top10 left30">
+       <%= current_user.profile.physical_state %>
+     </div>
+  </div> -->
+  <div class="span12 left50">
+     <div class="span3">
+       <%= current_user.profile.physical_city %>
+     </div>
+     <div class="span3">
+       <%= current_user.profile.physical_zip %>
+     </div>
+     <div class="span3">
+      <%= current_user.profile.physical_state %>
+     </div>
+     <div class="span3">
+       <%= current_user.profile.physical_country %>
+     </div>
+  </div>
+
+  <div class="span12">
+     <div class="span4 title-address">
+        <h6>Mailing Address</h6>
+     </div>
+     <div class="span6 top10 left30">
+       <%= current_user.profile.mailing_address %>
+     </div>
+  </div>
+ <!--  <div class="span12">
+     <div class="span4 title-address">
+        <h6>Mailing City</h6>
+     </div>
+     <div class="span6 top10 left30">
+       <%= current_user.profile.mailing_state %>
+     </div>
+  </div> -->
+  <div class="span12 left50">
+     <div class="span3">
+       <%= current_user.profile.mailing_city %>
+     </div>
+     <div class="span3">
+       <%= current_user.profile.mailing_zip %>
+     </div>
+     <div class="span3">
+        <%= current_user.profile.mailing_state %>
+     </div>
+     <div class="span3">
+       <%= current_user.profile.mailing_country %>
+     </div>
+  </div>
+  <div class="row-fluid">
+    <div class="span9">
+    </div>
+    <div class="span3">
+      <%if current_user.active_braintree == false %>
+        <%= link_to 'Edit', '', :class => 'btn span12 btn-primary btn-size', :remote => true,  :disabled => true %>
+      <% else %>
+          <%= link_to 'Edit', edit_accounts_path, :class => 'btn span12 btn-primary btn-size', :remote => true,  :disabled => false %>
+      <% end %>
+    </div>
+  </div>
+ </div>
+</div>
+
+<script type="text/javascript">
+  var AccountObj = {
+    'accountNewRecord' : "<%=current_user.new_record? %>",
+    'dbState' : "<%=current_user.profile.physical_state%>",
+    'dbCountry' : "<%=current_user.profile.physical_country%>",
+    'dbMailingState' : "<%=current_user.profile.mailing_state%>",
+    'dbMailingCountry' : "<%=current_user.profile.mailing_country%>",
+  };
+</script>

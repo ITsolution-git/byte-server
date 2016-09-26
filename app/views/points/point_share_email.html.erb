@@ -1,0 +1,20 @@
+<h1>New acccount</h1>
+
+<%= form_for @user, :url => {:action => "friend_regis_sharepoint", :id => @user}, :method => "post" do |f| %>
+    <%= hidden_field_tag :current_user, @current_user.id %>
+    <%= hidden_field_tag :point, @point %>
+    <%= hidden_field_tag :restaurant_id, @restaurant_id %>
+    <div class="field">
+      <%= f.label :username %><br />
+      <%= f.text_field :username,:placeholder=>"username" %>
+    </div>
+    <div class="field">
+      <%= f.label :email %><br />
+      <%= f.email_field :email,:placeholder=>"email" %>
+    </div>
+    <div class="field">
+      <%= f.label :password %><br />
+      <%= f.password_field :password,:placeholder=>"password" %>
+    </div>
+    <%= f.submit "Create" %>
+<% end %>

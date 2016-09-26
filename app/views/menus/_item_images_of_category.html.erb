@@ -1,0 +1,30 @@
+<div id="myCarousel" class="carousel slide item-image">
+  <div class="carousel-inner">
+    <% items.each_with_index do |item, index| %>
+      <div class="item <%= 'active' if index == 0 %>" id="item_<%= item.id %>" data-item="<%= item.id %>">
+          <div class="row-fluid">
+            <% if not item.item_photos[0].nil?  and not item.item_photos[0].photo.nil? and not item.item_photos[0].photo.public_id.nil? %>
+                <%= cl_image_tag item.item_photos[0].photo.public_id, version: item.item_photos[0].photo.version, transformation: [ 
+                  { width: 200, height: 200, crop: 'fill' },
+                  { x: (item.item_photos[0].photo.crop_x if item.item_photos[0].photo.crop_x), y: (item.item_photos[0].photo.crop_y if item.item_photos[0].photo.crop_y), width: (item.item_photos[0].photo.crop_w if item.item_photos[0].photo.crop_w), height: (item.item_photos[0].photo.crop_h if item.item_photos[0].photo.crop_h), crop: :crop}, 
+                  {angle: item.item_photos[0].photo.angle}] %>
+            <% else %>
+                <% if not item.item_images[0].nil? and not item.item_images[0].image.to_s.empty? %>
+                    <%= image_tag(item.item_images[0].image.url(:primary) + "?time=#{DateTime.now.second}") %>
+                <% else %>
+                    <%= image_tag('load_img_256.png') %>
+                <% end %>
+            <% end %>
+          </div><!--/row-fluid-->
+      </div><!--/item-->
+    <% end %>
+  </div><!--/carousel-inner-->
+
+  <ol class="carousel-indicators <%= 'hide' if items.length == 1 %>">
+    <% items.each_with_index do |id, index| %>
+      <li data-target="#myCarousel" data-slide-to="<%= index %>" class="<%= 'active' if index == 0 %>"></li>
+    <% end %>
+  </ol>
+  <a class="left carousel-control <%= 'hide' if items.length == 1 %>" href="#myCarousel" data-slide="prev">‹</a>
+  <a class="right carousel-control <%= 'hide' if items.length == 1 %>" href="#myCarousel" data-slide="next">›</a>
+</div>

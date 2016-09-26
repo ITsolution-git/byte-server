@@ -1,0 +1,65 @@
+$('#location_logo_form .crop-btn').html('<a href="#" class="btn"></a><%=image_tag("btn_rotate.png", :id => @location_logo.id, :class => 'rotate_location_logo top10 ')%>');
+$('#location_logo_form').find(".selectedfile").text('<%= @location_logo.image.file.filename %>');
+$('#location_logo_form').find('.img-item-preview').html('<%= image_tag(@location_logo.image_url(:primary) + "?time=#{DateTime.now.second}", :id=>'image_location_logo', :class => @location_logo.id) if @location_logo.image.file %>');
+
+var image_resize = Util.resize_image(<%= @location_logo.image.width %>, <%= @location_logo.image.height %>);
+
+var width = image_resize['width'];
+var height = image_resize['height'];
+if (width > height){
+  $('#location_logo_form').find('.img-item-preview #image_location_logo').css({
+    'width': (parseInt(width)==0) ? "auto" :  parseInt(width)/3+'px',
+    'height': parseInt(height)/3+'px'
+  });
+} else {
+  $('#location_logo_form').find('.img-item-preview #image_location_logo').css({
+    'width': (parseInt(width)==0) ? "auto" :  parseInt(width)/4+'px',
+    'height': parseInt(height)/4+'px'
+  });
+}
+
+$("#modal_holder_location_logo_form").html("<%= j render partial: "layouts/modal_image_crop",locals: {
+  heading: "Preview",
+  form: "location_logo_form"
+  } %>");
+var image = Util.resize_image(<%= @location_logo.image.width %>, <%= @location_logo.image.height %>);
+$('#location_logo_form #location_logo_rate').val(image['rate']);
+$('#myModal_image_location_logo_form .modal-body p').html('<img width="' + image['width'] + '" height="' + image['height'] + '" width_image="' + image['width'] + '" height_image="' + image['height'] + '" src="<%= @location_logo.image.url if @location_logo.image.file %>" />');
+$('.crop-helper').html("<%= j render partial: 'shared/crop_helper', locals: {:model => 'location_logo'} %>");
+
+
+// var value = 0;
+//   $(".rotate_location_logo").click(function(){
+//     console.log('vao')
+//      value +=90;
+//      if(value > 360){
+//       value = 90;
+//      }
+//      $("#image_location_logo").rotate({ angle:value});
+//      $('#myModal_image_location_logo_form .modal-body img').rotate({ angle:value});
+
+//      var id =$('#image_location_logo').attr('class')
+//     $.ajax({
+//       url: '/restaurants/rotate_logo',
+//       data: {logo: id, direction: value}, 
+//       type: 'POST',
+//       //success: function (dataCheck) {
+//       //   var image = Util.resize_image(<%= @location_logo.image.width %>, <%= @location_logo.image.height %>);
+//       //   console.log(image)
+//       //}
+//     });
+           //alert( $("#image_location_logo").attr('style'));
+           //if(value == 90){
+            
+             //$("#image_location_logo").css({ 'transform-origin':'62% 70% 0'});
+           //}
+           //else if(value == 270){
+             //$("#image_location_logo").css({ 'transform-origin':'112% 54% 0'});
+          // }
+           //else{
+            
+            
+           //}
+
+         
+        // });p

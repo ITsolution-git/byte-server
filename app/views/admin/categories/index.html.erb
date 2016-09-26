@@ -1,0 +1,28 @@
+<h1>Listing <%=@categories.count %> categories</h1>
+
+<table>
+  <tr>
+    <th>id</th>
+    <th>name</th>
+    <th>description</th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+  <% @categories.each do |category| %>
+      <tr>
+        <td><%= category.id %></td>
+        <td><%= category.name %></td>
+        <td><%= link_to 'Show', admin_category_path(category) %></td>
+        <td><%= link_to 'Edit', edit_admin_category_path(category) %></td>
+        <td><%= link_to 'Destroy', admin_category_path(category), method: :delete, data: { confirm: 'Are you sure? all menu items under this category will be deleted too.' } %></td>
+      </tr>
+  <% end %>
+</table>
+
+<br />
+
+<%= link_to 'New category', new_admin_category_path %>
+<%= link_to 'Back', admin_path%>

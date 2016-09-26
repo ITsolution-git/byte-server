@@ -1,0 +1,21 @@
+<ul style="list-style-type: none;">
+  <li><%= select("user", "location_id", locations.collect {|l| [ l.name, l.id ] }, {:prompt=> 'Move Account', :id=> "user_restaurant"}) %></li>
+  <br>
+  <li>
+    <select name="user[status]" id="user_status">
+      <option value="">Change Status</option>
+      <option selected="selected" value="<%= user_account.id %>_Active">Active</option>
+      <option value="<%= user_account.id %>_Suspended">Suspended</option>
+    </select>
+  </li>
+  <br>
+  <li>
+    <button type="button" class="btn btn-primary btn-lg" id="change_passowrd_model" style="margin-left: 5%; width: 89%;" data-user-id="<%= user_account.id %>" data-location-name="<%= locations.first.try(:name) %>">
+      Change Password
+    </button>
+    <button type="button" class="btn btn-primary btn-lg" id="change-email-model" style="margin-left: 5%; margin-top: 10px; width: 89%;" data-user-id="<%= user_account.id %>" data-location-name="<%= locations.first.try(:name) %>">
+      Change Email
+    </button>
+    <%= link_to user_account.is_suspended? ? 'Unsuspend Account' : 'Suspend Account', admin_user_suspend_account_path(user_account), class: 'btn btn-primary btn-lg', id: 'suspend-account', style: 'margin-left: 5%; margin-top: 10px; width: 84%;', method: :put %>
+  </li>
+</ul>

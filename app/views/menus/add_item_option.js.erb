@@ -1,0 +1,30 @@
+<% if @check == true %>
+	<% if @cust_errors.nil? %>
+		<% if @item_option.errors.full_messages.any? %>
+			<% if remotipart_submitted? %>
+				$(".menu_option_form_errors_container").html("<%= j "#{render('layouts/form_errors',:object=>@item_option)}" %>").show().delay(3000).fadeOut();
+			<% else %>
+				$(".menu_option_form_errors_container").html("<%= j render("layouts/form_errors",:object=>@item_option) %>").show().delay(3000).fadeOut();
+			<% end %>
+			// validateMenuOption();
+		<% else %>
+			<% item_option = ItemOption.new %>
+			$('.menu_option_form_block_container .wrap_title_form').html("<%= j render partial: 'menus/menu_option_title_form', locals: {item_option: item_option} %>");
+			$('.menu_option_form_block_container #menu_option_toggle').html("<%= j render :partial=> 'menus/menu_option_form_primary' ,locals:{:item_option=>item_option} %>");
+			<% if remotipart_submitted? %>
+				$(".menu_option_form_errors_container").html("<%= j "#{render('layouts/form_success', :message => 'Menu Option is created successfully.')}" %>").show().delay(3000).fadeOut();
+				$(".item_form_block_container .wrap_title_form").html("<%= j render partial: 'item_title_form',locals: {:item=>@item, :item_image => @item_image} %>");
+				$(".item_form_block_container #item_form_toggle").html("<%= j render partial: 'item_form_primary',locals: {:item=>@item, :item_image => @item_image} %>");
+			<% else %>
+				$(".menu_option_form_errors_container").html("<%= j render('layouts/form_success', :message => 'Menu Option is created successfully.') %>").show().delay(3000).fadeOut();
+				$(".item_form_block_container .wrap_title_form").html("<%= j render partial: 'item_title_form',locals: {:item=>@item, :item_image => @item_image} %>");
+				$(".item_form_block_container #item_form_toggle").html("<%= j render partial: 'item_form_primary',locals: {:item=>@item, :item_image => @item_image} %>");
+			<% end %>
+		<% end %>
+	<%else%>
+		$(".menu_option_form_errors_container").html("<%= j render('layouts/form_error_message', :message => @cust_errors)%>").show().delay(3000).fadeOut();
+		$('#submit_menu_option_form').removeAttr("disabled", "");
+	<%end%>
+<% else %>
+	$(".menu_option_form_errors_container").html("<%= j render("layouts/form_error_agreement", :message => "The restaurant you were looking for does not exist in current user.")%>").show().delay(3000).fadeOut();
+<% end %>

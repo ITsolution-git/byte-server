@@ -1,0 +1,5 @@
+var image = Util.resize_image(<%= @item_key_image.image.width %>, <%= @item_key_image.image.height %>);
+$('#item_key_image_form #item_key_image_rate').val(image['rate']);
+
+$('#myModal_image_item_key_image_form .modal-body p').html('<img width="' + image['width'] + '" height="' + image['height'] + '" width_image="' + image['width'] + '" height_image="' + image['height'] + '" src="<%= @item_key_image.image.url if @item_key_image.image.file %>" />');
+$('.crop-helper').html("<%= j render partial: 'shared/crop_helper', locals: {:model => 'item_key_image'} %>");

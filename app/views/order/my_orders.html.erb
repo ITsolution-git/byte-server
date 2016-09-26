@@ -1,0 +1,753 @@
+
+  <div class="row-fluid">
+    <div class="span8">
+      <div class="row-fluid">
+        <div class="span12">
+          <div class="span3">
+            <select style="width: 140px;" name="date_filter" id="date_filter">
+              <option value="alldate">All days</option>
+              <option value="period" <% if params[:from] and params[:to] %>selected<% end %>>Choose a period</option>
+            </select>
+          </div>
+
+          <form id="order_by_daterange" accept-charset="UTF-8" action="" class="form-search" method="get" <% if not params[:from] and not params[:to] %>style="display: none;"<% end %>>
+
+          <div class="span4">
+            <div class="form-control">
+              <span style="font-weight:bold;padding-top: 6px;display: inline-block;">From&nbsp;</span><input type="text" id="from" name="from" readonly value="<%= params[:from] %>">
+            </div>
+          </div>
+          <div class="span4">
+            <div class="form-control">
+                  <span style="font-weight:bold;padding-top: 6px;display: inline-block;">To&nbsp;</span><input type="text" id="to" name="to" readonly value="<%= params[:to] %>">
+            </div>
+          </div>
+          <div class="span1">
+            <input type="submit" class="btn" disabled>
+            </div>
+         </form>
+
+
+        </div>
+
+
+      </div>
+
+    </div>
+    <div class="span4 pull-right">
+      <a href="my_orders.csv" class="csv-orders pull-left" data-html="true" data-toggle="tooltip" rel="tooltip" data-placement="right" title="Download order information" style="margin-right:5px;"><%= image_tag("/assets/csv-icon.png") %></a>
+      <a href="<%= my_orders_order_index_path %>" class="refresh-orders pull-left" data-html="true" data-toggle="tooltip" rel="tooltip" data-placement="right" title="Update order status"><%= image_tag("/assets/refresh-icon.jpg") %></a>
+
+      <form accept-charset="UTF-8" action="" class="form-search pull-right" method="get">
+          <input autocomplete="off" value="<%if params[:keyword] %><%= params[:keyword].gsub(/[^a-zA-Z0-9\-\.\s]/,"") %><% end %>" class="" id="search_order" name="keyword" placeholder="Search..." type="text">
+          <input class="btnSearchOrder" name="search" title="Go" type="submit">
+  </form>
+    </div>
+  </div>
+  <div id="transactions_summary" class="row-fluid">
+    <div class="span4">
+      <div class="order-box">
+        <span class="total_transations transaction-label"><%= @total_orders %></span>
+        <span class="transaction-value" style="font-weight:bold">TRANSACTIONS</span>
+      </div>
+    </div>
+    <div class="span4">
+      <div class="order-box">
+        <span class="transaction-label"><%= number_to_currency(@total_price) %></span>
+
+        <span class="transaction-value" style="color:#49b957;font-weight:bold">TOTAL COLLECTED</span>
+        </div>
+    </div>
+    <div class="span4">
+      <div class="order-box">
+        <span class="transaction-label"><%= number_to_currency(@net_price) %></span>
+        <span class="transaction-value" style="color:#49b957;font-weight:bold">NET SALES</span>
+      </div>
+    </div>
+  </div>
+
+<table class="contact_table_restaurant table table-striped table-hover" id="transactions_table">
+    <thead class="contactHeader">
+        <tr class="success">
+            <th class="image-arrows-paymenttype">
+              Payment Stattus
+              <%= image_tag 'arrows.png', :class=>'name-sort hide' %></th>
+            <th class="image-arrows-orderdate">
+              Order Date/Time
+              <%= image_tag 'arrows.png', :class=>'status-sort hide' %></th>
+            </th>
+            <th class="image-arrows-ordertime">
+              Pickup Date/Time
+              <%= image_tag 'arrows.png', :class=>'username-sort hide' %></th>
+            </th>
+            <th class="image-arrows-username">
+              User Name
+              <%= image_tag 'arrows.png', :class=>'point-sort hide' %></th>
+            </th>
+            <th class="image-arrows-userstatus">
+              User Status
+              <%= image_tag 'arrows.png', :class=>'email-sort hide' %></th>
+            </th>
+            <th class="image-arrows-phonenumber">
+              Phone Number
+              <%= image_tag 'arrows.png', :class=>'date-sort hide' %></th>
+            </th>
+            <th class="image-arrows-orderstatus">
+              Order Status
+              <%= image_tag 'arrows.png', :class=>'zipcode-sort hide' %></th>
+            </th>
+            <th class="image-arrows-vieworder">
+              View Order
+            </th>
+             <th class="image-arrows-price">
+              Total
+              <%= image_tag 'arrows.png', :class=>'account-sort hide' %></th>
+            </th>
+        </tr>
+    </thead>
+
+    <tbody>
+    <% if !@orders.empty? %>
+      <% @orders.each do |order| %>
+      <% unless order.nil? || order.is_paid.zero? %>
+             <tr>
+                <td class="payment-type"><% if order.payment_type == 'Credit Card' %><span style="display:none"><%= order.payment_type %></span><%="PAID" %><% else %><span style="display:none">Cash</span><%= image_tag("/assets/Cash.png", :width => '24px') %><% end %></td>
+                <td data-sorter="shortDate" data-date-format="yyyymmdd">
+                  <%= order.created_at.in_time_zone(order.timezone).strftime("%Y/%m/%d") %>
+                  <%= Time.parse(order.created_at.in_time_zone(order.timezone).strftime("%I:%M  %p")).strftime("%I:%M %p") %>
+                </td>
+                <td>
+                    <%= order.pickup_time.try(:strftime, "%Y/%m/%d %I:%M %p") %>
+                </td>
+                <td><% unless order.user.nil?%><%= link_to order.user.username, groupmessage_notification_index_path(:alert => 'GM', :restaurant => order.location_id, :user_contact=> order.user.id, :myorders => true)  %><%=  %> <% end %></td>
+                <td><% unless order.user.nil?%><%= User.get_current_status(order.location_id, order.user_id)%><% end %></td>
+                <td><% unless order.user.nil?%><%= order.phone.present? ? order.phone : order.user.phone %> <% end %></td>
+                <td>
+                  <% if order.status == 0 || order.status == 1 %>
+                    <a href="<%= change_status_order_index_path(:order_id => order.id) %>" class="change_order_status" data-method="get" data-remote="true"><%== order.get_current_order_status() %></a>
+                  <% else %>
+                    <%== order.get_current_order_status() %>
+                  <% end %>
+                </td>
+                <td> <%= link_to image_tag("/assets/vieworder.png"), view_order_order_index_path(:order_id => order.id), method: :get, :remote=> true, :class=>"view-order"  %></td>
+                <td><% if order.status==0 and order.is_paid==0 %><%= number_to_currency(Order.calculate_total_price(order)) %><% else %><%= number_to_currency(order.total_price) %><% end %>
+                  </td>
+            </tr>
+
+         <% end %>
+        <% end %>
+      <% else %>
+         <tr><td colspan="10" class="width-no-result"><h5>No Result Found</h5></td></tr>
+        <% end %>
+    </tbody>
+</table>
+
+<%if !@orders.blank? %>
+  <div class="pull-left"><%= paginate @orders %> </div>
+<% end %>
+<style type="text/css">
+.payment-type img, .pos-status img{
+  max-width: 24px;
+}
+.tooltip.top-left .tooltip-arrow {
+  bottom: -5px;
+  left: 5px;
+  border-width: 5px 5px 0;
+  border-top-color: black;
+}
+.tooltip.top-right .tooltip-arrow {
+  bottom: -5px;
+  right: 5px;
+  border-width: 5px 5px 0;
+  border-top-color: black;
+}
+.tooltip.bottom-left .tooltip-arrow {
+  top: -5px;
+  left: 5px;
+  border-width: 0 5px 5px;
+  border-bottom-color: black;
+}
+.tooltip.bottom-right .tooltip-arrow {
+  top: -5px;
+  right: 5px;
+  border-width: 0 5px 5px;
+  border-bottom-color: black;
+}
+
+.transaction-label {
+  text-align: left;
+  display: block;
+  font-size: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+.label-ordered:hover{
+  cursor: pointer;
+}
+.transaction-value {
+  font-weight: bold;
+  text-align: left;
+  display: block;
+  font-size: 14px;
+}
+td.payment-type{
+  vertical-align: middle;
+  text-align: center;
+}
+#order_by_daterange{
+
+}
+#view_order .order-status {
+width: auto!important;
+display: inline-block;
+height: 37px;
+line-height: 25px;
+}
+#order_by_daterange input[type=submit] {
+  text-indent: -999999px;
+  height: 30px;
+  width: 30px;
+  background: url(/assets/search-btn1.jpg);
+  background-size: 30px 30px!important;
+  background-position: 0px 29px;
+}
+
+.btnSearchOrder {
+  position: absolute;
+  right: -31px;
+  top: 0;
+}
+div#transactions_summary {
+  margin-bottom: 35px;
+  margin-top: 25px;
+}
+.btnSearchOrder {
+  text-indent: -999999px;
+  height: 30px;
+  width: 30px!important;
+  background: url(/assets/search_icon.png);
+  background-size: 30px 30px!important;
+  background-position: 0px 29px;
+  border-radius: 5px!important;
+}
+input#search_order {
+  width: 170px;
+  float: left;
+}
+#order_by_daterange input[type=submit].valid {
+  background: url(/assets/search-btn2.jpg);
+}
+.refresh-orders img {
+  border-radius: 5px;
+}
+.order-status {
+	color: white;
+	border-radius: 5px;
+	padding: 5px 25px;
+	box-sizing: border-box;
+	text-align: center;
+  width: 100%;
+  display: block;
+}
+.change_order_status:hover, .change_order_status:active, .change_order_status:visited, .change_order_status:focus{
+  text-decoration: none;
+}
+.label-new {
+	background: #eb4141;
+}
+.label-ordered {
+	background: #fc9e32;
+}
+.label-completed {
+	background: #96c742;
+}
+.label-inorder {
+	background: #746aa8;
+}
+.hasDatepicker + img {
+  position: absolute;
+  right: 0;
+  top: 0;
+  border-radius: 0 3px 3px 0;
+  height: 30px;
+}
+
+.form-control{
+  position: relative;
+}
+.form-control input[type=text]{
+  width: 70%!important;
+  float: right;
+}
+.btnSearchRestaurant{
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+form.form-search {
+position: relative;
+margin-right: 32px;
+}
+#transactions_summary > div {
+text-align: center;
+}
+.order-box {
+border: 1px solid #eee;
+border-radius: 5px;
+padding: 5px 40px;
+width: 140px;
+margin: 0 auto;
+box-shadow: 0 3px 6px #999;
+height: 56px;
+}
+#view_order {
+  margin: 0 auto;
+  float: none;
+  text-align: center;
+}
+
+.order-button-group a {
+  height: 35px;
+  background: white;
+  line-height: 35px;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  padding: 0 20px;
+}
+.modal-body{
+  max-height: 500px!important;
+}
+#order_details {
+  margin-top: 20px;
+  border: 2px solid #dcdbe0;
+  padding: 20px;
+  max-height: 300px;
+  overflow: auto;
+}
+.order-body table td {
+  text-align: left;
+  vertical-align: middle;
+}
+.order-body table {
+  width: 100%;
+}
+  .order-row label {
+width: 50%;
+text-align: left;
+float: left;
+}
+.order-row > div {
+width: 50%;
+float: left;
+text-align: right;
+}
+.order-row label.total{
+font-size: 20px;
+font-weight: bold;
+}
+.order-body {
+  border-top: 1px solid #eee;
+  margin-top: 20px;
+  padding-top: 20px;
+}
+.order-footer {
+  border-top: 1px solid #eee;
+  margin-bottom: 30px;
+  margin-top: 20px;
+}
+.full-receipt .order-row {
+float: left;
+width: 100%;
+}
+.full-receipt {
+  width: 100%;
+  clear: both;
+  overflow: hidden;
+  margin-top: 20px;
+  display: none;
+}
+.full-receipt.viewfull{
+  display: block;
+}
+a.btn.disblehover:hover {
+cursor: default;
+}
+span.refundbtn {
+height: 32px;
+line-height: 32px;
+display: inline-block;
+padding: 2px 15px;
+border-radius: 5px;
+background-color: white!important;
+border: 1px solid #b3b3b3;
+color: #999;
+margin-top: 2px;
+}
+.total-row {
+margin-top: 30px;
+}
+.pos-status img:hover {
+cursor: pointer;
+}
+</style>
+
+<% content_for :scripts do %>
+
+<script language = "Javascript">
+$(function(){
+
+  //$('#refresh-orders').tooltip();
+  $("#date_filter").on("change", function(){
+    if($(this).val() == "period"){
+      $("#order_by_daterange").show();
+    }
+    else{
+      window.location.href = '<%= url_for :controller => 'order', :action => 'my_orders' %>';
+      $("#order_by_daterange").hide();
+    }
+  });
+
+  $("#search_order").on("change paste keydown", function(e){
+    if(e.keyCode == 13){
+        $("#search_order").val($("#search_order").val().replace(/[&\/\\#,+()$~%'":*?<>{}]/g,''));
+    }
+
+
+  });
+
+  $(".btnSearchOrder").on("click", function(e){
+        $("#search_order").val($("#search_order").val().replace(/[&\/\\#,+()$~%'":*?<>{}]/g,''));
+  });
+
+  $(".csv-orders").on("click", function(e) {
+  });
+});
+
+var dtCh= "/";
+var minYear=1900;
+var maxYear=2100;
+
+function isInteger(s){
+  var i;
+    for (i = 0; i < s.length; i++){
+        // Check that current character is number.
+        var c = s.charAt(i);
+        if (((c < "0") || (c > "9"))) return false;
+    }
+    // All characters are numbers.
+    return true;
+}
+
+function stripCharsInBag(s, bag){
+  var i;
+    var returnString = "";
+    // Search through string's characters one by one.
+    // If character is not in bag, append to returnString.
+    for (i = 0; i < s.length; i++){
+        var c = s.charAt(i);
+        if (bag.indexOf(c) == -1) returnString += c;
+    }
+    return returnString;
+}
+
+function daysInFebruary (year){
+  // February has 29 days in any year evenly divisible by four,
+    // EXCEPT for centurial years which are not also divisible by 400.
+    return (((year % 4 == 0) && ( (!(year % 100 == 0)) || (year % 400 == 0))) ? 29 : 28 );
+}
+function DaysArray(n) {
+  for (var i = 1; i <= n; i++) {
+    this[i] = 31
+    if (i==4 || i==6 || i==9 || i==11) {this[i] = 30}
+    if (i==2) {this[i] = 29}
+   }
+   return this
+}
+
+function isDate(dtStr){
+  var daysInMonth = DaysArray(12)
+  var pos1=dtStr.indexOf(dtCh)
+  var pos2=dtStr.indexOf(dtCh,pos1+1)
+  var strYear=dtStr.substring(0,pos1)
+  var strMonth=dtStr.substring(pos1+1,pos2)
+  var strDay=dtStr.substring(pos2+1)
+  strYr=strYear
+  if (strDay.charAt(0)=="0" && strDay.length>1) strDay=strDay.substring(1)
+  if (strMonth.charAt(0)=="0" && strMonth.length>1) strMonth=strMonth.substring(1)
+  for (var i = 1; i <= 3; i++) {
+    if (strYr.charAt(0)=="0" && strYr.length>1) strYr=strYr.substring(1)
+  }
+  month=parseInt(strMonth)
+  day=parseInt(strDay)
+  year=parseInt(strYr)
+  if (pos1==-1 || pos2==-1){l
+    alert("The date format should be : yyyy/mm/dd")
+    return false
+  }
+  if (strMonth.length<1 || month<1 || month>12){
+    alert("Please enter a valid month")
+    return false
+  }
+  if (strDay.length<1 || day<1 || day>31 || (month==2 && day>daysInFebruary(year)) || day > daysInMonth[month]){
+    alert("Please enter a valid day")
+    return false
+  }
+  if (strYear.length != 4 || year==0 || year<minYear || year>maxYear){
+    alert("Please enter a valid 4 digit year between "+minYear+" and "+maxYear)
+    return false
+  }
+  if (dtStr.indexOf(dtCh,pos2+1)!=-1 || isInteger(stripCharsInBag(dtStr, dtCh))==false){
+    alert("Please enter a valid date")
+    return false
+  }
+return true
+}
+
+</script>
+<% if !@orders.empty? %>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('.refresh-orders').tooltip();
+      $(document).on("click", "#fullOrder", function(){
+        $(".full-receipt").toggleClass("viewfull");
+      })
+        if($(".alert-success").length!=0){
+          $(".alert-success").delay(3000).fadeOut();
+      }
+      if($(".alert-error").length!=0){
+          $(".alert-error").delay(3000).fadeOut();
+      }
+
+    var COOKIE_KEY = 'sort';
+    var COOKIE_KEY_MYORDER = 'sortMyOrder';
+
+
+
+    function getCookieSortList(cookieKey){
+        var sortCondition = undefined;
+        if (!jQuery.cookie(cookieKey)){
+          sortCondition = [];
+        } else{
+          sortCondition = JSON.parse(jQuery.cookie(cookieKey));
+        }
+        jQuery.cookie(cookieKey, JSON.stringify(sortCondition));
+        console.log("SORT COOKIE:", sortCondition);
+        return sortCondition;
+    }
+
+    function updateSortListToUI(tableId, sortList){
+        if (sortList.length > 0) {
+          $(tableId).trigger("sorton", [sortList]);
+        }
+    }
+
+    function convertHours(time){
+      var hours = Number(time.match(/^(\d+)/)[1]);
+      var minutes = Number(time.match(/:(\d+)/)[1]);
+      var AMPM = time.match(/\s(.*)$/)[1];
+      if(AMPM == "PM" && hours<12) hours = hours+12;
+      if(AMPM == "AM" && hours==12) hours = hours-12;
+      var sHours = hours.toString();
+      var sMinutes = minutes.toString();
+      if(hours<10) sHours = "0" + sHours;
+      if(minutes<10) sMinutes = "0" + sMinutes;
+      return parseInt(sHours + sMinutes);
+    }
+
+    function updateSortListData(sortList, sortDefault, index, cookieKey){
+        var isUpdate = false;
+        if (sortDefault && sortDefault.hasOwnProperty(index) && sortDefault[index] && sortDefault[index].hasOwnProperty('sorter') && sortDefault[index]['sorter'] == false){
+        } else{
+            if (sortList && sortList.length > 0){
+                for (var i = 0; i < sortList.length; i++) {
+                var sortItem = sortList[i];
+                if (sortItem[0] == index){
+                  var direction = sortItem[1];
+                  if (direction == 0){
+                    direction = 1;
+                  } else{
+                    direction = 0;
+                  }
+                  sortList[i] = [index, direction];
+                  isUpdate = true;
+                }
+              };
+            }
+            if (!isUpdate){
+              sortList = [];
+              sortList.push([index, 0]);
+            }
+        }
+        jQuery.cookie(cookieKey, JSON.stringify(sortList));
+        return sortList;
+    }
+
+
+  $.tablesorter.addParser({
+      // set a unique id
+      id: 'money',
+      is: function(s) {
+          // return false so this parser is not auto detected
+          return false;
+      },
+      format: function(s) {
+          return parseInt(s.replace(/\$/,'').replace(/\,/,''),10);
+      },
+      // set type, either numeric or text
+      type: 'numeric'
+  });
+    var sortDefault = {
+            dateFormat : "yyyymmdd",
+            8:{ sorter: false },
+            0:{
+               sortInitialOrder: "desc",
+            },
+            1:{
+                    sortInitialOrder: 'desc'
+                },
+            2:{
+                    sorter: 'shortDate',
+                    sortInitialOrder: 'desc'
+                },
+            3:{  sorter: false},
+
+            4:{
+               sortInitialOrder: "desc",
+            },
+            5:{
+               sortInitialOrder: "desc",
+            }
+            ,
+            9:{
+               sortInitialOrder: "desc",
+               sorter:'money'
+            }
+    };
+
+    var sortList = getCookieSortList(COOKIE_KEY);
+    $("#transactions_table").tablesorter({
+      headers: sortDefault
+    });
+    updateSortListToUI("#transactions_table", sortList);
+
+
+    $("#transactions_table thead th").on("click", function(){
+      // console.log('ok')
+      $('.btn-group').removeClass('open');
+      // changeOrder(sortList, $(this).index());
+      sortList = updateSortListData(sortList, sortDefault, $(this).index(), COOKIE_KEY);
+      updateSortListToUI("#transactions_table", sortList);
+    });
+
+      });
+  </script>
+<% end %>
+
+<script>
+  $(function() {
+
+function checkDateDifference(startDate, endDate) {
+    startDate = $.datepicker.parseDate('yy/mm/dd', startDate);
+    endDate = $.datepicker.parseDate('yy/mm/dd', endDate);
+
+    var difference = (endDate - startDate) / (86400000);
+    if (difference < 0) {
+        return false;
+    }
+    return true;
+
+}
+    $.datepicker.setDefaults({
+      showOn: "both",
+      buttonImageOnly: true,
+      buttonImage: "/assets/datepicker-icon.jpg",
+      buttonText: "Calendar"
+    });
+
+    $( "#from" ).datepicker({
+      defaultDate: "+1w",
+      changeMonth: true,
+      numberOfMonths: 1,
+      dateFormat: 'yy/mm/dd',
+      onClose: function( selectedDate ) {
+        var date2 = $('#from').datepicker('getDate');
+
+        if(date2){
+          date2.setDate(date2.getDate()+1);
+          $('#to').datepicker('setDate', date2);
+
+        }
+
+        $( "#to" ).datepicker( "option", "minDate", selectedDate );
+        //$( "#to" ).val(selectedDate);
+        var from = $( "#from" ).val(), to = $( "#to" ).val();
+        if(to != '' && from != '' && isDate(from) && isDate(to) && checkDateDifference(from, to)){
+            $('#order_by_daterange input[type=submit]').prop('disabled', false).addClass('valid');
+        }
+        else{
+          $('#order_by_daterange input[type=submit]').prop('disabled', true);
+        }
+      }
+    });
+
+    $( "#to" ).datepicker({
+      defaultDate: "+1w",
+      changeMonth: true,
+      numberOfMonths: 1,
+      dateFormat: 'yy/mm/dd',
+      onClose: function( selectedDate ) {
+        // $( "#from" ).datepicker( "option", "maxDate", selectedDate );
+         var from = $( "#from" ).val(), to = $( "#to" ).val();
+        if(to != '' && from != '' && isDate(from) && isDate(to) && checkDateDifference(from, to) ){
+            $('#order_by_daterange input[type=submit]').prop('disabled', false).addClass('valid');
+        }
+        else{
+          $('#order_by_daterange input[type=submit]').prop('disabled', true);
+        }
+      }
+    });
+    // .val($.datepicker.formatDate('yy/mm/dd', '<%= params[:to] %>'));
+
+  $.validator.addMethod("dateFormat",
+    function(value, element) {
+        return isDate(value);
+    },
+    "Please enter a date in the format yyyy/mm/dd.");
+
+    $('#order_by_daterange').validate({
+        rules: {
+            'from': { required: true, date: true, dateFormat: true },
+            'to': { required: true, date: true, isValid: true, dateFormat: true }
+        }
+    });
+
+
+  });
+  </script>
+<% end %>
+<div id="confirmation_dialog" class="modal hide fade" style="z-index: 999999999;">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><br>
+  </div>
+  <div class="modal-body">
+    <p>Are you sure you want to change status from <strong>Ordered</strong> to <strong>Completed</strong>?</p>
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="btn btn-primary">Yes</a>
+    <a href="javascript:void(0)" class="btn btn-danger" data-dismiss="modal" aria-hidden="true">No</a>
+  </div>
+</div>
+
+<div id="vieworder_dialog" class="modal hide fade">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><br>
+  </div>
+  <div class="modal-body">
+
+  </div>
+  <div class="modal-footer">
+    <a href="javascript:void(0)" class="btn" data-dismiss="modal" aria-hidden="true">Done</a>
+  </div>
+</div>

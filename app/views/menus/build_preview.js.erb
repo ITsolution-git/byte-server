@@ -1,0 +1,6 @@
+$("#modal_holder").html("<%= j render partial: "layouts/build_preview",locals: {
+    location: @restaurant,
+    menu: @menu,
+    device: @device
+    } %>");
+$("#myModal_menu_<%= @menu.id %>").modal();

@@ -1,0 +1,194 @@
+<% unless @order.nil?%>
+  <div id="view_order">
+
+    <div class="order-button-group">
+
+      <a href="<%= resend_receipt_order_index_path(:order_id => @order.id) %>" data-method="get" data-remote="true" class="btn">Resend Receipt</a>
+
+      <% if !@order.order_id.nil? && !@order.is_refunded %>
+        <button class="btn issue-refund" data-url="<%= payment_path(id: @order.id, access_token: current_user.authentication_token) %>">Issue Refund?</button>
+
+
+      <% else %>
+
+        <span class="refundbtn">Issue Refund</span>
+
+      <% end %>
+
+      <%== @order.get_current_order_status() %>
+
+    </div>
+
+    <div id="order_details">
+
+      <div class="order-header">
+
+        <% if @order.location.logo && @order.location.logo.try(:public_id) %>
+          <%= cl_image_tag @order.location.logo.fullpath, style: 'max-width:30%; max-height: 30%' %>
+        <% else %>
+          <img src="<%= image_path("/assets/logo-byte.jpg") %>">
+        <% end %>
+
+        <div class="order-time"><%= @order.created_at.in_time_zone(@order.timezone).strftime("%B %d, %Y") %> at <%= Time.parse(@order.created_at.in_time_zone(@order.timezone).strftime("%I:%M  %p")).strftime("%I:%M %p") %></div>
+
+
+      </div>
+        <div style="text-align:left; margin:10px 0px 0px">Ticket: #<%= @order.ticket %></div>
+      <div class="order-body" style="margin-top:5px;" >
+
+        <table>
+
+          <% @order_items.each do|order_item| %>
+
+            <tr>
+              <td class="item_name">
+                <strong><%= order_item.item.name %></strong>
+              </td>
+              <td><%= order_item.quantity %></td>
+
+
+              <td class="item-price" style="text-align: right;"> <% if order_item.use_point.to_f == 0%>
+                <%=number_to_currency(order_item.price.to_f * order_item.quantity, precision: 2)%>
+              <%else%>
+                <%=number_to_currency(0, precision: 2)%>
+              <%end%></td>
+            </tr>
+            <% if order_item.note.present? %>
+              <tr class="item-note">
+                <td colspan="3">
+                  <div class="comment-box">
+                    <h5>Comment:</h5>
+                    <div class="comment-text">
+                      <%= order_item.note %>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+            <% order_item.order_item_options.each do|order_item_option| %>
+              <tr class="item_option">
+                <td class="item_option_name">
+                  <%= order_item_option.item_option_addon_name %>
+                </td>
+                <td class="item_quantity">
+                  <%= order_item.quantity %>
+                </td>
+                <td class="item-price" style="text-align: right;"><%= number_to_currency(order_item_option.price.to_f * order_item.quantity) %></td>
+              </tr>
+            <% end %>
+          <% end %>
+        </table>
+
+      </div>
+
+      <div class="order-footer">
+
+
+
+        <div class="full-receipt viewfull">
+
+          <div class="order-row">
+
+            <label>Sub Total</label>
+
+            <div><%= number_to_currency(@order.sub_price.to_f, precision: 2) %></div>
+
+          </div>
+
+          <div class="order-row">
+
+            <label>Tax</label>
+
+            <div><% if @order.total_tax.to_i ==0 %><%= number_to_currency(@order.location.tax.to_f*@order.sub_price.to_f, precision: 2) %><% else %><%= number_to_currency(@order.total_tax.to_f, precision: 2) %><% end %></div>
+
+          </div>
+
+          <div class="order-row">
+
+            <label>Tip</label>
+
+            <% unless @order.total_tip.nil? %>
+
+              <% if @order.total_tip >= 0 && @order.tip_percent.to_f == -2 %>
+
+                <div><%= number_to_currency(@order.total_tip.to_f, precision: 2) %></div>
+
+              <%elsif @order.total_tip.to_f == -2 && @order.tip_percent.to_f >= 0 %>
+
+                <div><%=number_to_currency(@order.tip_percent.to_f * @order.sub_price.to_f, precision: 2)  %></div>
+              <%elsif @order.total_tip.to_f >= 0 || @order.tip_percent.to_f >= 0 %>
+                <div><%= number_to_currency(@order.total_tip.to_f, precision: 2) %></div>
+              <% end %>
+            <% else %>
+              <div>$0.00</div>
+            <%end%>
+
+          </div>
+
+          <div class="order-row">
+
+              <label>Service Fee</label>
+
+              <div><%= number_to_currency(@order.fee.to_f, precision: 2) %></div>
+
+          </div>
+
+        </div>
+
+        <div class="order-row total-row">
+
+          <label class="total"><strong  style="font-weight: bold;font-size: 18px;">Total</strong></label>
+
+          <div style="font-weight: bold;font-size: 18px;"><% if @order.status==0 and @order.is_paid==0 %><%= number_to_currency(Order.calculate_total_price(@order)) %><% else %><%= number_to_currency(@order.total_price) %><% end %></div>
+
+        </div>
+
+
+      </div>
+      <table class="table">
+        <% if @order.order_id.present? %>
+          <% transaction = Braintree::Transaction.find(@order.order_id) %>
+          <tr>
+            <td>Status</td>
+            <td><%= transaction.status %></td>
+          </tr>
+          <tr>
+            <td>Braintree Order Id</td>
+            <td><%= @order.order_id %></td>
+          </tr>
+          <tr class="order-row">
+            <td>Payment Type</td>
+            <td><%= transaction.credit_card_details.card_type %></td>
+          </tr>
+          <tr class="order-row">
+            <td>Cardholder Name</td>
+            <td><%= transaction.credit_card_details.cardholder_name %></td>
+          </tr>
+          <tr class="order-row">
+            <td>Credit Card Ends With</td>
+            <td><%= transaction.credit_card_details.last_4 %></td>
+          </tr>
+        <% end %>
+      </table>
+
+    </div>
+
+  </div>
+
+<% end %>
+<style type="text/css">
+span.refundbtn {
+  height: 32px;
+  line-height: 32px;
+  display: inline-block;
+  padding: 2px 15px;
+  border-radius: 5px;
+  background-color: white!important;
+  border: 1px solid #b3b3b3;
+  color: #999;
+  margin-top: 2px;
+}
+.order-row {
+  margin-top: 30px;
+}
+</style>

@@ -1,0 +1,18 @@
+    <div id="myModal" class="modal hide fade bottom0 modal-rating-receipt" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header delete_user_account">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      <h4 id="myModalLabel_delete"><%= heading.to_s %></h4>
+    </div>
+
+      <div class="modal-body">
+        <div class="row-fluid">
+          <div class="span12">
+            Receipt is valid. Do you want to send reward points to the diner?
+          </div>
+        </div>
+      </div>
+      <div class="modal-fotter-rating modal-footer">
+    <%= link_to 'Yes', action_ratingreceipt_restaurant_notification_path(:params => params), {method: :post,:remote => true, 'data-dismiss' =>  "modal", 'aria-hidden' => 'true', :class => 'btn btn-primary'} %>
+    <button class="btn btn-success" data-dismiss="modal" aria-hidden="true">No</button>
+  </div>
+  </div>

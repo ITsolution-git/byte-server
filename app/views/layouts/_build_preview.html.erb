@@ -1,0 +1,15 @@
+<div id="myModal_menu_<%= menu.id %>" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+
+  <div class="modal-body">
+  	<div class="wrapper-preview <%= if device == 'iPhone' then 'iphone' else 'android' end %>">
+      <%= render partial: 'menus/phone_preview_template', locals: {menu: menu, device: device, :location => location} %>
+    </div>
+    <div class="switch-phone">
+      <%= select_tag "switch_device", options_for_select([['iPhone','iPhone'], ['Android', 'Android']],'iPhone'), {:loc_id => location.id, :menu_id => menu.id, :category_id => @categories.first.id} %>
+    </div>
+  </div>
+<!--   <div class="modal-footer">
+    <button class="btn btn-success" data-dismiss="modal" aria-hidden="true">Close</button>
+  </div> -->
+</div>

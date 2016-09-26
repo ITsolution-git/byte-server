@@ -1,0 +1,36 @@
+$(".item_form_block_container").html("<%=  j render partial: "menus/item_form",locals: {item: @item, item_image: @item_image}%>");
+<% if @item.item_images.present? && @item_image.present? && @item_image.image.file.present?%>
+  $('#item_image_form .crop-btn').html('<a href="#" class="btn"></a><%=image_tag("btn_rotate.png", :id => @item_image.id, :class => 'rotate_item_image top10 ')%>');
+  $('#item_image_form').find(".selectedfile").text('<%= @item_image.image.file.filename %>');
+
+  <% if @item_image.image.present? %>
+    $('#item_image_form').find('.img-item-preview').html('<%= image_tag(@item_image.image_url(:primary) + "?time=#{DateTime.now.second}", :id=>'image_item_image', :class => @item_image.id) %>');
+  <% end %>
+
+  var image_resize = Util.resize_image(<%= @item_image.image.width %>, <%= @item_image.image.height %>);
+
+  var width = image_resize['width'];
+  var height = image_resize['height'];
+  if (width > height){
+    $('#item_image_form').find('.img-item-preview #image_item_image').css({
+      'width': parseInt(width)/2+'px',
+      'height': parseInt(height)/3+'px'
+    });
+  } else {
+    if (width > 0 && height > 0) {
+      $('#item_image_form').find('.img-item-preview #image_item_image').css({
+        'width': parseInt(width)/5+'px',
+        'height': parseInt(height)/6+'px'
+      });
+    }
+  }
+
+  $("#modal_holder_item_image_form").html("<%= j render partial: "layouts/modal_image_crop",locals: {
+    heading: "Preview",
+    form: "item_image_form"
+    } %>");
+  var image = Util.resize_image(<%= @item.item_images[0].image.width %>, <%= @item.item_images[0].image.height %>);
+  $('#item_image_form #item_image_rate').val(image['rate']);
+  $('#myModal_image_item_image_form .modal-body p').html('<img width="' + image['width'] + '" height="' + image['height'] + '" width_image="' + image['width'] + '" height_image="' + image['height'] + '" src="<%= @item.item_images[0].image.url if @item.item_images[0].image.file %>" />');
+  $('.crop-helper').html("<%= j render partial: 'shared/crop_helper', locals: {:model => 'item_image'} %>");
+<% end %>

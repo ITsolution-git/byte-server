@@ -1,0 +1,21 @@
+<h1>New dinner status</h1>
+
+<%= form_for @dinner, url: {action: "create"} do |f| %>
+    <div class="field">
+      <%= f.label :location_id %><br />
+      <%= f.text_field :location_id,:placeholder=>"location id" %>
+    </div>
+    <div class="field">
+      <%= f.label :types %><br />
+      <%= f.text_field :types,:placeholder=>"Point type" %>
+    </div>
+    <div class="field">
+      <%= f.label :point %><br />
+      <%= f.text_field :point,:placeholder=>"point" %>
+    </div>
+    <div class="field">
+      <%= f.label :key %><br />
+      <%= f.text_field :key,:placeholder=>"Key = 1 if Mymenu point" %>
+    </div>
+    <%= f.submit "Create" %>
+<% end %>

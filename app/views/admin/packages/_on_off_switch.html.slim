@@ -1,0 +1,12 @@
+.onoffswitch[
+  data-status-path="#{status_admin_package_path(package_id)}"
+]
+  input.onoffswitch-checkbox[
+    id="myonoffswitch-#{package_id}"
+    type='checkbox'
+    name='onoffswitch'
+    checked=('checked' if package_status)
+  ]
+    label.onoffswitch-label for="myonoffswitch-#{package_id}"
+      span.onoffswitch-inner
+      span.onoffswitch-switch

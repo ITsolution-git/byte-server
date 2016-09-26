@@ -1,0 +1,426 @@
+<!-- SparkLines -->
+<div id="sparklines" class="row-fluid">
+
+  <div class="row-fluid">
+    <div class="span4 text-center">
+      <div class="sparkline checkins active" data-type="checkins">
+        <div id="checkins-sparkline">
+        </div>
+        <span class="total-value"></span>
+        <div>Visits</div>
+      </div>
+    </div>
+    <div class="span4 text-center">
+      <div class="sparkline zipcodes" data-type="zipcodes">
+        <div id="zipcodes-sparkline">
+        </div>
+        <span class="total-value"></span>
+        <div>Zipcode</div>
+      </div>
+    </div>
+    <div class="span4 text-center">
+      <div class="sparkline feedbacks" data-type="feedbacks">
+        <div id="feedbacks-sparkline">
+        </div>
+        <span class="total-value"></span>
+        <div>Feedback</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row-fluid">
+    <div class="span4  text-center">  
+      <div class="sparkline favourites" data-type="favourites">
+        <div id="favourites-sparkline">
+        </div>
+        <span class="total-value"></span>
+        <div>Favourite</div>
+      </div>
+    </div>
+    <div class="span4 text-center">  
+      <div class="sparkline orders" data-type="orders">
+        <div id="orders-sparkline">
+        </div>
+        <span class="total-value"></span>
+        <div>Order</div>
+      </div>
+    </div>
+    <div class="span4 text-center">  
+      <div class="sparkline socials" data-type="socials">
+        <div id="socials-sparkline">
+        </div>
+        <span class="total-value"></span>
+        <div>Share</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row-fluid">
+    <div class="span4 text-center">  
+      <div class="sparkline new_customers" data-type="new_customers">
+        <div id="new_customers-sparkline">
+        </div>
+        <span class="total-value"></span>
+        <div>New Customer</div>
+      </div>
+    </div>
+    <div class="span4 text-center">  
+      <div class="sparkline returning_customers" data-type="returning_customers">
+        <div id="returning_customers-sparkline">
+        </div>
+        <span class="total-value"></span>
+        <div>Returning Customer</div>
+      </div>
+    </div>
+    <div class="span4 text-center">  
+      <div class="sparkline redeemed_prizes" data-type="redeemed_prizes">
+        <div id="redeemed_prizes-sparkline">
+        </div>
+        <span class="total-value"></span>
+        <div>Redeemed Prize</div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End of Sparkline -->
+
+<!-- Options of Charts -->
+<div id="chart-type" class="row-fluid">
+  <div class="span5 offset1">
+    <div id="date-range">
+      <a href='#' class="range-filter active" data-type="year">Year</a>
+      <a href='#' class="range-filter" data-type="month">Month</a>
+      <a href='#' class="range-filter" data-type="week">Week</a>
+      <a href='#' class="range-filter" data-type="day">Day</a>
+    </div>
+  </div>
+  <div class="span6">
+
+    <%= select_tag "menu_item", options_from_collection_for_select(@menu_items, 'id', 'name'), class: "select-menus", prompt: "Menu Item" %>
+    <%= select_tag "prize_item", options_from_collection_for_select(@prizes, 'id', 'name'), class: "select-menus", prompt: "Prize Item" %>
+    
+
+
+  </div>
+</div>
+<!-- End of Options -->
+
+<!-- Title of Linechart -->
+<div id="linechart-title" class="row-fluid">
+  <h4 class="text-center">
+    Past <%= select_tag "period_item", options_for_select(1..99) %><div id="chart-filter-title" class="chart-title" ></div>(s) ago : <div id="total-value-title" class="chart-title" ></div> <div id="chart-type-title" class="chart-title" ></div>
+  </h4>
+</div>
+<!-- End of Title -->
+
+<!-- Linechart -->
+<div class="row-fluid">
+  <div class="span12">
+    <div id="linechart" style="height: 400px;">
+    </div>
+  </div>
+</div>
+<!-- End of Linechart -->
+
+
+<%= javascript_include_tag 'jquery.flot/jquery.flot' %>
+<%= javascript_include_tag 'jquery.flot/jquery.flot.time' %>
+<%= javascript_include_tag 'jquery.flot/jquery.flot.tooltip' %>
+<%= javascript_include_tag 'jquery.sparkline' %>
+<script type="text/javascript">
+  $(document).ready(function() {
+
+    var rangeFilter = 'year';
+    var chartType = 'checkins';
+    var feedback_grades_tip;
+
+    var restaurantId = "<%= @restaurant.id %>";
+    
+    var total_values = [];
+    var chartData = [];
+    var max_period_value = {
+      year: 10,
+      month: 120,
+      week: 500,
+      day: 366
+    }
+
+    var updateTotalValues = function(data) {
+      $.each(data, function(key, value) {
+        var sum = 0;
+        $.each(value, function(i, v) {
+          sum += v[1];
+        });
+        total_values[key] = sum;
+        chartData[key] = value;
+      });
+      $('.sparkline').each(function(index) {
+        var type = $(this).data('type');
+        $(this).children('.total-value').text(total_values[type]);
+      });
+    };
+
+    var updateChartTitle = function() {
+      var title = {
+        checkins: 'Visits',
+        zipcodes: 'Zipcodes',
+        feedbacks: 'Feedbacks',
+        favourites: 'Favourites',
+        orders: 'Orders',
+        new_customers: 'New Customers',
+        returning_customers: 'Returning Customers',
+        socials: 'Social Shares',
+        redeemed_prizes: 'Redeemed Prizes'
+      }
+
+      // var chartTitle = 'Past ' + '<select id="period_item" name="period_item" ></select>' +
+      // rangeFilter + '(s) ago : ' + total_values[chartType] + ' ' + title[chartType];
+      // $('#linechart-title h4').html(chartTitle)
+      $('#chart-filter-title').text(rangeFilter)
+      $('#total-value-title').text(total_values[chartType])
+      $('#chart-type-title').text(title[chartType])
+      // $('#period_item').find('option').remove()
+      // for (i = 1; i < 10; i++) {
+      //   $('#period_item').append($("<option></option>").attr("value", i).text(i));
+      // }
+    }
+
+    var rating_to_letter_grade = function(rating) {
+
+        switch (rating | 0) {
+          case 1: return "A+";
+          case 2: return "A";
+          case 3: return "A-";
+          case 4: return "B+";
+          case 5: return "B";
+          case 6: return "B-";
+          case 7: return "C+";
+          case 8: return "C";
+          case 9: return "C-";
+          case 10: return "D+";
+          case 11: return "D";
+          case 12: return "D-";
+          case 13: return "F";
+          default: return "";
+        }
+
+        return "";
+    }
+
+    var tooltip_func = function(label, xval, yval, flotItem) {
+      if (chartType == 'feedbacks') {
+        return feedback_grades_tip[xval] || "0";
+      }
+      return '' + yval;
+    };
+
+    var updateChart = function(data) {
+      updateTotalValues(data);
+      updateChartTitle();
+      updateChartOptions(chartType);
+
+      /* start of linechart setting */
+      var formatTypes = {
+        year: '%b',
+        month: '%b %d',
+        week: '%b %d',
+        day: '%I %P'
+      };
+      var tickSizeTypes = {
+        year: [1, 'month'],
+        month: [3, 'day'],
+        week: [1, 'day'],
+        day: [1, 'hour']
+      };
+      var chartColor = {
+        checkins: 'green',
+        zipcodes: 'blue',
+        feedbacks: 'brown',
+        favourites: 'purple',
+        orders: 'olive',
+        socials: 'magenta',
+        new_customers: 'navy',
+        returning_customers: 'red',
+        redeemed_prizes: 'darkgreen'
+      };
+
+      $.plot('#linechart', [chartData[chartType]], {
+        lines: {
+          show: true,
+        },
+        points: {
+          show: true,
+          fill: true,
+          fillColor: chartColor[chartType]
+        },
+        yaxis: {
+          min: 0
+        },
+        xaxis: {
+          mode: "time",
+          timeformat: formatTypes[rangeFilter],
+          tickSize: tickSizeTypes[rangeFilter],
+          tickLength: 0
+        },
+        grid: {
+          borderWidth: {top: 0, right: 0, left: 1, bottom: 1},
+          hoverable: true
+        },
+        tooltip: {
+          show: true,
+          content: tooltip_func
+        },
+        colors: [chartColor[chartType]]
+      });
+      /* end of linechart setting */
+
+      /* start of sparkline chart setting*/
+      var barWidth = {
+        year: 2,
+        month: 3,
+        week: 5,
+        day: 4
+      };
+      var barSpacing = {
+        year: 1,
+        month: 2,
+        week: 18,
+        day: 2
+      };
+
+      $.each(data, function(key, value) {
+        if (key == 'feedback_ratings') return ;
+
+        sparkData = value.map(function(c) { return c[1]; });
+        $('#' + key + '-sparkline').sparkline(sparkData, { 
+          type: 'bar',
+          height: '30',
+          barWidth: barWidth[rangeFilter], 
+          barSpacing: barSpacing[rangeFilter], 
+          barColor: chartColor[key]
+        });
+      });
+
+      feedback_grades_tip = {};
+      $.each(data.feedback_ratings, function(xval, value) {
+        tip = '';
+        $.each(value, function(rating, count) {
+          if (count > 0) {
+            if (tip != '') tip += ', ';
+            tip += count + ' - ' + rating_to_letter_grade(rating);
+          }
+        });
+        if (tip == '') tip = "0";
+        feedback_grades_tip[xval] = tip;
+      });
+      /* end of setting sparkline chart */
+
+    };
+
+    var refreshChart = function(range) {
+      var itemId = $('#menu_item').val();
+      var prizeId = $('#prize_item').val();
+      var periodId = $('#period_item').val();
+
+      $.ajax({
+        url: "/restaurants/" + restaurantId + "/dashboard",
+        method: 'GET',
+        dataType: 'json',
+        data: {
+            filter: rangeFilter,
+            item_id: itemId,
+            prize_id: prizeId,
+            period_id: periodId,
+            chartType: chartType
+        }
+      }).done(function (data) {
+        updateChart(data);
+      }).fail(function (jqXHR, textStatus, errorThrown) {
+        alert('failed');
+      });
+    };
+
+    refreshChart(rangeFilter);
+
+    $("#date-range .range-filter").on('click', function(e) {
+      e.preventDefault();
+      $('#date-range .range-filter').removeClass('active');
+      $(this).addClass('active');
+      rangeFilter = $(this).data('type');
+
+      refreshChart(rangeFilter);
+    });
+
+    var updateChartOptions = function(chartType) {
+      $('#menu_item').hide();
+      $('#prize_item').hide();
+
+      if (chartType == 'checkins' || chartType == 'zipcodes' || chartType == 'shares' || chartType == 'new_customers' || chartType == 'returning_customers' ) {
+        $('#menu_item').val("");
+        $('#prize_item').val("");
+      } else if (chartType == 'feedbacks' || chartType == 'favourites' || chartType == 'orders' ) {
+        $('#menu_item').show();
+      } else if (chartType == 'redeemed_prizes') {
+        $('#prize_item').show();
+      } 
+    };
+
+    $("#sparklines .sparkline").on('click', function(e) {
+      e.preventDefault();
+      $('#sparklines .sparkline').removeClass('active');
+      $(this).addClass('active');
+      chartType = $(this).data('type');
+
+      
+      refreshChart(rangeFilter);
+    });
+
+
+    $('#menu_item').on('change', function (e) {
+      refreshChart(rangeFilter);
+    });
+
+    $('#prize_item').on('change', function (e) {
+      refreshChart(rangeFilter);
+    });
+
+    $('#period_item').on('change', function (e) {
+      refreshChart(rangeFilter);
+    });
+  });
+</script>
+
+<style type="text/css">
+  
+#date-range .range-filter {
+  margin-right: 15px;
+}
+
+#chart-type {
+  margin-top: 50px;
+  margin-bottom: 30px;
+}
+
+.select-menus {
+  float: right;
+  margin-right: 15px;
+  display: none;
+}
+
+#date-range .range-filter.active {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+#sparklines {
+  margin-top: 20px;
+}
+
+#period_item {
+  width: initial;
+}
+
+.chart-title {
+  display: inline;
+}
+</style>

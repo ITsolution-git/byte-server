@@ -1,0 +1,8 @@
+
+// <% if @location_social.nil?%>
+//   <% flash[:notice] = "Create successfully." %>
+// <% else %>
+//   <% flash[:notice] = "Update successfully." %>
+// <% end %>
+<% flash[:notice] = "The settings are saved successfully" %>
+window.location.href="<%= socical_points_path(restaurant_id: @restaurant.id) %>"

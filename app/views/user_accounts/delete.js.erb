@@ -1,0 +1,8 @@
+  //load modal
+  //alert(<%=@is_checked%>)
+$("#modal_holder_user_account").html("<%= j render partial: "layouts/delete_user_account",locals: {
+    :heading => "Delete",
+     :user_account_array => @user_account_array,
+     :is_checked => @is_checked
+    } %>");
+$("#myModal").modal();

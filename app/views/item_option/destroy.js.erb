@@ -1,0 +1,9 @@
+<%
+  item_option = ItemOption.new
+%>
+$('.menu_option_form_block_container .wrap_title_form').html("<%= j render partial: 'menus/menu_option_title_form', locals: {item_option: item_option} %>");
+$('.menu_option_form_block_container #menu_option_toggle').html("<%= j render :partial=> 'menus/menu_option_form_primary' ,locals:{:item_option=>item_option} %>");
+
+$('.item_form_block_container .wrap_title_form').html("<%= j render :partial=>"menus/item_title_form" ,locals:{:item => @item, :item_image => @item_image} %>");
+$('.item_form_block_container #item_form_toggle').html("<%= j render :partial=>"menus/item_form_primary" ,locals:{:item => @item, :item_image => @item_image} %>");
+$(".menu_option_form_errors_container").html('<%= j render("layouts/form_success", :message => "Menu Option is deleted successfully.") %>').show().delay(3000).fadeOut();

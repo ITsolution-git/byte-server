@@ -1,0 +1,49 @@
+<% if device == 'iPhone' %>
+  <div class="item_<%= @item.id %>">
+    <div class="info">
+      <div class="item-name"><%= @item.name %></div>
+      <div class="item-review">
+        <div class="rating">A+</div>
+        <div class="review">1 Review</div>
+      </div>
+    </div>
+    <p class="price"><%= number_to_currency(@item.price) %></p>
+  </div>
+<% else %>
+  <div class="favor-rating-ic"></div>
+  <%= image_tag('favor_ic.png', :class => 'favor-ic') %>
+  <%= image_tag('rating_ic.png', :class => 'rating-ic') %>
+  <div class="wrap-share-ic"></div>
+  <%= image_tag('share_ic.png', :class => 'share-ic') %>
+  <div class="item-key-messages">
+    <% if not @item.item_keys.nil? %>
+      <% @item.item_keys.each do |item_key| %>
+        <span class="item-key-image"><%= image_tag(item_key.item_key_image.image_url(:primary) + "?time=#{DateTime.now.second}") if item_key.item_key_image.image.file %></span>
+      <% end %>
+    <% end %>
+    <% if not @item.special_message.to_s.empty? %>
+      <span class="item-special-message"><%= @item.special_message %></span>
+    <% end %>
+  </div>
+  <div class="info">
+    <p class="location-name"><%= @item.name %></p>
+    <p class="location-phone"><%= number_to_currency(@item.price) %></p>
+    <p class="location-address"><%= @item.description %></p>
+    <p class="location-footer">
+      <span class="operation">Calories: <%= @item.calories ||= 0 %></span>
+      <span class="bio">Points: 
+      <% if @item.reward_points.to_s.empty? %>
+        <% if @category.category_points.to_s.empty? %>
+          <% if not @menu.reward_points.to_s.empty? %>
+            <%= @menu.reward_points ||= 0 %>
+          <% end %>
+        <% else %>
+          <%= @category.category_points %>
+        <% end %>
+      <% else %>
+        <%= @item.reward_points %>
+      <% end %>
+      </span>
+    </p>
+  </div>
+<% end %>

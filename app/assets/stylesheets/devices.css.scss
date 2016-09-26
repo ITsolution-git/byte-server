@@ -1,0 +1,23 @@
+// Place all the styles related to the Devices controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+input {
+  border-radius: 0 !important;
+  margin-top: -1px;
+}
+input[type="image"]:focus {
+  border: none;
+  outline: none;
+}
+#user_username {
+  border-radius: 5px 5px 0 0 !important;
+}
+#user_password {
+  border-radius: 0 0 5px 5px !important;
+}
+#showpwd {
+  float: right;
+  cursor: pointer;
+  text-decoration: underline;
+}

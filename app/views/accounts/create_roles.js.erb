@@ -1,0 +1,20 @@
+<%
+  if @location_ids.nil?
+%>
+   $(".roles_form_errors_container").html("<%= j render("layouts/form_error_agreement", :message => "Manager must be assigned to a restaurant")%>").show().delay(3000).fadeOut();
+<% else %>
+  <% if @info.errors.full_messages.any? %>
+    <% if remotipart_submitted? %>
+      $(".roles_form_errors_container").html("<%= j "#{render('layouts/form_errors', :object=>@info)}"%>").show().delay(3000).fadeOut();
+    <% else %>
+      $(".roles_form_errors_container").html('<%= j render("layouts/form_errors",:object=>@info)%>').show().delay(3000).fadeOut();
+    <% end %>
+  <% else %>
+  <%
+     @info = Info.new
+     @info_avatar = @info.build_info_avatar
+  %>
+   $('.roles_form_block_container #roles_form_toggle').html("<%= j render partial: "accounts/roles_form_primary", locals: {info: @info} %>");
+   $(".roles_form_errors_container").html("<%= j render("layouts/form_success", :message => "Account is created successfully")%>").show().delay(3000).fadeOut();
+  <% end %>
+<% end %>

@@ -1,0 +1,7 @@
+$('#accounts_container').html("<%= j render("users") %>");
+<% if @account.errors.full_messages.any? %>
+$(".form_errors_container").html("<%= j render("layouts/form_errors",:object=>@account) %>");
+<% else %>
+$(".form_errors_container").html("<%= j render("layouts/form_success",:message=>"Account Successfully Created") %>");
+$('#user_form')[0].reset();
+<% end %>

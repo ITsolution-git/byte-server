@@ -1,0 +1,346 @@
+<div class="manage_contests row-fluid" style="opacity:0;">
+    <div id="tabs" style="border:none;">
+        <ul class="tabs-nav" style="border:none; background:#fff;">
+            <li><a href="#tabs-1">Summary</a></li>
+            <li><a href="#tabs-2">Details</a></li>
+            <li><a href="#tabs-3">Photos</a></li>
+        </ul>
+        <div id="tabs-1" style="padding:5px 0px;">
+          <div class="contest-content span7">
+              <table class="contact_table_restaurant table table-striped table-hover" id="transactions_table">
+                  <thead class="contactHeader">
+                      <tr class="success">
+                          <th class="image-arrows-paymenttype">
+                            Contest Name
+                          <th class="image-arrows-orderdate">
+                            Contestant
+                          </th>
+                          <th class="image-arrows-ordertime">
+                            Photos
+                          </th>
+                          <th class="image-arrows-username">
+                            FaceBook
+                          </th>
+                          <th class="image-arrows-userstatus">
+                            Twitter
+                          </th>
+                          <th class="image-arrows-phonenumber">
+                            Instagram
+                          </th>
+                          <th class="image-arrows-orderstatus">
+                            Grades
+                          </th>
+                          <th class="image-arrows-vieworder">
+                            Total Actions
+                          </th>
+                      </tr>
+                  </thead>
+
+                  <tbody>
+                    <% if @summary.count > 0 %>
+                      <% @summary.each do |s| %>
+                        <tr>
+                          <td><%=s["contest_name"] %></td>
+                          <td><%=s["user_name"] %></td>
+                          <td><%=s["photo_action"]%></td>
+                          <td><%=s["facebook_action"]%></td>
+                          <td><%=s["twitter_action"]%></td>
+                          <td><%=s["instagram_action"]%></td>
+                          <td><%=s["grade_action"]%></td>
+                          <td><%=s["total_action"]%></td>
+                        </tr>
+                      <% end %>
+                    <% end %>
+                  </tbody>
+              </table>
+            </div>
+            <!--  -->
+        </div>
+        <div id="tabs-2" style="padding:5px 0px;">
+          <div style="float:right;">
+            <% if @contest.contest_actions.count > 0 %>
+              <% if @today.month != (@today + 2).month %>
+                  <%= link_to "Pick A Winner", "#", :class => "btn btn-contest-pick" %>&nbsp;
+              <% elsif @today.saturday? || @today.sunday? %>
+                  <%= link_to "Pick A Winner", "#", :class => "btn btn-contest-pick" %>&nbsp;
+              <% end %>
+              <%= link_to "Approve", "#", :class => "btn btn-contest-approve" %>&nbsp;
+              <%= link_to "Delete", "#", :class => "btn btn-contest-delete" %>&nbsp;
+              <%=link_to image_tag("contest_csv_icon.png"), "#{params[:id]}.csv" %>
+            <% end %>
+          </div>
+          <table class="contact_table_restaurant table table-striped table-hover" id="contest_action_table">
+              <thead class="contactHeader">
+                  <tr class="success">
+                      <th>
+                        <input type="checkbox" name="all">
+                      </th>
+                      <th class="image-arrows-firstname">
+                        First Name
+                        <%= image_tag 'arrows.png', :class=>'name-sort hide' %></th>
+                      <th class="image-arrows-lastname">
+                        Last Name
+                        <%= image_tag 'arrows.png', :class=>'name-sort hide' %></th>
+                      </th>
+                      <th class="image-arrows-email">
+                        Email
+                        <%= image_tag 'arrows.png', :class=>'name-sort hide' %></th>
+                      </th>
+                      <th class="image-arrows-restaurant">
+                        Restaurant
+                        <%= image_tag 'arrows.png', :class=>'name-sort hide' %></th>
+                      </th>
+                      <th class="image-arrows-menuitem">
+                        Menu Item
+                        <%= image_tag 'arrows.png', :class=>'name-sort hide' %></th>
+                      </th>
+                      <th class="image-arrows-type">
+                        Entry Type
+                        <%= image_tag 'arrows.png', :class=>'name-sort hide' %></th>
+                      </th>
+                      <th class="image-arrows-date">
+                        Date Submitted
+                        <%= image_tag 'arrows.png', :class=>'name-sort hide' %></th>
+                      </th>
+                      <th class="image-arrows-status">
+                        Status
+                        <%= image_tag 'arrows.png', :class=>'name-sort hide' %></th>
+                      </th>
+                  </tr>
+              </thead>
+
+              <tbody>
+                <% if !@contest.contest_actions.empty? %>
+                  <% @contest.contest_actions.each do |c| %>
+                      <tr>
+                        <td><input type="checkbox" name="chk[]" value="<%=c.id%>"></td>
+                        <td><%=c.user.first_name %></td>
+                        <td><%=c.user.last_name %></td>
+                        <td><%=c.user.email %></td>
+                        <td><%=c.location.name %></td>
+                        <td><%=c.item_name %></td>
+                        <td><%=link_to "Photo", c.photo_url.tr(" ","+"), {:style=>"color:blue;"} %></td>
+                        <td><%=c.created_at.in_time_zone(c.location.timezone).strftime("%m/%d/%Y") %></td>
+                        <td><%=c.status %></td>
+                      </tr>
+                  <% end %>
+                <% else %>
+                  <tr><td colspan="9" class="width-no-result"><h5>No Result Found</h5></td></tr>
+                <% end %>
+              </tbody>
+          </table>
+        </div>
+        <div id="tabs-3" style="padding:5px 0px;">
+          <% if !@contest.contest_actions.empty? %>
+          <div style="float:right;">
+            <%= link_to "Approve", "#", :class => "btn btn-contest-approve" %>&nbsp;
+            <%= link_to "Delete", "#", :class => "btn btn-contest-delete" %>
+          </div>
+          <div class="contest-actions-slide" style="height:300px; width:400px; margin:auto; margin-bottom:100px;">
+            <div class="flexslider">
+              <ul class="slides">
+                <% @contest.contest_actions.each do |c| %>
+                <li style="text-align:center;" action_id="<%=c.id%>">
+                  <img src="<%=c.photo_url.tr(" ","+")%>" style="height:300px;"/>
+                  <p class="flex-caption">Social Share: <%=c.facebook==true ? "Facebook": "" %><%=c.twitter==true ? "Twitter": "" %><%=c.instagram==true ? "Instagram": "" %></p>
+                  <p class="flex-caption">Grade: <%=c.grade.present? ? c.grade : "" %> <%=c.comment.present? ? "-"+c.comment : ""%></p>
+                  <p class="flex-caption">Status: <%=c.status%></p>
+                </li>
+                <% end %>
+              </ul>
+            </div>
+          </div>
+          <p style="left:50%; position:relative; margin-left:-80px; margin-top:-5px;"><span id="photo_index">1</span> of <%=@contest.contest_actions.count%> number of photos</p>
+          <% end %>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).on("page:load ready", function(){
+      $(".tabs-nav a").on('click', function() {
+        $.cookie("contest_tabs_nav", $(this).attr('href'), {expires : 1})
+      });
+      $('.flexslider').flexslider({
+        animation: "slide",
+        slideshow: false
+      });
+      setTimeout(function() {
+        $('.flex-control-nav li').css('opacity',0);
+        $( "#tabs" ).tabs();
+        $('.flex-nav-prev, .flex-nav-next, .flex-control-nav li').unbind('click').bind('click', function() {
+          setTimeout(function() {
+            $("#photo_index").html($('.flex-control-nav a.flex-active').html())
+          },100)
+        });
+        var tab_navs = $.cookie("contest_tabs_nav");
+        $("a[href='"+tab_navs+"']").trigger('click');
+        $(".manage_contests").css('opacity', 1);
+      }, 100);
+
+      $("input[name=all]").click(function() {
+        $('input[name="chk[]"]').prop("checked", $(this).prop("checked"));
+      });
+
+      $(".btn-contest-approve").click(function() {
+          var ids = []
+          if ($('#tabs-2').css('display') != 'none') {
+              $('input[name="chk[]"]').each(function() {
+                if($(this).prop("checked"))
+                  ids.push($(this).val())
+              });
+          } else if($('#tabs-3').css('display') != 'none') {
+            var index = parseInt($("#photo_index").html());
+            ids.push($('ul.slides li:nth-child('+index+')').attr('action_id'));
+          }
+
+          if(ids.length > 0)
+            change_status(ids, "Approved")
+      });
+
+      $(".btn-contest-delete").click(function() {
+          var ids = []
+          if ($('#tabs-2').css('display') != 'none') {
+              $('input[name="chk[]"]').each(function() {
+                if($(this).prop("checked"))
+                  ids.push($(this).val())
+              });
+          } else if($('#tabs-3').css('display') != 'none') {
+              var index = parseInt($("#photo_index").html());
+              ids.push($('ul.slides li:nth-child('+index+')').attr('action_id'));
+          }
+          if(ids.length > 0)
+            change_status(ids, "deleted")
+      });
+
+      $(".btn-contest-pick").click(function() {
+          change_status(ids, "Winner");
+      });
+      function change_status(ids, status) {
+          $.ajax({
+              url: '/admin/contests/change_status',
+              data: {
+                  contest_action_ids: ids,
+                  status: status
+              },
+              error: function() {
+              },
+              success: function(data) {
+                  setTimeout(function() {
+                      location.href = ''
+                  }, 500)
+              },
+              type: 'POST'
+          });
+      }
+      var COOKIE_KEY = 'sort';
+      var COOKIE_KEY_MYORDER = 'sortMyOrder';
+      function getCookieSortList(cookieKey){
+          var sortCondition = undefined;
+          if (!jQuery.cookie(cookieKey)){
+            sortCondition = [];
+          } else{
+            sortCondition = JSON.parse(jQuery.cookie(cookieKey));
+          }
+          jQuery.cookie(cookieKey, JSON.stringify(sortCondition));
+          console.log("SORT COOKIE:", sortCondition);
+          return sortCondition;
+      }
+      function updateSortListToUI(tableId, sortList){
+          if (sortList.length > 0) {
+            $(tableId).trigger("sorton", [sortList]);
+          }
+      }
+      function updateSortListData(sortList, sortDefault, index, cookieKey){
+          var isUpdate = false;
+          if (sortDefault && sortDefault.hasOwnProperty(index) && sortDefault[index] && sortDefault[index].hasOwnProperty('sorter') && sortDefault[index]['sorter'] == false){
+          } else{
+              if (sortList && sortList.length > 0){
+                  for (var i = 0; i < sortList.length; i++) {
+                  var sortItem = sortList[i];
+                  if (sortItem[0] == index){
+                    var direction = sortItem[1];
+                    if (direction == 0){
+                      direction = 1;
+                    } else{
+                      direction = 0;
+                    }
+                    sortList[i] = [index, direction];
+                    isUpdate = true;
+                  }
+                };
+              }
+              if (!isUpdate){
+                sortList = [];
+                sortList.push([index, 0]);
+              }
+          }
+          jQuery.cookie(cookieKey, JSON.stringify(sortList));
+          return sortList;
+      }
+      var sortList = getCookieSortList(COOKIE_KEY);
+      var sortDefault = {
+              dateFormat : "yyyymmdd",
+              0:{
+                 sorter: false,
+              },
+              1:{
+                      sortInitialOrder: 'desc'
+              },
+              2:{
+                      sortInitialOrder: 'desc'
+              },
+              3:{
+                      sortInitialOrder: 'desc'
+              },
+              4:{
+                      sortInitialOrder: 'desc'
+              },
+
+              5:{
+                 sortInitialOrder: "desc",
+              },
+              6:{
+                 sortInitialOrder: "desc",
+              },
+              7:{
+                 sortInitialOrder: "desc",
+              },
+              8:{
+                 sortInitialOrder: "desc",
+              }
+      };
+      $("#contest_action_table").tablesorter({
+        headers: sortDefault
+      });
+      $("#contest_action_table thead th").on("click", function(){
+        // changeOrder(sortList, $(this).index());
+        sortList = updateSortListData(sortList, sortDefault, $(this).index(), COOKIE_KEY);
+        updateSortListToUI("#contest_action_table", sortList);
+      });
+    });
+</script>
+<style>
+  #contest_action_table th {
+    cursor:pointer;
+  }
+  .flex-caption {
+    width: 96%;
+    left: 0;
+    bottom: 0;
+    background: rgba(0,0,0,.5);
+    color: #fff;
+    text-shadow: 0 -1px 0 rgba(0,0,0,.3);
+    font-size: 14px;
+    line-height: 18px;
+    padding:1% 2%;
+    margin:0px;
+  }
+  li.css a {
+    border-radius: 0;
+  }
+  .flex-direction-nav, .flex-nav-prev, .flex-nav-next {
+    line-height:40px;
+  }
+</style>

@@ -1,0 +1,16 @@
+var subCategoriesWrapper = $('.combo_sub_categories_wrapper .combo_sub_categories');
+var html = '<div class="checkbox-dropdownlist">'
+  + '<span class="btn add-nested-attributes">Select Categories</span>'
+  + '<div class="wrapper-checkbox close">'
+  + '<table class="combo_sub_categories_table">'
+  + '<thead><tr><td>Flow</td><td>Category</td><td>Quantity</td></tr></thead><tbody>';
+<% @categories.each do |category| %>
+  html += '<tr>'
+    + '<td><input type="text" maxlength="5" id="combo_flow_<%= category.id %>" class="combo-flow combo-mini-input" value="" name="sequence[]" /></td>'
+    + '<td><input type="hidden" name="categories[]" value="<%= category.id %>" /><%= category.name %></td>'
+    + '<td><input type="text" maxlength="5" id="combo_quantity_<%= category.id %>" category_id="<%= category.id %>" class="combo-quantity combo-mini-input" value="" name="qty[]" /></td>'
+    + '</tr>';
+<% end %>
+html += '</tbody></table></div></div>';
+subCategoriesWrapper.html(html);
+$('.combo_sub_categories_wrapper').removeClass('hide');

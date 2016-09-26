@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+    <style type="text/css">
+        body {
+            padding: 0 10px;
+        }
+        p.header {
+          margin-left: 70px;
+          display: inline-block;
+        }
+    </style>
+</head>
+<body>
+  <div>
+    <p>Admin <%= @user.first_name %><%= @user.last_name %> has downgraded his restaurant package from <%= @package %> to Baisc and keep <%= @location_name %></p>
+    <p>Please delete this manager google account.</p>
+  </div> 
+</body>
+</html>

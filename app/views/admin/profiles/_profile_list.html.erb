@@ -1,0 +1,60 @@
+<ul class="profile_list" style="max-height: 500px; overflow: auto;">
+  <% @profiles.each do |p| %>
+      <li class="row-fluid" data-id="<%=p.id%>">
+        <div class="span4">
+          <img src="<%= p.image %>" style="height:50px; width:auto;">
+        </div>
+        <div class="span8" style="-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;" unselectable="on" onselectstart="return false;" onmousedown="return false;">
+          <p><%= p.name %></p>
+          <p>
+            <%
+               @publish_timestamp = 0
+               if p.publish_date.present? and p.publish_date !=""
+                @publish = p.publish_date.split(" | ")
+                @publish_date = @publish[0].split('.')
+                @publish_timestamp = DateTime.parse(@publish_date[2]+"-"+@publish_date[1]+"-"+@publish_date[0]+" "+@publish[1]+":00").to_i
+               end
+               @unpublish_timestamp = 0
+               if p.unpublish_date.present? and p.unpublish_date != ""
+                @unpublish = p.unpublish_date.split(" | ")
+                @unpublish_date = @unpublish[0].split('.')
+                 @unpublish_timestamp = DateTime.parse(@unpublish_date[2]+"-"+@unpublish_date[1]+"-"+@unpublish_date[0]+" "+@unpublish[1]+":00").to_i
+               end
+              if @publish_timestamp  > @unpublish_timestamp
+            %>
+                Published Date: <span><%= p.publish_date %></span>
+            <% else %>
+                Unpublished Date: <span><%= p.unpublish_date %></span>
+            <% end %>
+          </p>
+          <a href="<%= edit_admin_profile_path(p.id) %>"><i class="icon-large icon-pencil"></i></a>
+          <%
+             @publish_timestamp = 0
+             if p.publish_date.present? and p.publish_date !=""
+               @publish = p.publish_date.split(" | ")
+               @publish_date = @publish[0].split('.')
+               @publish_timestamp = DateTime.parse(@publish_date[2]+"-"+@publish_date[1]+"-"+@publish_date[0]+" "+@publish[1]+":00").to_i
+             end
+             @unpublish_timestamp = 0
+             if p.unpublish_date.present? and p.unpublish_date != ""
+               @unpublish = p.unpublish_date.split(" | ")
+               @unpublish_date = @unpublish[0].split('.')
+               @unpublish_timestamp = DateTime.parse(@unpublish_date[2]+"-"+@unpublish_date[1]+"-"+@unpublish_date[0]+" "+@unpublish[1]+":00").to_i
+             end
+             if @publish_timestamp  > @unpublish_timestamp
+          %>
+              <a href="#" style="margin-left:20px;" class="unpublish-profile">
+                <i class="icon-large icon-thumbs-down"></i>
+              </a>
+          <% else %>
+              <a href="#" style="margin-left:20px;" class="publish-profile">
+                <i class="icon-large icon-thumbs-up"></i>
+              </a>
+          <% end %>
+          <a href="#" style="margin-left:20px;" class="delete-profile">
+            <i class="icon-large icon-remove"></i>
+          </a>
+        </div>
+      </li>
+  <% end %>
+</ul>

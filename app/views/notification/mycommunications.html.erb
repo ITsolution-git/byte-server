@@ -1,0 +1,104 @@
+
+<div class="searchHolder">
+	<%= form_tag searchmycommunications_notification_index_path() ,:class => "span12" do %>
+	
+  <div class="row-fluid">
+    <div class="span5">
+      <%= text_field_tag :search,"",:class=>"input-block-level",:placeholder=>"Search"%>
+    </div>
+   
+    <%= submit_tag "Submit" ,:class=>"btnSearch",:title=>"Go", :value => '' %>
+  </div>
+  <% end %>
+  <div class="clear"></div>
+</div>
+
+<div class='communicationWrapper top20'>
+	<table class="table table-striped table-hover">
+  <thead>
+      <tr class="success">
+    <th>
+	UserID
+    </th>
+        <th>
+          Message Type
+        </th>
+        <th>
+          Product Rating 
+        </th>
+        <th>
+          Date
+        </th>
+        <th>
+          Time
+        </th>
+        <th>
+          Action
+        </th>
+      </tr>
+  </thead>
+  <tbody>
+  	<% count=0%>
+  	
+  	    
+  			 <% if !@notifications.blank? %>
+  			 <% count=count+1%>
+  			 	<% @notifications.each do |notification|%>
+       			<% @restaurant=Location.find(notification.location_id)%>
+		         <%  @user=User.find(notification.from_user) %>
+		            <% if (notification.alert_type =='Rating' || notification.alert_type =='Restaurant Rating' )&& !notification.item_comment_id.nil?
+		            item_comment = ItemComment.find(:first, :conditions => ['user_id = ? and id = ?',notification.from_user,notification.item_comment_id])
+           	 		value = ''
+                value = item_comment.rating unless item_comment.nil?
+					 			ratingGrade = ""
+									 if value == '' || value == -1 || value.nil?
+									 	ratingGrade=' '
+									 else
+									 score = ['A+','A','A-','B+','B','B-','C+','C','C-','D+','D','D-','F']
+
+								   ratingGrade=score[item_comment.rating.to_i - 1]
+				    end
+				  end
+				    %>
+				    <tr><td><%= link_to  @user.username,usercommunications_restaurant_notification_path(@restaurant,notification) %></td>
+				    	<td><%= notification.alert_type%></td>
+				    	<td ><% if notification.alert_type =='Rating' || notification.alert_type =='Restaurant Rating' %><%=ratingGrade %><% end%></td>
+				    	<td><%= notification.created_at.strftime("%Y-%m-%d ")%></td>
+				    	<td><%= notification.created_at.strftime("%l:%M %p") %></td>
+				    	
+				    	<td><%= link_to image_tag('delete_icon.png'),{:controller=>'notification',:action=>'deletenotification',:id=>notification.id,:resturant=>@restaurant.id,:from=>"all"} ,:title=>"Delete",:remote=> false,:confirm => 'Are you sure you want to Delete?' %></td>
+				    </tr>
+				    
+		  <% end %>
+	
+     <% end %>
+     
+  	
+  <% if count == 0%>
+  	<tr><td><h5>No Result Found</h5></td><td></td><td></td><td></td><td></td><td></td></tr>
+ <% end %>
+              
+	
+  </tbody>
+</table>
+</div>
+<% if count !=0 %>
+	<div class="floatright"><%= paginate @notifications %> </div>
+<% end %>
+<% content_for :scripts do %>
+    <script type="text/javascript">
+        (function() {
+            $(document).ready(function() {
+
+                if($(".alert-success").length!=0){
+                    $(".alert-success").delay(3000).fadeOut();
+                }
+                if($(".alert-error").length!=0){
+                    $(".alert-error").delay(3000).fadeOut();
+                }
+
+            });
+        })();
+    </script>
+<% end %>
+

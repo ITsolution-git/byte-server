@@ -1,0 +1,33 @@
+// Place all the styles related to the users controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+.menu_option_icon{
+	font-size: 20px;
+	line-height: 30px;
+	cursor: pointer;
+}
+
+.add-on .errors-area, .add-on .delete-add-on{
+	color: red;
+}
+.add-on .add-add-on{
+	color: #0066FF;
+}
+
+
+#menu_option_form .select_on_help_block{
+	margin-left: 20px;
+	margin-top: -7px;
+	color: #898989!important;
+}
+
+#menu_option_form .selected {
+	width: 20px;
+	height: 20px;
+	// -moz-appearance: none;
+}
+
+#menu_option_form .option_label{
+	color: #898989!important;
+}

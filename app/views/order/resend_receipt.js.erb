@@ -1,0 +1,15 @@
+<% unless @order.nil?%>
+	<% if @accepted == true %>
+	$("#confirmation_dialog").addClass('hide').modal('hide');
+	alert('You have just sent receipt successfully');
+	<% else %>
+	$("#confirmation_dialog .modal-body").html('<p>Are you sure you want to resend Receipt?</p>');
+	$("#confirmation_dialog .modal-footer").html('<a data-method="get" data-remote="true" href="<%= resend_receipt_order_index_path(:order_id => @order.id, :accept => true) %>" class="btn btn-primary">Yes</a>\
+	    <a href="#" class="btn btn-danger" data-dismiss="modal" aria-hidden="true">No</a> \
+		');
+	$("#confirmation_dialog").removeClass('hide').modal('show');
+	$('.modal-backdrop:last-child').removeClass("modal-backdrop");
+	<% end %>
+<% else %>
+alert("You cannot resend the receipt of this order!");
+<% end %>

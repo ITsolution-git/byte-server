@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+    <style type="text/css">
+        body {
+            padding: 0 10px;
+        }
+        p.header {
+          margin-left: 70px;
+          display: inline-block;
+        }
+    </style>
+</head>
+<body>
+  <div>
+    <p> Congratulations, <%= @sharer %> has shared <%= @points.to_i %> points with you. Just click the link to signup and add the points to your new account! <%= @link %></p>
+  </div> 
+</body>
+</html>

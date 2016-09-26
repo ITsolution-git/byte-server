@@ -1,0 +1,9 @@
+<%
+  item_key = ItemKey.new
+  item_key_image = ItemKeyImage.new
+%>
+$('.item_key_form_block_container .wrap_title_form').html("<%= j render partial: 'menus/item_key_title_form', locals: {item_key: item_key} %>");
+$('.item_key_form_block_container #itemkey_toggle').html("<%= j render :partial=> 'menus/item_key_form_primary' ,locals:{:item_key=>item_key,:item_key_image=> item_key_image} %>");
+$('.item_form_block_container .wrap_title_form').html("<%= j render :partial=>"menus/item_title_form" ,locals:{:item => @item, :item_image => @item_image} %>");
+$('.item_form_block_container #item_form_toggle').html("<%= j render :partial=>"menus/item_form_primary" ,locals:{:item => @item, :item_image => @item_image} %>");
+$(".itemKey_form_errors_container").html('<%= j render("layouts/form_success", :message => "Item Key is deleted successfully.") %>').show().delay(3000).fadeOut();

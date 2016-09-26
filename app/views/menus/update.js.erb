@@ -1,0 +1,30 @@
+<% if @menu.errors.full_messages.any? %>
+  $(".menu_form_errors_container").html("<%= j render("layouts/form_errors",:object=>@menu) %>").show().delay(3000).fadeOut();
+<% else %>
+  <%
+    is_equal = @menu == @menu_old
+  %>
+  <% if is_equal %>
+    $(".menu_form_errors_container").html("<%= j render("layouts/form_warning",:message=>"There are no changes on this screen to be saved. Please make any changes to update") %>").show().delay(3000).fadeOut();
+  <% else %>
+    $("#wrapper_menu_container_<%= @menu.id %>").replaceWith("<%= j render :partial=>"menu",:locals=>{:menu=>@menu} %>");// add menu to right panel
+    <% if remotipart_submitted? %>
+      $(".build_menu_block_container #build_menu_toggle").html("<%= j "#{render 'build_menu_form_primary'}" %>");
+    <% else %>
+      $(".build_menu_block_container #build_menu_toggle").html("<%= j render "build_menu_form_primary" %>");
+    <% end %>
+
+    <%
+      @menu = Menu.new
+      combo_item = ComboItem.new
+    %>
+    $("#menu_form_container .wrap_title_form").html("<%= j render 'menus/menu_title_form' %>");
+    $("#menu_form_container #menu_form_toggle").html("<%= j render 'menus/menu_form_primary' %>");
+    $(".menu_form_errors_container").html("<%= j render("layouts/form_success", :message => "Menu is updated successfully.") %>").show().delay(3000).fadeOut();
+
+    $(".combo_item_form_block_container .wrap_title_form").html("<%= j render partial: "menus/combo_item_title_form", locals: {combo_item: combo_item} %>");
+    $(".combo_item_form_block_container #combo_item_form_toggle").html("<%= j render partial: "menus/combo_item_form_primary", locals: {combo_item: combo_item} %>");
+  <% end %>
+<% end %>
+
+new app.classes.MenuManagement('.menus_container');

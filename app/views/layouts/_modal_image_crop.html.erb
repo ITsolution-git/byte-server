@@ -1,0 +1,21 @@
+<div id="myModal_<%= form.to_s %>" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel"><%= heading.to_s %></h3>
+  </div>
+  <div class="modal-body">
+    <p>
+
+    </p>
+
+  </div>
+  <div class="modal-footer">
+    <div class="resolution">
+      <p>Width: <span class="r-width">0px</span></p>
+      <p>Height: <span class="r-height">0px</span></p>
+    </div>
+
+    <button class="btn btn-primary btn_save_crop" form="<%= form.to_s %>" aria-hidden="true">Save</button>
+    <button class="btn btn-success" data-dismiss="modal" aria-hidden="true">Close</button>
+  </div>
+</div>

@@ -1,0 +1,182 @@
+<% if current_user.admin? %>
+  <div class="span12">
+    <div class="">
+      <%= form_tag "/restaurants", :class => "form-search", :method => :get do %>
+        <%= text_field_tag :search,  @search_params, :class=>"", :placeholder=>"Search...", :autocomplete => 'off', :id => "search_restaurant" %>
+        <%= submit_tag "Submit", :class => "btnSearchRestaurant",:title=>"Go", :value => 'SEARCH' %>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
+<% if params[:value]%>
+  <h6 style="color:red"><%= params[:value]%></h6>
+<% end %>
+<%
+if current_user && current_user.restaurant_manager?
+  location = Location.where('rsr_manager=?', "#{current_user.id},")
+end
+%>
+<%
+allow = false
+
+if current_user && !current_user.user?
+  if current_user.admin? || (current_user.owner? && current_user.active_braintree) \
+      || (current_user.restaurant_manager? && current_user.parent_user \
+      && current_user.parent_user.active_braintree && location.any?) \
+      || (current_user.restaurant_manager? \
+      && current_user.parent_user && current_user.parent_user.admin? && location.any?)
+    allow = true
+  end
+end
+%>
+<% if allow %>
+<table class="table table-striped table-hover" id="restaurant-table">
+  <thead>
+      <tr class="success">
+        <th>
+          Restaurants
+        </th>
+        <th>
+          Package
+        </th>
+        <th>
+          Menus
+        </th>
+        <th>
+          Menu Items
+        </th>
+        <th>
+          Published Menu
+        </th>
+        <th>
+          Actions
+        </th>
+        <th>
+        </th>
+      </tr>
+  </thead>
+  <tbody>
+  <% if @restaurants.any?%>
+    <% @restaurants.each do |restaurant| %>
+        <%
+          published_menu = restaurant.menus.select {|menu| menu.publish_status == PUBLISH_STATUS}.first
+          package = ''
+        %>
+        <tr>
+          <td>
+            <%= link_to restaurant.name, edit_restaurant_path(restaurant) %>
+          </td>
+          <td>
+            <%
+              app_service = restaurant.owner.try(:get_real_app_service)
+              unless app_service.nil?
+                begin
+                 plan =  AppService.find_plan(app_service.id)
+                 package = plan.name unless plan.nil?
+                rescue
+                  package = 'Braintree request timeout.'
+                end
+              end
+
+              %>
+              <%= package %>
+          </td>
+          <td class="aligncenter">
+            <%= restaurant.menus.count %>
+          </td>
+          <td class="aligncenter">
+            <%= restaurant.items.count %>
+          </td>
+          <td class="published_menu">
+            <% unless published_menu.nil? %>
+              <div class="published_menu_name"><%= published_menu.name %></div>
+              <div class="published_menu_date"><%= published_menu.published_date.strftime("%Y-%m-%d %H:%M") unless published_menu.published_date.nil? %></div>
+            <% end %>
+          </td>
+          <td>
+            <div class="btn-group">
+              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Select Action<span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" role="menu">
+                <li><%= link_to "Menu Management",restaurant_menus_path(restaurant) %></li>
+                <li><%= link_to "Manage Images", manage_photos_restaurant_path(restaurant.id), :id => "account_link" %></li>
+                <% if current_user.has_cognos?(restaurant.id) %>
+                  <li> <%= link_to "Dashboard",  dashboard_restaurant_path(restaurant)%></li>
+                <% end %>
+                <li><%= link_to "Communications",communications_restaurant_notification_index_path(restaurant) %></li>
+                <li><%= link_to "Rewards",rewards_restaurant_points_path(restaurant)%></li>
+                <li><%= link_to "Orders", restaurant_orders_restaurant_order_index_path(restaurant)%></li>
+                <li><%= link_to "Calendar", calendar_restaurant_path(restaurant) %></li>
+                <li><%= link_to "Contacts", search_restaurant_contact_index_path(restaurant) %></li>
+                <li><%= link_to "Profile/Menu CSV", profile_menu_csv_restaurant_path(id: restaurant.id, format: :csv) %></li>
+              </ul>
+            </div>
+          </td>
+          <td>
+            <% if can? :destroy, Location %>
+              <%unless current_user.admin?%>
+                <%= link_to image_tag('delete_icon.png'),restaurant_path(restaurant), method: :delete, :title=>"Delete", :remote=> false, :confirm => 'Are you sure you want to delete this Restaurant?', :class => 'location_icon_delete' %>
+              <%else %>
+                <%
+                  # restaurant_count = 0
+                  # if !restaurant.nil? && !restaurant.owner_id.nil?
+                    restaurant_count = Location.where(:owner_id => restaurant.owner_id).count
+
+                  # end
+                %>
+                <% if restaurant_count == 1%>
+                   <%= link_to image_tag('delete_icon.png'), '#', :title=>"Delete", :class => 'remove-location location_icon_delete', data: { location: "#{restaurant_path(restaurant)}", isLast: true }  %>
+                <% else %>
+                  <%= link_to image_tag('delete_icon.png'), '#', :title=>"Delete", :class => 'remove-location location_icon_delete', data: { location: "#{restaurant_path(restaurant)}", isLast: false } %>
+                <%end%>
+              <%end %>
+            <% end %>
+          </td>
+        </tr>
+    <% end %>
+  <% else %>
+    <tr><td class="width-no-result"><h5>No Result Found</h5></td>
+      <td></td><td></td><td></td><td></td><td></td><td></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+<div class="clear"></div>
+<% if can? :create, Location %>
+  <%= link_to "New Restaurant", new_restaurant_path, :class=>"btn btn-primary" %>
+<% end %>
+<%if !@restaurants.blank? %>
+  <div class="floatright"><%= paginate @restaurants %> </div>
+<% end %>
+
+<% else %>
+   <% if !current_user.restaurant_manager?  %>
+    <div class="well">
+      <h5>Please go to MyAccount Settings to activate your account to continue using BYTE.</h5>
+    </div>
+    <% else %>
+    <div class="well">
+      <h5>Your account has been deactivated. Please contact your Admin for more information.</h5>
+    </div>
+    <% end %>
+<% end %>
+
+<% content_for :scripts do %>
+  <script type="text/javascript">
+    (function() {
+      $(document).ready(function() {
+
+        if($(".alert-success").length!=0){
+          $(".alert-success").delay(3000).fadeOut();
+        }
+
+        var published_menus_date = $('td.published_menu .published_menu_date');
+        published_menus_date.each(function(index) {
+          var date = Date.parse($(this).text() + " GMT");
+          $(this).text(date.toString("MM.dd.yy / hh:mm tt"));
+        });
+      });
+    })();
+  </script>
+<% end %>

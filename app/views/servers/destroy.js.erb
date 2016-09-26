@@ -1,0 +1,10 @@
+<%
+  @server = Server.new
+  @server_avatar = ServerAvatar.new
+%>
+
+$(".server_form_block_container .wrap_title_form").html("<%= j render "menus/server_title_form" %>");
+$(".server_form_block_container #server_form_toggle").html("<%= j render "menus/server_form_primary" %>");
+$(".menu_form_block_container .wrap_title_form").html("<%= j render partial: "menus/menu_title_form" %>");
+$(".menu_form_block_container #menu_form_toggle").html("<%= j render partial: "menus/menu_form_primary" %>");
+$(".server_form_errors_container").html('<%= j render("layouts/form_success", :message => "Server is deleted successfully.") %>').show().delay(3000).fadeOut();

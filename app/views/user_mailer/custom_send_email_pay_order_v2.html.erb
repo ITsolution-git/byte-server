@@ -1,0 +1,104 @@
+<html>
+<header>
+
+</header>
+<body style="background:white">
+<div style="width: 700px">
+<p>Dear Sir/Madam,</p>
+Here is a copy of your order from <%= @location.name %> ordered from the BYTE app:
+<div id="order_details"  style="width:500px;float:right;margin-top:20px">
+    <div class="order-header" style="text-align:center;border-bottom: 2px solid #eee; padding-bottom:30px;margin-bottom:30px">
+      <% if @order.location.logo && @order.location.logo.try(:public_id) %>
+        <%= cl_image_tag @order.location.logo.fullpath, style: 'max-width:30%; max-height: 30%' %>
+      <% else %>
+        <img src="<%= image_path("/assets/logo-byte.jpg") %>">
+      <% end %>
+      <div class="order-time"><%= @order.created_at.in_time_zone(@order.timezone).strftime("%B %d, %Y") %> at <span style="text-transform:uppercase"><%= Time.parse(@order.created_at.in_time_zone(@order.timezone).strftime("%I:%M  %P")).strftime("%I:%M %P") %></span></div>
+      <div>Status: <span style="color:#085F7A"><%== @order.get_current_order_status() %></span></div>
+    </div>
+    <div class="order-body" style="width:100%">
+      <table style="width:100%">
+        <tbody>
+
+        <% @order_items.each do|order_item| %>
+          <tr>
+            <td class="item_name" style="font-weight:bold" width="250"><%= order_item.item_name %></td>
+            <td class="item_quantity"  width="50"><%= order_item.quantity %></td>
+            <td class="item-price" style="text-align: right;font-weight:bold" width="100">
+            <% if order_item.use_point.to_f == 0%>
+          <%=number_to_currency(order_item.price.to_f*order_item.quantity, precision: 2)%>
+          <%else%>
+           <%=number_to_currency(0, precision: 2)%>
+           <%end%>
+          </td>
+          </tr>
+          <% order_item.order_item_options.each do|order_item_option| %>
+          <tr>
+            <td class="item_name">
+              <%= order_item_option.item_option_addon_name %>
+            </td>
+            <td class="item_quantity">
+              <%= order_item.quantity %>
+            </td>
+            <td class="item-price" style="text-align: right;"><%= number_to_currency(order_item_option.price.to_f * order_item.quantity) %></td>
+          </tr>
+        <% end %>
+         <% end %>
+      </tbody></table>
+    </div>
+    <div class="order-footer" style="margin-top:30px;border-top:2px solid #eee;padding-top:20px">
+            <div class="order-row" style="margin:10px 0px;">
+                <label style="width:50%;float:left;font-size:16px;">Sub Total</label>
+                <div style="width:50%;float:right;font-weight:bold;text-align:right;font-size:16px"><%= number_to_currency(@order.sub_price.to_f, precision: 2) %></div>
+            </div>
+            <div class="order-row" style="margin:10px 0px;">
+                <label style="width:50%;float:left;font-size:16px;">Tax</label>
+                <div style="width:50%;float:right;font-weight:bold;text-align:right;font-size:16px"><% if @order.total_tax.to_i ==0 %><%= number_to_currency(@order.location.tax.to_f*@order.sub_price.to_f, precision: 2) %><% else %><%= number_to_currency(@order.total_tax.to_f, precision: 2) %><% end %></div>
+            </div>
+            <div class="order-row" style="margin:10px 0px;">
+                <label style="width:50%;float:left;font-size:16px;">Tip</label>
+                <div style="width:50%;float:right;font-weight:bold;text-align:right;font-size:16px">
+                <% unless @order.total_tip.nil? %>
+
+                  <% if @order.total_tip >= 0 && @order.tip_percent.to_f == -2 %>
+
+                    <%= number_to_currency(@order.total_tip.to_f, precision: 2) %>
+
+                  <%elsif @order.total_tip.to_f == -2 && @order.tip_percent.to_f >= 0 %>
+
+                    <%=number_to_currency(@order.tip_percent.to_f * @order.sub_price.to_f, precision: 2)  %>
+                  <%elsif @order.total_tip.to_f >= 0 || @order.tip_percent.to_f >= 0 %>
+                    <%= number_to_currency(@order.total_tip.to_f, precision: 2) %>
+                  <% end %>
+                <% else %>
+                  $0.00
+                <%end%>
+                </div>
+            </div>
+            <div class="order-row" style="margin:10px 0px;">
+                <label style="width:50%;float:left;font-size:16px;">Service Fee</label>
+                <div style="width:50%;float:right;font-weight:bold;text-align:right;font-size:16px"><%= number_to_currency(@order.fee.to_f, precision: 2) %></div>
+            </div>
+            <br>
+      <div class="order-row">
+        <label style="width:50%;float:left"><strong style="font-size:24px">Total</strong></label>
+        <div style="width:50%;float:right;font-weight:bold;text-align:right;font-size:24px"><% if @order.status==0 and @order.is_paid==0 %><%= number_to_currency(Order.calculate_total_price(@order)) %><% else %><%= number_to_currency(@order.total_price.to_f) %><% end %></div>
+      </div>
+      <div class="order-row"></div>
+    </div>
+  </div>  
+</div>
+  <div style="clear:both"></div>
+  <div style="width:300px;float:left;margin-top:50px">
+      <p>Thanks for your cooperation,<br>
+    Hope to see you next time,<br>
+    Thanks<br>
+  </p><br>
+  <p>Restaurant: <%= @location.name %><br>
+  Phone: <%= @location.phone %><br>
+  <a href="mailto:support@mybyteapp.com" style="color:red">support@mybyteapp.com</a>
+  </p>
+    
+  </div>
+</body>
+</html>

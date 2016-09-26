@@ -1,0 +1,14 @@
+<%
+  item = Item.new
+  item_image = ItemImage.new
+  combo_item = ComboItem.new
+%>
+
+$(".menus_container #menu_item_<%= @item.id %>_row").remove();
+$(".item_form_block_container .wrap_title_form").html("<%= j render partial: "menus/item_title_form",locals: {:item => item, :item_image => item_image} %>");
+$(".item_form_block_container #item_form_toggle").html("<%= j render partial: "menus/item_form_primary",locals: {:item => item, :item_image => item_image} %>");
+$(".build_menu_block_container #build_menu_toggle").html("<%= j render "menus/build_menu_form_primary" %>");
+$(".item_form_errors_container").html("<%= j render("layouts/form_success", :message => "Menu Item is deleted successfully.") %>").show().delay(3000).fadeOut();
+
+    $(".combo_item_form_block_container .wrap_title_form").html("<%= j render partial: "menus/combo_item_title_form", locals: {combo_item: combo_item} %>");
+    $(".combo_item_form_block_container #combo_item_form_toggle").html("<%= j render partial: "menus/combo_item_form_primary", locals: {combo_item: combo_item} %>");

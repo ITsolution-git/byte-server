@@ -1,0 +1,18 @@
+$('.billings_form_block_container #billings_form_toggle').html("<%= j render partial: "accounts/billings_form_primary", locals:{customer: @customer, dates: @dates}%>");
+// $(".multiselect").multiselect({
+//      buttonText: function(options, select) {
+//         if (options.length == 0) {
+//           return 'Monthly <b class="caret"></b>';
+//         }
+//         else if (options.length > 3) {
+//           return options.length + ' selected <b class="caret"></b>';
+//         }
+//         else {
+//           var selected = '';
+//           options.each(function() {
+//             selected += $(this).text() + ', ';
+//           });
+//           return selected.substr(0, selected.length -2) + ' <b class="caret"></b>';
+//         }
+//       },
+// });

@@ -1,0 +1,8 @@
+<p>Welcome to your new BYTE account!</p>
+<p>Select the Confirm link below to confirm your new account and set your password:</p>
+<b>Email:</b> <%= @resource.email %><br />
+<b>TEMP Password:</b> <%= @resource.password_bak %><br />
+<%= link_to 'Confirm your account', confirmation_url(@resource, :confirmation_token => @resource.confirmation_token) %>
+<p>Thanks You for Joining the BYTE Team</p>
+<p>Winning new customers one BYTE at at time!</p>
+<p>support@mybyteapp.com</p>

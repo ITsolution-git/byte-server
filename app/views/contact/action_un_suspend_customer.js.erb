@@ -1,0 +1,4 @@
+<% unless @check_update == false %>
+  <% flash[:notice] = "Customer suspend successfully." %>
+<% end %>
+window.location.href="<%=search_restaurant_contact_index_path(@restaurant, :group_id =>@group_id)%>"

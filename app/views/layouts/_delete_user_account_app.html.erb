@@ -1,0 +1,44 @@
+<% if is_checked == false %>
+  <% user_arr = user_account_array.split(',') %>
+  <div id="myModal" class="modal hide fade bottom0" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header delete_user_account">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      <h4 id="myModalLabel_delete"><%= heading.to_s %></h4>
+    </div>
+
+      <div class="modal-body">
+        <div class="row-fluid">
+          <div class="span12">
+             <p class="padding_left_20">You are about to delete: </p>
+             <%user_arr.each do |arr|
+                user = User.find_by_id(arr.to_i)
+              %>
+               <p class="padding_left_30"><%=user.username%>  (<%=user.email%>)</p>
+             <%end%>
+            <!--  <p class="padding_left_20"><b>Notice: Deleting these users will threir restaurants chain as well as <br/>the manager users of the child restaurants.</b></p> -->
+             <p class="padding_left_20">Do you want to continue?</p>
+             <%= link_to 'Yes, Delete All', action_delete_user_account_apps_path(:user_account => user_arr), {method: :post, :remote => true, 'data-dismiss' =>  "modal", 'aria-hidden' => 'true', :class => 'btn btn-primary', :id=>'delete_user_account_button',} %>
+             <button class="btn no_delete_user_account" data-dismiss="modal" aria-hidden="true">No</button>
+          </div>
+        </div>
+      </div>
+  </div>
+  <% else %>
+    <div id="myModal" class="modal hide fade bottom0 modal-reset" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header delete_user_account">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      <h4 id="myModalLabel_delete"><%= heading.to_s %></h4>
+    </div>
+
+      <div class="modal-body">
+        <div class="row-fluid">
+          <div class="span12 padding_left_30">
+             <h5>Please select at least a user to delete. </h5>
+          </div>
+          <div class="pull-right">
+            <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">OK</button>
+          </div>
+        </div>
+      </div>
+  </div>
+  <% end %>

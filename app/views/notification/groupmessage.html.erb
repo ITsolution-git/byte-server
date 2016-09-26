@@ -1,0 +1,218 @@
+<div class="bread-crum">
+  <% if params[:alert] %>
+    <%= link_to @restaurant.name, restaurants_path %>&nbsp;&nbsp;<small>>></small>&nbsp;&nbsp;
+    <% if params[:myorders] %>
+      <%= link_to 'Orders', restaurant_orders_restaurant_order_index_path(@restaurant) %>&nbsp;&nbsp;
+    <% else %>
+      <%= link_to 'Communications', communications_restaurant_notification_index_path(@restaurant) %>&nbsp;&nbsp;
+    <% end %>
+    <small>>></small>&nbsp;&nbsp;<%= link_to 'Send Message', '#' %>
+  <% end %>
+</div>
+<input type="hidden" value="<%= @restaurant.id %>" id="restaurant_id_field"/>
+
+<%= form_for @notification,:url=>{:action=>"addgroup"} ,:html=>{:class => "sendMessage"} do |f|%>
+  <% if params[:myorders] %>
+    <input type="hidden" value="true" name="myorders" id="myorders"/>
+  <% end %>
+
+  <% if params[:alert] %>
+    <div class="to_user_msg">
+      <div class="row-fluid">
+        <div class="userInputs span10">
+          <%= f.label 'To:', id: 'label_link_to', style: "width: 20px;" %>
+          <h5 class="lb-all-customer">All Customers</h5>
+          <h5 class="lb-all-user">All Users</h5>
+          <% if @user_email.empty? %>
+            <textarea id="user_emails" placeholder="Enter User Emails or Username" name="user_emails"></textarea>
+            <!--   <input type="text" value="" name="user_emails" id="user_emails" class="input-block-level" placeholder="Enter User Emails"/> -->
+          <% else %>
+            <% if params[:myorders] %>
+              <span style="font-weight:bold;"><%= @user_email.join('; ') %></span>
+              <input type="hidden" id="user_emails" name="user_emails" value="<%= @user_email.join(';') %>" />
+            <% else %>
+              <textarea id="user_emails" placeholder="Enter User Emails or Username" name="user_emails" value="<%= @user_email.join(';') %>"><%=@user_email.join('; ') %></textarea>
+            <% end %>
+          <% end %>
+          <span class=" Validate_Email_Span error">Please provide User Emails</span>
+        </div>
+      </div>
+      <a href="#" class="btnEditUser">Edit</a>
+    </div>
+  <% else %>
+    <h5><%= "Vip customers"%></h5>
+  <% end %>
+
+  <% if params[:myorders].blank? %>
+    <div class="row-fluid top10">
+      <div class="span10" >
+        <%= f.label 'Message type:' %>
+        <%= f.select :alert_type, options_for_select(MESSAGE_TYPE) %>
+        <img class='alertLogoSpan' width='31px' height='41px' src="" style=""/>
+      </div>
+      <span class=" messageSpanAbout"></span>
+    </div>
+  <% else %>
+    <script type="text/javascript">
+      window.addEventListener("load", function load(event){
+        var about = "Rating Reward";
+        window.removeEventListener("load", load, false); //remove listener, no longer needed
+        var groupMessage = new GroupMessage(about);
+        groupMessage.hideNotificationForm();
+        groupMessage.disabledSelect();
+      }, false);
+    </script>
+    <input type="hidden" value="Rating Reward" name="notifications[alert_type]" id="notifications_alert_type">
+  <% end %>
+
+  <%= f.label 'Body:' %>
+  <div class="row-fluid">
+    <div class="span12">
+      <!-- <select id="prize_point"></select> -->
+
+      <% # If applicable, output a dropdown with the Prize options %>
+      <% if @prizes.present? %>
+        <select name="notifications[point_prize]" id = 'prize_point'>
+          <option value="0">--Select Prize--</option>
+
+          <% # Output the Prize options in their StatusPrize groups (e.g. Bronze, Gold, etc) %>
+          <% previous_optgroup_name = nil %>
+          <% @prizes.each do |prize| %>
+            <% current_optgroup_name = prize.status_prize.name %>
+            <% if current_optgroup_name != previous_optgroup_name %>
+              <optgroup label="<%= current_optgroup_name %>" style="font-weight: bold; font-style: normal;">
+            <% end %>
+
+            <option id="<%= prize.id %>" style="font-weight: normal;" value="<%= prize.id %>"><%= prize.name %></option>
+
+            <%= '</optgroup>' if current_optgroup_name != previous_optgroup_name %>
+
+            <% previous_optgroup_name = current_optgroup_name %>
+          <% end %>
+        </select>
+      <% end %>
+			
+			<style>
+				.redactor-toolbar {
+					z-index:0 !important;
+				}
+			</style>
+      <%= f.text_area :message, id: "ckeditor", placeholder: "Type Your Comments here",
+        class: "input-block-level redactor_mm text_message" %>
+      <span class="messageSpan"></span>
+    </div>
+  </div>
+
+  <%= hidden_field_tag :points ,0%>
+
+  <%= f.hidden_field :from_user ,:value=>current_user.id %>
+  <%= hidden_field_tag :to_user , params[:alert] if params[:alert] %>
+  <%= f.hidden_field :location_id ,:value=>@restaurant.id %>
+
+  <div class="row-fluid">
+    <div class="span5">
+       <%= f.submit "Submit" ,:class=>"btn btn-primary messageButton" %>
+    </div>
+  </div>
+
+<% end %>
+
+<!-- <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;" data-backdrop="static"> -->
+<div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+  <div class="modal-header" style="background-color: #f5f5f5;">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h5>Select Contacts</h5>
+  </div>
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal_content_search modal-body" style="height: 400px;">
+          <div class="dropdown span12">
+            <div class="span3">
+              <button class="label_customer_contact_name btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                Customers
+               <!--  <%if @group_id.nil? %>
+                  Customers
+                  <% else %>
+                    <%group = Group.find_by_id(@group_id)%>
+                    <% unless group.nil?%>
+                      <%= group.name %>
+                    <% else %>
+                      Customers
+                    <% end %>
+                  <% end %> -->
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu scrollable-menu" role="menu" aria-labelledby="dropdownMenu1">
+                <li>
+                  <div class="items-dropdown" style="margin-left: 10px;">
+                     <span class="contact_group_name item-name"><%= link_to 'Customers','#', :id => 'contact_all_customer' %></span>
+                  </div>
+                </li>
+                <% @group = @group.sort_by!{ |m| m.name.downcase } %>
+                <% unless @group.empty? %>
+                  <% @group.each do |g| %>
+                      <li>
+                        <div class="items-dropdown" style="margin-left: 10px;">
+                          <div>
+                            <span class="contact_group_name item-name"><%= link_to g.name, '#', :id=>'contact_customer_group', :class=>"#{g.id}" %></span>
+                           </div>
+                        </div>
+                      </li>
+                  <% end %>
+                <% end %>
+              </ul>
+            </div>
+            <!-- <div class ="span4"> -->
+            <div class="span9">
+              <!-- <%= form_tag '#', :class => "" do %> -->
+                <input type="text" class="search_contact_customer_field" aria-label="Search terms" value="">
+                <button type="submit" class="btn_search_contact_custoner btn btn-default"> <img src="/assets/search-black.png"></button>
+              <!-- <% end %> -->
+            </div>
+
+
+          </div>
+
+          <div class="checkbox_select_all">
+            <input class="checkbox" id='check_all_customer_contact_message' type=
+                        "checkbox">
+            <h5 style="display: inline;">Select All</h5>
+          </div>
+          <div class="search_contact_table">
+            <%= render :partial=>'customer_contact_form', locals: {customer: @customer}%>
+          </div>
+        </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="span4">
+     <%= link_to 'Select', send_customer_contact_message_notification_index_path(:user_contact =>''), {:remote => true, :class => 'btn btn-primary', :disabled=>'disabled', :id => 'btn_submit_customer_contact'} %>
+     <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<% content_for :scripts do %>
+  <script type="text/javascript">
+  (function() {
+    $(document).ready(function() {
+      $('#label_link_to').on('click', function() {
+        $('#myModal').modal('show')
+      });
+      if ($('#user_emails').val() == ""){
+        $('#user_emails').addClass('user_height');
+      } else {
+        $('#user_emails').removeClass('user_height');
+        $('#user_emails').css({'height': ''});
+        $('#user_emails').flexible();
+      }
+      if($(".alert-success").length!=0){
+        $(".alert-success").delay(3000).fadeOut();
+      }
+      if($(".alert-error").length!=0){
+        $(".alert-error").delay(3000).fadeOut();
+      }
+    });
+    })();
+  </script>
+<% end %>

@@ -1,0 +1,133 @@
+<div class="row-fluid" >
+   <div class="package_form_errors_container">
+   </div>
+   <div class="row-fluid top20">
+    <%= form_for user, :url => update_package_accounts_path, :remote => true do |f| %>
+     <div class="span12">
+      <% get_plans_braintree.each_with_index do |p, index| %>
+       <div class="row-fluid top10">
+          <div class="span3 contact package_name">
+            <h6><%= p.name %></h6>
+          </div>
+          <div class="span3 top10">
+           <%= number_to_currency(p.price, precision: 2) %>
+          </div>
+          <div class="span1 top_radio">
+              <%= f.radio_button :app_service_id, index + 1%>
+          </div>
+        </div>
+      <% end %>
+         <div class="row-fluid top10">
+          <div class="span6 contact">
+            <h6><a href="http://mymenu.co/terms-agreement/" class="term-condition term-color" target="_blank">T&C Agreement</a></h6>
+          </div>
+          <div class="span1 top10">
+             <%= f.check_box :agree %>
+          </div>
+        </div>
+
+        <div class="row-fluid top10">
+          <div class="span4 pull-right">
+            <%= f.submit 'Update', :id=>'update_package_submit', :class => 'btn-primary btn span12', disable_with: "Please wait..." %> 
+          </div>
+          <div class="span4 pull-right">
+            <%= link_to 'Cancel', canel_package_accounts_path, :class => 'btn span9 btn-cancel', :remote => true %>
+          </div>
+        </div>
+      <% end %>
+      <div class="row-fluid top10">
+        <div class="span12">
+          Please visit
+            <a href="http://thebyteapp.com/restaurants/" target="_blank">
+              http://thebyteapp.com/restaurants/
+            </a>
+            for more information about 3 packages.
+        </div>
+      </div>
+     </div>
+   </div>
+</div>
+
+<!-- Modal Update Package -->
+<div id="myModalUpdatePackage" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+  <div class="modal-body">
+    <p>If you downgrade the package, some restaurants will be hidden.</p>
+  </div>
+  <div class="modal-footer">
+    <%= link_to 'OK', view_restaurant_accounts_path(:new_app_service_id => current_user.app_service_id), {:remote => true, 'data-dismiss' =>  "modal", 'aria-hidden' => 'true', :class => 'btn btn-primary'} %>
+    <button class="btn btn-success" data-dismiss="modal" aria-hidden="true">Cancel</button>
+  </div>
+</div>
+
+<!-- Modal Update Package1 -->
+<div id="myModalUpdatePackageOther" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+  <div class="modal-body">
+    <p>If you upgrade the package, some restaurants will be hidden.</p>
+  </div>
+  <div class="modal-footer">
+    <%= link_to 'OK', view_restaurant_accounts_path(:new_app_service_id => current_user.app_service_id), {:remote => true, 'data-dismiss' =>  "modal", 'aria-hidden' => 'true', :class => 'btn btn-primary'} %>
+    <button class="btn btn-success" data-dismiss="modal" aria-hidden="true">Cancel</button>
+  </div>
+</div>
+
+
+<!-- Modal Update Package Basic-->
+<div id="myModalUpdatePackageBasic" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<%= form_for current_user, :url => update_restaurant_acitve_accounts_path(:new_app_service_id => current_user.app_service_id),:html=>{:id => "update_restaurant_form"},:remote => true do |f| %>
+  <% if current_user.app_service_id == 1%>
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      <h5 id="myModalLabel">Please select one restaurant to continue:</h5>
+    </div>
+    <div class="modal-body">
+      <% unless locations.empty? %>
+        <% locations.each_with_index do |l, i| %>
+          <%= radio_button_tag "locations_array[]",l.id.to_i%>
+          <%= l.name %> <br /> 
+          <!-- <%= check_box_tag "locations[]", l.id, false, class: 'nested-item' %>
+          <%= l.name %> <br /> -->
+        <% end %>
+      <% end %>
+    </div>
+  <% elsif current_user.app_service_id == 2%>
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      <h5 id="myModalLabel">Please select not more than 10 restaurant to continue:</h5>
+    </div>
+    <div class="modal-body">
+      <% unless locations.empty? %>
+        <% locations.each_with_index do |l, i| %>
+          <%= check_box_tag "locations_array[]", l.id.to_i, false, class: 'nested-item', :id => "locations_array_#{l.id}" %>
+          <%= l.name %> <br />
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+  <div class="modal-footer">
+    <%= f.submit 'Submit',:class => 'btn btn-primary', :id => 'btn_submit_modal', :disabled => true %>
+    <button class="btn btn-success" data-dismiss="modal" aria-hidden="true">Cancel</button>
+  </div>
+<% end %>
+</div>
+<script type="text/javascript">
+   $(document).on('click', '#btn_submit_modal', function(){
+     $('#myModalUpdatePackageBasic').modal('hide');
+     $('#update_package_submit').prop('disabled', true);
+     $('#update_package_submit').attr('value', 'Please wait...');
+   });
+
+   
+    // $('#update_restaurant_form input[name="locations_array[]').each(function(){
+    //   if($(this).is(":checked")) {
+    //     // $('#btn_submit_modal').attr("disabled", false);
+    //      console.log("ok")
+    //     console.log($(this).is(":checked").length)
+    //   }
+    // });
+
+  //  $(document).on('click', '#cancel_service_ok', function(){
+  //   $("#myModalCancel").hide();
+  // });
+</script>

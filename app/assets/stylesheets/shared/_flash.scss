@@ -1,0 +1,12 @@
+.flash-messages-block {
+  position: fixed;
+  top: 0;
+  display: block;
+  right: 0;
+  left: 0;
+  z-index: 99999;
+  text-align: center;
+  div{
+    font-size: 15px;
+  }
+}

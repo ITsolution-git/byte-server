@@ -1,0 +1,3 @@
+#= require ../index
+
+@app.classes = {}

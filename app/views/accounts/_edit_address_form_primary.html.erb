@@ -1,0 +1,252 @@
+<div class="row-fluid">
+  <div class="accounts_form_errors_container">
+  </div>
+  <%= form_for user, :url => update_address_accounts_path, :remote => true do |f| %>
+   <%= f.hidden_field :skip_zip_validation, value: 1 %>
+   <div class="row-fluid">
+   <div class="span12">
+     <div class="span4 title-address">
+        <h6>Account Status</h6>
+     </div>
+     <div class="span3 top10 left30">
+       <%= get_active(user.active_braintree) %>
+     </div>
+    </div>
+    
+    <div class="span12">
+       <div class="span4 title-address">
+          <h6>Start Date</h6>
+       </div>
+       <div class="span6 top10 left30">
+          <%= get_date(user) %>
+       </div>
+    </div>
+      <div class="span12">
+    <div class="span4 title-address">
+        <h6>Username</h6>
+     </div>
+     <div class="span6 top10 left30">
+       <%= f.text_field :username, :class => 'width100' %>
+     </div>
+   </div>
+    <div class="span12">
+      <div class="span4 title-address">
+        <h6>Account Number</h6>
+      </div>
+      <div class="span6 top10 left30">
+        <%= get_account_number(current_user.account_number.to_i) %>
+      </div>
+    </div>
+    <div class="span12">
+       <div class="span4 title-address">
+          <h6>Phone Number</h6>
+       </div>
+       <div class="span8 top10 left30">
+          <%= f.text_field :phone, :placeholder=>"Phone", :class => 'width100' %>
+       </div>
+    </div>
+
+    <div class="span12">
+       <div class="span4 title-address">
+          <h6>Primary Contact</h6>
+       </div>
+       <div class="span6 left30">
+          <div class="top10 span4 width-text" id="firstname">
+            <%= f.text_field :first_name, :placeholder=>"Firstname" %>
+          </div>
+          <div class="top10 span4 width-text" id = 'lastname'>
+            <%= f.text_field :last_name, :autocomplete => :off, :placeholder=>"Lastname", :class => 'margin_text' %>
+          </div>
+       </div>
+    </div>
+
+    <div class="span12">
+       <div class="span4 title-address">
+          <h6>Primary Email</h6>
+       </div>
+       <div class="span6 top10 left30">
+        <%= f.label :email, user.email %>
+       </div>
+    </div>
+
+    <div class="span12">
+       <div class="span4 title-address">
+          <h6>Restaurant Name</h6>
+       </div>
+       <div class="span8 top10 left30">
+        <%= f.fields_for :profile, user.profile do |p| %>
+          <%= p.text_field :restaurant_name, :placeholder=>"Restaurant name", :class => 'width100'%>
+        <% end %>
+       </div>
+    </div>
+
+    <div class="span12">
+       <div class="span4 title-address">
+          <h6>Physical Address</h6>
+       </div>
+       <div class="span8 top10 left30">
+        <%= f.fields_for :profile, user.profile do |p| %>
+          <%= p.text_field :physical_address, :placeholder=>"Physical Address", :class => 'width100' %>
+        <% end %>
+       </div>
+    </div>
+  <!--   <div class="span12">
+       <div class="span4 title-address">
+          <h6>Physical City</h6>
+       </div>
+       <div class="span6 top10 left30">
+        <%= f.fields_for :profile, user.profile do |p| %>
+          <%= p.text_field :physical_state, :placeholder=>"Physical City" %>
+        <% end %>
+       </div>
+    </div> -->
+    <div class="span12 left50">
+       <div class="top10 span3 width-text">
+        <%= f.fields_for :profile, user.profile do |p| %>
+          <%= p.text_field :physical_city, :placeholder=>"City" %>
+        <% end %>
+       </div>
+       <div class="top10 span3 width-text">
+         <%= f.fields_for :profile, user.profile do |p| %>
+           <%= p.text_field :physical_zip, :class => 'zip', :placeholder=>"zip", :maxlength => 5%>
+         <% end %>
+       </div>
+       <div class="top10 span3 width-text">
+        <%= f.fields_for :profile, user.profile do |p| %>
+          <%= p.select :physical_state, options_from_collection_for_select(State.all, 'name', 'name', user.profile.physical_state.present? ? user.profile.physical_state.titleize : 'Alaska'), {:prompt=>"Select State"}, :class => "span12" %>
+        <% end %>
+       </div>
+       <div class="top10 span3 width-text">
+         <%= f.fields_for :profile, user.profile do |p| %>
+            <%= p.select(:physical_country, options_for_select([['United States','United States']],'United States'),{:prompt=>"Select Country"}, :class => "span12") %>
+          <% end %>
+       </div>
+    </div>
+    <div class="span12">
+       <div class="span4 title-address">
+          <h6>Mailing Address</h6>
+       </div>
+       <div class="span8 top10 left30">
+         <%= f.fields_for :profile, user.profile do |p| %>
+           <%= p.text_field :mailing_address , :placeholder=>"Mailing Address", :class => 'width100'%>
+         <% end %>
+       </div>
+    </div>
+<!--     <div class="span12">
+       <div class="span4 title-address">
+          <h6>Mailing City</h6>
+       </div>
+       <div class="span6 top10 left30">
+         <%= f.fields_for :profile, user.profile do |p| %>
+           <%= p.text_field :mailing_state , :placeholder=>"City"%>
+         <% end %>
+       </div>
+    </div> -->
+    <div class="span12 left50">
+       <div class="span3 width-text top10">
+         <%= f.fields_for :profile, user.profile do |p| %>
+           <%= p.text_field :mailing_city , :placeholder=>"City"%>
+         <% end %>
+       </div>
+       <div class="span3 width-text top10">
+           <%= f.fields_for :profile, user.profile do |p| %>
+             <%= p.text_field :mailing_zip, :class => 'zip', :placeholder=>"zip", :maxlength => 5 %>
+           <% end %>
+       </div>
+       <div class="span3 width-text top10">
+         <%= f.fields_for :profile, user.profile do |p| %>
+           <%= p.select(:mailing_state, options_from_collection_for_select(State.all, 'name', 'name', user.profile.mailing_state.present? ? user.profile.mailing_state.titleize : 'Alaska'), {:prompt=>"Select State"}, :class => "span12") %>
+          <% end %>
+       </div>
+       <div class="span3 width-text top10">
+          <%= f.fields_for :profile, user.profile do |p| %>
+            <%= p.select(:mailing_country, options_for_select([['United States','United States']],'United States'),{:prompt=>"Select Country"}, :class => "span12") %>
+          <%end %>
+       </div>
+    </div>
+
+     <div class="row-fluid margin16">
+        <div class="span4 pull-right top10">
+           <%= f.submit :value => 'Update', :id => 'address_form_submit',:class => 'btn btn-primary span12' %>
+         </div>
+        <div class="span4 pull-right top10">
+         <%= link_to 'Cancel', canel_address_accounts_path, :class => 'btn btn-cancel', :id => 'cancel_address', :remote => true %>
+        </div>
+      </div>
+
+    <!-- <div class="row-fluid">
+      <div class="span9 pad200 top10">
+       <%= link_to 'Cancel', canel_address_accounts_path, :class => 'btn btn-cancel', :remote => true %>
+      </div>
+      <div class="span3 top10">
+        <%= f.submit :value => 'Update', :id => 'address_form_submit',:class => 'btn btn-primary btn-size' %>
+      </div>
+    </div> -->
+   </div>
+</div>
+<% end %>
+<script type="text/javascript">
+  var account = new AccountForm();
+  account.modelName = 'user';
+  account.loadAllCountriesFromWS('#user_profile_attributes_physical_country');
+  account.loadAllMailingCountriesFromWS('#user_profile_attributes_mailing_country');
+  // if ($('#user_profile_attributes_physical_state').text() == 'Select State'){
+  //   profile_attributes_physical_state: [Validate.Presence],
+  // }
+  var addressform = Util.validate(account, {
+    profile_attributes_restaurant_name: [Validate.Presence],
+    profile_attributes_physical_address: [Validate.Presence],
+    profile_attributes_mailing_address: [Validate.Presence],
+
+    profile_attributes_physical_city: [
+      Validate.Presence,
+      [Validate.Length, { minimum: 1, maximum: 40 }]
+    ],
+    profile_attributes_mailing_city: [
+      Validate.Presence,
+      [Validate.Length, { minimum: 1, maximum: 40 }]
+    ],
+    profile_attributes_physical_zip: [
+      Validate.Presence,
+      Validate.Numericality,
+      [Validate.Length, {is: 5}]
+    ],
+    profile_attributes_mailing_zip: [
+      Validate.Presence,
+      Validate.Numericality,
+      [Validate.Length, {is: 5}]
+    ],
+    first_name: [
+      Validate.Presence,
+      [Validate.Length, { minimum: 3, maximum: 30 }],
+      //[Validate.Format, {pattern: /^[a-zA-Z ][a-z]+[\s|,][a-zA-Z ][a-z]{1,19}$/, failureMessage: "Invalid primary contact. Use: Firstname Lastname"}]
+      //[Validate.Format, {pattern: /(((\S+) (\S+))|(\S+))/, failureMessage: "Invalid full name. Use: first name and last name"}]
+    ],
+    last_name: [
+      Validate.Presence,
+      [Validate.Length, { minimum: 3, maximum: 30 }],
+    ],
+
+    username: [
+      Validate.Presence,
+      [Validate.Length, { minimum: 3, maximum: 30 }],
+    ],
+
+    profile_attributes_physical_state: [Validate.Presence],
+    profile_attributes_physical_country: [Validate.Presence],
+
+    profile_attributes_mailing_state: [Validate.Presence],
+    profile_attributes_mailing_country: [Validate.Presence]
+  });
+   $('#address_form_submit').click(function() {
+    for (var element in addressform) {
+      // important check that this is objects own property
+      // not from prototype prop inherited
+      if(addressform.hasOwnProperty(element)){
+        if (addressform[element].validationFailed) {
+          return false;
+        }
+      }
+    }
+  });
+</script>

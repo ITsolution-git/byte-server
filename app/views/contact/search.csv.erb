@@ -1,0 +1,159 @@
+Basic User Info
+------------------------
+<% userHeaders = ['Date Added', 'First Name', 'Last Name', 'Username', 'Email', 'Zipcode', 'Points'] %>
+<%= CSV.generate_line userHeaders %>
+<% @customer_all.each do |user| %>
+  <% row = [ "#{user.created_at.in_time_zone("America/Chicago").strftime("%Y-%m-%d")}"] %>
+  <% row << "#{user.first_name}" %>
+  <% row << "#{user.last_name}" %>
+  <% row << "#{user.username}" %>
+  <% row << "#{user.email}" %>
+  <% row << "#{user.zip}" %>
+  <% row << "#{user.points}" %>
+  <% row.collect! {|string| (string == "") ? "None" : string} %>
+  <%= CSV.generate_line(row).strip.html_safe %>
+<% end %>
+
+
+Unlocked prizes
+------------------------
+<% unlockedPrizesHeaders = ['Date Unlocked', 'First Name', 'Last Name', 'Username', 'Email', 'User Zipcode', 'Prizename'] %>
+<%= CSV.generate_line unlockedPrizesHeaders %>
+<% @customer_all.each do |user| %>
+  <% user_prizes = UserPrize.where(location_id: @current_location.id, user_id: user.id) %>
+  <% user_prizes.each do |u_prize| %>
+    <% row = [ "#{u_prize.created_at.in_time_zone("America/Chicago").strftime("%Y-%m-%d")}"] %>
+    <% row << "#{user.first_name}" %>
+    <% row << "#{user.last_name}" %>
+    <% row << "#{user.username}" %>
+    <% row << "#{user.email}" %>
+    <% row << "#{user.zip}" %>
+    <% row << "#{u_prize.prize.name}" %>
+    <% row.collect! {|string| (string == "") ? "None" : string} %>
+    <%= CSV.generate_line(row).strip.html_safe %>
+  <% end %>
+<% end %>
+
+
+Redeemed prizes
+------------------------
+<% redeemedPrizesHeaders = ['Date Redeemed', 'First Name', 'Last Name', 'Username', 'Email', 'User Zip Code', 'Prizename'] %>
+<%= CSV.generate_line redeemedPrizesHeaders %>
+<% possiblePrizes = [] %>
+<% statusPrizes = @current_location.status_prizes %>
+<% statusPrizes.each do |sp| %>
+  <% sp_prizes = sp.prizes  %>
+  <% sp_prizes.each do |prize| %>
+    <% possiblePrizes << prize %>
+  <% end %>
+<% end %>
+<% possiblePrizes.each do |pp| %>
+  <% pp.prize_redeems.each do |redeemed| %>
+    <% user = redeemed.user %>
+    <% row = ["#{redeemed.created_at.in_time_zone("America/Chicago").strftime("%Y-%m-%d")}"] %>
+    <% if (user) %>
+      <% row << "#{user.first_name}" %>
+      <% row << "#{user.last_name}" %>
+      <% row << "#{user.username}" %>
+      <% row << "#{user.email}" %>
+      <% row << "#{user.zip}" %>
+      <% row << "#{redeemed.prize.name}" %>
+    <% else %>
+      <% row << "Deleted Account" %>
+      <% row << "Deleted Account" %>
+      <% row << "Deleted Account" %>
+      <% row << "Deleted Account" %>
+      <% row << "Deleted Account" %>
+      <% row << "#{redeemed.prize.name}" %>
+    <% end %>
+    <% row.collect! {|string| (string == "") ? "None" : string} %>
+    <%= CSV.generate_line(row).strip.html_safe %>
+  <% end %>
+<% end %>
+
+
+Checkins
+------------------------
+<% checkinsHeaders = ['Checkin Date', 'First Name', 'Last Name', 'Username', 'Email', 'User Zip Code', 'Checkin Time'] %>
+<%= CSV.generate_line checkinsHeaders %>
+<% @checkins.each do |checkin| %>
+  <% user = checkin.user %>
+  <% row = ["#{checkin.created_at.in_time_zone("America/Chicago").strftime("%Y-%m-%d ")}"] %>
+  <% if (user) %>
+    <% row << "#{user.first_name}" %>
+    <% row << "#{user.last_name}" %>
+    <% row << "#{user.username}" %>
+    <% row << "#{user.email}" %>
+    <% row << "#{user.zip}" %>
+    <% row << "#{checkin.created_at.in_time_zone("America/Chicago").strftime("%l:%M %p")}" %>
+  <% else %>
+    <% row << "Deleted Account" %>
+    <% row << "Deleted Account" %>
+    <% row << "Deleted Account" %>
+    <% row << "Deleted Account" %>
+    <% row << "Deleted Account" %>
+    <% row << "#{checkin.created_at.in_time_zone("America/Chicago").strftime("%l:%M %p")}" %>
+  <% end %>
+  <% row.collect! {|string| (string == "") ? "None" : string} %>
+  <%= CSV.generate_line(row).strip.html_safe %>
+<% end %>
+
+
+Favorited Items
+------------------------
+<% favItemsHeaders = ['Date', 'First Name', 'Last Name', 'Username', 'User Zip Code', 'Favorited Item Name'] %>
+<%= CSV.generate_line favItemsHeaders %>
+<% @items.each do |i| %>
+  <% i.item_favourites.each do |item_fav| %>
+    <% user = item_fav.user %>
+    <% row = ["#{item_fav.created_at.in_time_zone("America/Chicago").strftime("%Y-%m-%d ")}"] %>
+    <% if user %>
+      <% row << "#{user.first_name}" %>
+      <% row << "#{user.last_name}" %>
+      <% row << "#{user.username}" %>
+      <% row << "#{user.zip}" %>
+      <% row << "#{i.name}" %>
+    <% else %>
+      <% row << "Deleted Account" %>
+      <% row << "Deleted Account" %>
+      <% row << "Deleted Account" %>
+      <% row << "Deleted Account" %>
+      <% row << "#{i.name}" %>
+    <% end %>
+    <% row.collect! {|string| (string == "") ? "None" : string} %>
+    <%= CSV.generate_line(row).strip.html_safe %>
+  <% end %>
+<% end %>
+
+
+Item Comments
+------------------------
+<% itemCommentsHeaders = ['Date', 'First Name', 'Last Name', 'Username', 'Email', 'User Zip Code',  'Item Name', 'Rating', 'Grade', 'Comment'] %>
+<%= CSV.generate_line itemCommentsHeaders %>
+<% @item_comments.each do |item_com| %>
+  <% user = item_com.user %>
+  <% row = ["#{item_com.created_at.in_time_zone("America/Chicago").strftime("%Y-%m-%d ")}"] %>
+  <% if user %>
+    <% row << "#{user.first_name}" %>
+    <% row << "#{user.last_name}" %>
+    <% row << "#{user.username}" %>
+    <% row << "#{user.email}" %>
+    <% row << "#{user.zip}" %>
+    <% row << "#{item_com.item.name}" %>
+    <% row << "#{item_com.rating}" %>
+    <% row << "#{item_com.get_rating_as_letter}" %>
+    <% row << "#{item_com.text}" %>
+  <% else %>
+    <% row << "Deleted Account" %>
+    <% row << "Deleted Account" %>
+    <% row << "Deleted Account" %>
+    <% row << "Deleted Account" %>
+    <% row << "Deleted Account" %>
+    <% row << "#{item_com.item.name}" %>
+    <% row << "#{item_com.rating}" %>
+    <% row << "#{item_com.get_rating_as_letter}" %>
+    <% row << "#{item_com.text}" %>
+  <% end %>
+  <% row.collect! {|string| (string == "") ? "None" : string} %>
+  <%= CSV.generate_line(row).strip.html_safe %>
+<% end %>

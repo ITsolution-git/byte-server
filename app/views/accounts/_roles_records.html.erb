@@ -1,0 +1,35 @@
+<% if not restaurants_manager.empty? %>
+  <% 
+    manager = []
+    restaurants_manager.each do |r|
+      manager << r.info_id
+    end
+    manager = manager.uniq
+  %>  
+  <a class="btn dropdown-toggle scrollable-menu" data-toggle="dropdown" href="#">
+  <% if info.new_record? %>
+    Edit Account Manager
+  <% else %>
+    <%=info.name%>
+  <% end %>
+    <span class="caret"></span>
+  </a>
+
+  <ul class="dropdown-menu">
+    <%
+    manager.each do |res|
+      info = Info.find(res)
+    %>
+      <li id="<%= res%>">
+        <div class="items-dropdown">
+          <span class="item-name"><%= link_to info.name,edit_roles_accounts_path(info), remote: true %></span>
+           <%= link_to image_tag('delete_icon.png'), delete_user_manager_path(info),method: :get, :class => 'delete-item-action',:title => "Delete", :"data-toggle" => "tooltip", :rel => "tooltip", :remote=> true, :confirm => 'Are you sure to delete this account?'%>
+          <div class="clear"></div>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+<% end %>
+<script type="text/javascript">
+  // console.log("<%=@user_manager.inspect%>")
+</script>

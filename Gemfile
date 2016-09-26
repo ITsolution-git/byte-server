@@ -1,0 +1,107 @@
+source 'https://rubygems.org'
+
+ruby '2.1.2'
+
+gem 'rails', '3.2.19'
+
+gem 'fastimage'
+gem 'active_model_serializers', github: 'rails-api/active_model_serializers', branch: '0-9-stable'
+
+gem 'newrelic_rpm'
+gem "font-awesome-rails"
+gem 'awesome_print'
+gem "figaro"
+gem "nested_form"
+gem 'fog'
+gem 'acts_as_strip'
+gem 'axlsx' , '2.0.1'
+gem 'bootstrap-datepicker-rails', '>= 0.6.21'
+gem 'bootstrap-timepicker-rails'
+gem 'braintree-rails', :git => "https://github.com/lyang/braintree-rails.git", :branch => 'master'
+gem 'bugsnag'
+gem 'cancan'
+gem 'capistrano', '~> 3.2.0'
+gem 'capistrano-ext'
+gem 'capistrano-rails', '~> 1.1'
+gem 'capistrano-rvm'
+gem 'carrierwave'
+gem 'copy_carrierwave_file'
+gem 'devise', "2.2.3"
+gem 'execjs'
+gem 'friendly_id', '~> 4.0.9'
+gem 'geocoder', '~> 1.2.7'
+gem 'google_places'
+gem 'jcrop-rails-v2', '~> 0.9.12.3'
+gem 'jquery-cookie-rails'
+gem 'jquery-rails', '~> 3.0.4'
+gem 'jquery-migrate-rails'
+gem 'jquery-tablesorter'
+gem 'jquery-ui-rails', '~> 4.2.1'
+gem 'kaminari', :require => true
+gem 'less-rails'
+gem 'masked_input-rails'
+gem 'mini_magick'
+gem 'mysql2'
+gem 'oauth2'
+gem 'parse-ruby-client', '~> 0.3.0'
+gem 'piet'
+gem 'png_quantizator'
+gem 'prawn' , '0.13.1'
+gem 'pushmeup'
+gem 'rabl'
+gem 'rake', '~> 10.3.2'
+gem 'rb-readline'
+gem 'redactor-rails'
+gem 'remotipart', '~> 1.2'
+gem 'rmagick', :require => 'RMagick'
+#gem 'rmagick', require: false
+gem 'rufus-scheduler' ,'~>2.0.24'
+gem 'similar_text', '~> 0.0.4'
+gem 'therubyracer'
+gem 'twitter-bootstrap-rails'
+gem 'unicorn'
+gem 'underscore-rails'
+gem 'vidibus-routing_error'
+gem 'jquery-validation-rails'
+gem 'word-count-validator', '~> 1.0.0'
+gem 'amoeba'
+gem 'slim-rails'
+gem 'decent_exposure'
+gem 'ruby-progressbar'
+gem 'resque', git: 'git://github.com/resque/resque.git', branch: '1-x-stable', require: 'resque/server'
+gem 'resque-status'
+gem 'resque-loner'
+gem 'capistrano-resque', '~> 0.2.2', require: false
+gem 'coffee-rails', '~> 3.2.1'
+gem 'cloudinary'
+gem 'mandrill_mailer'
+gem 'gmaps4rails'
+gem 'twitter'
+gem 'test-unit'
+gem 'wicked'
+gem 'groupdate'
+
+group :assets do
+  gem 'sass-rails',   '~> 3.2.3'
+  gem 'uglifier', '>= 1.0.3'
+  gem 'quiet_assets'
+end
+
+group :development do
+  gem 'better_errors'
+  gem 'binding_of_caller'
+  gem 'brakeman', :require => false
+  gem "letter_opener"
+  gem 'meta_request'
+  gem 'pry'
+  gem 'pry-byebug'
+  gem 'pry-remote'
+  gem 'pry-stack_explorer'
+  gem 'rspec-rails'
+  gem 'rspec-expectations'
+  gem 'shoulda-matchers', require: false
+  gem 'spring'
+  gem 'spring-commands-rspec'
+  gem 'thin'
+  gem 'foreman'
+end

@@ -1,0 +1,79 @@
+ <html>
+  <header>
+
+  </header>
+  <body >
+     <div style='background-color:#E8E8E8;border-style:solid;border-width:1px;margin-left:20px;
+margin-right:30px;width:580px;'>
+       <div style='margin-left:20px;margin-right:30px;'>
+         <h2 style='color:#330066;font-weight:bold;'>BYTE Order</h2>
+         <h4>Order #: <%=@order["order_id"] %></h4>
+         <h3 style='color:#330066;'><%= @location.name %></h3>
+         <h4>Items Ordered:</h4>
+         <div style='margin-left:40px;margin-right:40px;'>
+            <table width='500px' >
+               <tr width='500px' style=''>
+                  <th style='color:#330066;border:1px solid black;text-align:center;'>ID</th>
+                  <th style='color:#330066;border:1px solid black;text-align:center;'>Item Name</th>
+                  <th style='color:#330066;border:1px solid black;text-align:center;'> Quantity</th>
+                  <th style='color:#330066;border:1px solid black;text-align:center;'>Item Price</th>
+              </tr>
+            <% @order_items.each do |item| %>
+              <tr width='500px' >
+                <td style='text-align:center;border:1px solid black;'><%= item["id"]%></td>
+                <td style='text-align:left;border:1px solid black;padding-left:10px;'><%= OrderItem.find(item['id']).item.name%></td>
+                <td  style='text-align:center;border:1px solid black;'><%= item["quantity"]%></td>
+                <td style='text-align:center;border:1px solid black;'><%=number_to_currency(item["price"], precision: 2)%></td>
+              </tr>
+              <% item["order_item_options"].to_a.each do |item1| %>
+                <tr width='500px' >
+                  <td style='text-align:center;border:1px solid black;'><%= item1["id"]%></td>
+                  <td style='text-align:left;border:1px solid black;padding-left:10px;'><%= ItemOptionAddon.find(item1['item_option_addon_id']).name%></td>
+                  <td style='text-align:center;border:1px solid black;'><%= item1["quantity"]%></td>
+                  <td style='text-align:center;border:1px solid black;'><%= number_to_currency(item1["price"], precision: 2)%><td>
+                </tr>
+              <% end %>
+            <% end %>
+            </table>
+            <hr/>
+            <table width='210px' style='margin-left:260px;margin-right:260px;'>
+                  <tr>
+                    <td style='color:#330066;'>Sub Total</td>
+                    <td style='text-align:right;color:#330066;'><%=number_to_currency(@order["sub_total"], precision: 2)%></td>
+                  </tr>
+                  <tr>
+                    <td style='color:#330066;'>Tax</td>
+                    <td style='text-align:right;color:#330066;'><%=number_to_currency(@order["total_tax"], precision: 2)%></td>
+                  </tr>
+                  <tr>
+                    <td style='color:#330066;'>Tip</td>
+                    <% if @order["total_tip"] > 0 && @order["tip_percent"] == -2 %>
+                    <td style='color:#330066;text-align:right;'>
+                      <%=number_to_currency(@order["total_tip"], precision: 2)%>
+                    </td>
+                    <%elsif @order["total_tip"] == -2 && @order["tip_percent"] > 0 %>
+                      <td style='color:#330066;text-align:right;'>
+                        <%=number_to_currency(@order["tip_percent"] * @order["sub_total"], precision: 2)%>
+                      </td>
+                    <%end%>
+                  </tr>
+                  <tr>
+                      <td style='color:#330066;'>Service Fee</td>
+                      <td style='text-align:right;color:#330066;'><%=number_to_currency(@order["fee"], precision: 2)%></td>
+                    </tr>
+                  <tr>
+                    <td style='color:#330066;'>----------</td>
+                    <td style='color:#330066;text-align:right;'>----------</td>
+                  </tr>
+                  <tr>
+                    <td style='color:#330066;'>Total</td>
+                    <td style='color:#330066;text-align:right;'>
+                      <%=number_to_currency(@order["total_price"], precision: 2)%>
+                    </td>
+                  </tr>
+            </table>
+         </div>
+       </div>
+     </div>
+    </body>
+</html>

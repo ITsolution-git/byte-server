@@ -1,0 +1,7 @@
+<%- userHeaders = ['First Name', 'Last Name', 'Username', 'Email', 'Points', 'Zipcode'] -%>
+<% if !@user_accounts_app_all.empty? %>
+  <%= CSV.generate_line userHeaders %>
+  <% @user_accounts_app_all.each do |user| %>
+    <%= CSV.generate_line([user.first_name, user.last_name, user.username, user.email, user.points, user.zip]) %>
+  <% end %>
+<% end %>

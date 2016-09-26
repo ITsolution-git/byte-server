@@ -1,0 +1,56 @@
+#chart-type {
+  margin-top: 20px;
+}
+
+.sparkline {
+  position: relative;
+  display: inline-block;
+  margin-left: 10px;
+  border-radius: 5px;
+  padding: 5px 5px 0px;
+
+}
+
+.sparkline:hover::before, .sparkline.active::before {
+  content: ' ';
+  background: rgba(255,0,0,0.3);
+}
+
+.sparkline::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  border-radius: 5px;
+}
+
+.sparkline.checkins:hover::before, .sparkline.checkins.active::before {
+  background: rgba(0, 255, 0, 0.3);
+}
+.sparkline.zipcodes:hover::before, .sparkline.zipcodes.active::before {
+  background: rgba(0, 0, 255, 0.3);
+}
+.sparkline.feedbacks:hover::before, .sparkline.feedbacks.active::before {
+  background: rgba(165, 42, 42, 0.3);
+}
+.sparkline.favourites:hover::before, .sparkline.favourites.active::before {
+  background: rgba(128, 0, 128, 0.3);
+}
+.sparkline.orders:hover::before, .sparkline.orders.active::before {
+  background: rgba(128, 128, 0, 0.3);
+}
+.sparkline.socials:hover::before, .sparkline.socials.active::before {
+  background: rgba(255, 0, 255, 0.3);
+}
+.sparkline.new_customers:hover::before, .sparkline.new_customers.active::before {
+  background: rgba(0, 0, 128, 0.3);
+}
+.sparkline.redeemed_prizes:hover::before, .sparkline.redeemed_prizes.active::before {
+  background: rgba(0, 100, 0, 0.3);
+}
+#date-range .range-filter.active {
+  font-weight: bold;
+  text-decoration: underline;
+}
+

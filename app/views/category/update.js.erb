@@ -1,0 +1,38 @@
+<% if @category.errors.full_messages.any? %>
+  $(".category_form_errors_container").html("<%= j render("layouts/form_errors",:object=>@category) %>").show().delay(3000).fadeOut();
+<% else %>
+  <%
+    is_equal = false
+    if (@category.id.to_i == @category_old.id.to_i) && (@category.redemption_value.to_i == @category_old.redemption_value.to_i)\
+      && (@category.name.to_s == @category_old.name.to_s) && (@category.category_points.to_i == @category_old.category_points.to_i)
+      is_equal = true
+    end
+  %>
+  <% if is_equal %>
+    $(".category_form_errors_container").html("<%= j render("layouts/form_warning",:message=>"There are no changes on this screen to be saved. Please make any changes to update") %>").show().delay(3000).fadeOut();
+  <% else %>
+    <% @category.menus.each do |menu| %>
+      $(".menus_container  #menu_<%=menu.id%>_category_<%=@category.id%> .category_row").html("<%= j render partial: "menus/category_row", locals:{category: @category, menu: menu, restaurant: @restaurant} %>")
+    <% end %>
+
+    $('.category_name_row_<%= @category.id %>').html("<%= @category.name %>");
+    $('.category_name_row_<%= @category.id %>').parent().find('.muted small').html("<%= @category.category_points %> Points");
+    <% if remotipart_submitted? %>
+      $(".build_menu_block_container #build_menu_toggle").html("<%= j "#{render 'menus/build_menu_form_primary'}" %>");
+    <% else %>
+      $(".build_menu_block_container #build_menu_toggle").html("<%= j render "menus/build_menu_form_primary" %>");
+    <% end %>
+    <%
+      @category = Category.new
+      combo_item = ComboItem.new
+    %>
+    $(".category_form_block_container .wrap_title_form").html("<%= j render partial: "menus/category_title_form",locals: {:category => @category} %>");
+    $(".category_form_block_container #category_form_toggle").html("<%= j render partial: "menus/category_form_primary",locals: {:category => @category} %>");
+    $(".category_form_errors_container").html("<%= j render("layouts/form_success", :message => "Category is updated successfully.") %>").show().delay(3000).fadeOut();
+
+    $(".combo_item_form_block_container .wrap_title_form").html("<%= j render partial: "menus/combo_item_title_form", locals: {combo_item: combo_item} %>");
+    $(".combo_item_form_block_container #combo_item_form_toggle").html("<%= j render partial: "menus/combo_item_form_primary", locals: {combo_item: combo_item} %>");
+  <% end %>
+<% end %>
+
+new app.classes.MenuManagement('.menus_container');

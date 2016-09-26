@@ -1,0 +1,25 @@
+<%
+  modal_id = "#{association}_modal"
+  logo = association.eql?("logo")
+%>
+
+<div class="photo-display" id="<%= association %>_display">
+  <% if object.try(:public_id) %>
+    <div class: 'photo-display'>
+      <%= cl_image_tag object.public_id,
+        version: object.version,
+        transformation: [
+        {x: (object.crop_x if object.crop_x), y: (object.crop_y if object.crop_y), width: (object.crop_w if object.crop_w), height: (object.crop_h if object.crop_h), crop: :crop},
+        {width: (180 if logo), height: (180 if logo), radius: ('max' if logo), crop: ('fit' if logo)},
+        {angle: object.angle}] %>
+    </div>
+    <%= link_to image_tag("delete_icon.png"), '#', class: "remove-photo-btn", "data-association"=>association %>
+  <% end %>
+</div>
+
+<a class="btn" data-toggle="modal" data-target="#<%= modal_id %>">
+  Select Photo
+</a>
+
+<%= render partial: 'shared/select_photo_modal', locals: {modal_id: modal_id, object: object, association: association, photo_source: photo_source, logo: logo} %>
+

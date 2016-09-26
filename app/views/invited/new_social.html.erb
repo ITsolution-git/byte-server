@@ -1,0 +1,50 @@
+<h2>Register</h2>
+<div class="well">
+  <div style="margin:0px 20px">
+    <%= form_for @user, :url => {:action => "regis_social"}, :method => "post" do |f| %>
+        <div><%= render 'shared/error_messages', :object => @user %></div>
+        <%= hidden_field_tag :cur_id, @c_id %>
+        <div class="row top10">
+          <div class="span6">
+            <label>Username (*): </label>
+            <%= f.text_field :username, :autofocus => true,:placeholder=>"Username",:class=>"input-block-level" %>
+          </div>
+        </div>
+        <div class="row top10">
+          <div class="span6">
+            <label>Email (*): </label>
+            <%= f.email_field :email,:placeholder=>"Email",:class=>"input-block-level" %>
+          </div>
+        </div>
+        <div class="row top10">
+          <div class="span6">
+            <label>Zipcode: </label>
+            <%= f.text_field :zip,:placeholder=>"Zipcode",:class=>"input-block-level" %>
+          </div>
+        </div>
+        <div class="row top10">
+          <div class="span3">
+            <label>First Name: </label>
+            <%= f.text_field :first_name,:autocomplete => :off,:placeholder=>"First Name",:class=>"input-block-level" %>
+          </div>
+          <div class="span3">
+            <label>Last Name: </label>
+            <%= f.text_field :last_name,:autocomplete => :off, :placeholder=>"Last Name",:class=>"input-block-level" %>
+          </div>
+        </div>
+        <div class="row top10">
+          <div class="span6">
+            <label>Password (*): </label>
+            <%= f.password_field :password,:autocomplete => :off,:placeholder=>"Password",:class=>"input-block-level" %>
+          </div>
+        </div>
+        <div class="row top10">
+          <div class="span6">
+            <label>Confirm Password (*): </label>
+            <%= f.password_field :password_confirmation,:autocomplete => :off,:placeholder=>"Confirm Password",:class=>"input-block-level" %>
+          </div>
+        </div>
+        <%= f.submit "Sign Up", :class=> "btn btn-primary" %>
+    <% end %>
+  </div>
+</div>

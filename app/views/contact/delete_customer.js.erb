@@ -1,0 +1,14 @@
+<% if @user_contact_delete.nil? || @user_contact_delete == "" %>
+  alert('Please select at least a group to delete.')
+<% else %>
+<% if @user_contact_delete.count == 1 %>
+ <% flash[:notice] = "Contact deleted." %>
+ <% else %>
+ <% flash[:notice] = "Contacts deleted." %>
+ <% end %>
+ <% if @group_id.nil? || @group_id == "" %>
+  window.location.href="<%=search_restaurant_contact_index_path(@restaurant)%>"
+ <% else %>
+  window.location.href="<%=search_restaurant_contact_index_path(@restaurant, :group_id =>@group_id)%>"
+ <% end %>
+ <% end %>

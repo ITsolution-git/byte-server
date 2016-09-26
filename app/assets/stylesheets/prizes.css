@@ -1,0 +1,43 @@
+#prize-category{
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+.prize-menu{
+  margin-left: 222px;
+  width: 240px;
+}
+
+.item-prize{
+  padding: 3px 20px;
+}
+
+.prize-header{
+    padding: 10px;
+    font-weight: bold;
+}
+.item-prize:hover{
+    cursor: pointer;
+    /*background: #0081c2;*/
+}
+.none-prize{
+  padding: 3px 10px;
+}
+.none-prize:hover{
+  cursor: pointer;
+  background: #0081c2;
+}
+.hidden-field{
+  display: none;
+}
+.wrap-prize-item{
+  list-style-type: none;
+  margin: 0 auto;
+}
+.wrap-prize-category{
+  list-style-type: none;
+  margin: 0 auto;
+}
+.caret{
+  float: right;
+}

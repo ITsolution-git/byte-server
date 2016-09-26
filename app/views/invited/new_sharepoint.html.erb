@@ -1,0 +1,162 @@
+<h2>Register</h2>
+<div class="well">
+  <div style="margin:0px 20px">
+  <%
+    expired_link = regis_sharepoint_new_path
+    action_link = expired_link
+    unless @friendship.nil?
+      action_link = regis_sharepoint_path(@user.authentication_token)
+    end
+    friend_expired_link = ''
+  %>
+
+<div id="modal_invited_expired" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">Warning</h3>
+  </div>
+  <div class="modal-body">
+    <p>
+      The invitation is over 30 days.You will not receive the shared points anymore. Please continue signing up to use BYTE.
+    </p>
+
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-success" data-dismiss="modal" aria-hidden="true">Close</button>
+  </div>
+</div>
+  <%= form_for @user, :url => action_link, :method => "post", html: {id: 'regis_sharepoint', :autocomplete=>:off}, :validate => true do |f| %>
+  <% unless @friendship.nil? %>
+    <% friend_expired_link = friend_expired_path(@friendship.id) %>
+    <%= hidden_field_tag :friend_id, @friendship.id %>
+    <%= hidden_field_tag :location_id, @location.id%>
+  <%end%>
+        <div><%= render 'shared/error_messages', :object => @user %></div>
+
+        <div class="row top10">
+          <div class="span6">
+            <label>Username (*): </label>
+            <%= f.text_field :username, :autofocus => true,:placeholder=>"Username",:class=>"input-block-level", :required => 'required' %>
+          </div>
+        </div>
+        <div class="row top10">
+          <div class="span6">
+            <label>Email (*): </label>
+              <%= f.email_field :email, :placeholder=>"Email", :class=>"input-block-level", :id => "user_email", :required => 'required' %>
+
+          </div>
+        </div>
+        <div class="row top10">
+          <div class="span6">
+            <label>Zipcode (*): </label>
+            <%= f.text_field :zip,:placeholder=>"Zipcode",:class=>"input-block-level", :required => 'required' %>
+          </div>
+        </div>
+        <div class="row top10">
+          <div class="span3">
+            <label>First Name (*): </label>
+            <%= f.text_field :first_name, :placeholder=>"First Name",:class=>"input-block-level", :required => 'required' %>
+          </div>
+          <div class="span3">
+            <label>Last Name (*): </label>
+            <%= f.text_field :last_name, :placeholder=>"Last Name",:class=>"", :required => 'required' %>
+          </div>
+        </div>
+        <div class="row top10">
+          <div class="span6">
+            <label>Password (*): </label>
+            <%= f.password_field :password, :placeholder=>"Password",:class=>"input-block-level", :required => 'required' %>
+          </div>
+        </div>
+        <div class="row top10">
+          <div class="span6">
+            <label>Confirm Password (*): </label>
+            <%= f.password_field :password_confirmation, :placeholder=>"Confirm Password",:class=>"input-block-level", :required => 'required' %>
+          </div>
+        </div>
+        <%= f.submit "Sign Up", :class=> "row btn btn-primary", id: "signup_invited" %>
+    <% end %>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $(function(event){
+    $("#regis_sharepoint").validate({
+      rules: {
+        'user[email]': {
+          required: true,
+          email: true,
+          remote: {
+              url: "<%= check_email_prize_index_path %>",
+              type: "get",
+              data: {
+                email: function() {
+                  return $( "#user_email" ).val();
+                },
+                user_id: function() {
+                  return "<%= @user.id %>";
+                }
+              }
+          }
+        },
+        'user[password]': "required",
+        'user[password_confirmation]': {
+          equalTo: "#user_password"
+        },
+        'user[zip]':{
+          digits: true,
+          minlength: 5,
+          maxlength: 5
+        },
+        'user[username]': {
+          required: true,
+          remote: {
+              url: "<%= check_username_prize_index_path %>",
+              type: "get",
+              data: {
+                username: function() {
+                  return $( "#user_username" ).val();
+                }
+              }
+          }
+        }
+      },
+      messages:{
+        'user[username]':{
+          remote: 'Username is already registered.'
+        },
+        'user[email]':{
+          remote: 'Email is already registered.'
+        }
+      },
+      submitHandler: function(form) {
+        form.submit();
+    }
+   });
+  })
+</script>
+
+<% content_for :scripts do %>
+  <script type="text/javascript">
+  var params = {
+    'from_user':'<%=@friendship.friendable_id%>',
+    'to_user':'<%=@user.email%>',
+    'username':'<%=@share.username%>',
+    'friendship_id':'<%=@friendship.id%>',
+    'location_id': '<%= @location.id%>'
+  }
+  var invitedFormObj = {
+    'expired' : <%= @friendship.nil? && !@user.errors.any? %>,
+    'add_friend_link': '<%=request_friend_path%>',
+    'signed_up': <%=@check_signup%>,
+    'params': params,
+    'alert': '#modal_invited_expired',
+    'form': '#regis_sharepoint',
+    'submit': '#signup_invited',
+    'expired_link': '<%= expired_link %>',
+    'friend_expired_link': '<%= friend_expired_link %>'
+  }
+  </script>
+
+<% end %>
+<%= javascript_include_tag "invited_form" %>

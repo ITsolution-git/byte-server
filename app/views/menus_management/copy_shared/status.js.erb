@@ -1,0 +1,4 @@
+<% @complete_menus.each do |menu| %>
+  var $menu_item = $(".copying-menus #menu-item-<%= menu.id %>");
+  $menu_item.text($menu_item.text() + ' COMPLETE! please reload page to display it!')
+<% end %>

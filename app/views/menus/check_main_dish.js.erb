@@ -1,0 +1,9 @@
+<% if !@combo_item_items.nil? && !@combo_item_items.empty? || @check == true %>
+  alert('This item is the free item in some combos. Please remove it from combos before updating.');
+  $('#item_is_main_dish').prop('checked', false);
+<% end %>
+
+<% if !@combo_items.nil? && !@combo_items.empty? %>
+  alert('This item is the main dish in some combos. Please remove it from combos before updating.');
+  $('#item_is_main_dish').prop('checked', true);
+<% end %>

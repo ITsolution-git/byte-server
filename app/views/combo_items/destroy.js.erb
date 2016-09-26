@@ -1,0 +1,7 @@
+<%
+  @combo_item = ComboItem.new
+%>
+$("#menus_container").html("<%= escape_javascript render('menus', restaurant_menus: @restaurant.menus, restaurant_copying_menus: @restaurant.copy_shared_menu_statuses) %>");
+$(".combo_item_form_block_container .wrap_title_form").html("<%= j render partial: "menus/combo_item_title_form", locals: {combo_item: @combo_item} %>");
+$(".combo_item_form_block_container #combo_item_form_toggle").html("<%= j render partial: "menus/combo_item_form_primary", locals: {combo_item: @combo_item} %>");
+$(".combo_item_form_errors_container").html('<%= j render("layouts/form_success", :message => "Combo is deleted successfully") %>').show().delay(3000).fadeOut();

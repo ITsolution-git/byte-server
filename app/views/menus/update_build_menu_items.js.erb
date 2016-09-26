@@ -1,0 +1,13 @@
+$('#build_menu_item_id_wrapper').html("<%= j render partial: 'menus/build_menu_item_id', locals: {item_ids: @item_ids} %>");
+var btn_name = 'Update';
+<% if @item_ids.empty? %>
+  btn_name = 'Add';
+<% end %>
+<% if not @current_menu.nil? and @current_menu.published? %>
+    $('#build_btn').attr('disabled', true);
+    $('#build_btn').removeClass('btn-primary');
+<% else %>
+    $('#build_btn').removeAttr('disabled');
+    $('#build_btn').addClass('btn-primary');
+<% end %>
+$('#build_btn').val(btn_name);

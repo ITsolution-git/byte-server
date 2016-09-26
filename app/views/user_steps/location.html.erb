@@ -1,0 +1,105 @@
+<%
+  previous_country = ''
+  previous_state = ''
+  previous_city = ''
+  previous_billing_country = ''
+  previous_billing_state = ''
+  previous_billing_city = ''
+  previous_restaurant_country_code = params[:restaurant_country_code].blank? ? 'US' : params[:restaurant_country_code]
+%>
+<%
+  if !session["move_location_id"].blank?
+    @location = Location.find(session["move_location_id"])
+  end
+%>
+<div class="well">
+  <div class="row-fluid">
+    <div class="span12">
+      <center><%= image_tag 'signup/brand.png' %></center>
+    </div>
+    <div class="span12">
+      <h3 class="text-center">Let's Add Your First Location</h3>
+    </div>
+  </div>
+
+  <div class="row-fluid">
+    <div class="span12">
+      <p class="text-center"><%= check_box_tag 'isMulitple' %> <span> Part of a Chain/Multiple Location?</span></p>
+    </div>
+  </div>
+
+  <!-- star form -->
+  <%= form_for(resource, :url => wizard_path, method: :put, :html => {:autocomplete => "off"}) do |f| %>
+
+  <div class="row-fluid">
+    <div class="span3">
+      <div class="children location">
+        <center><%= link_to (image_tag 'signup/left_btn.png'), previous_wizard_path %></center>
+      </div>
+    </div>
+    <div class="span6">
+      <%
+        if !session["move_location_id"].blank?
+          @location = Location.find(session["move_location_id"])
+        end
+      %>
+
+      <%= render 'shared/error_messages', :object => resource %>
+  
+      <div style="display: <%= session["move_location_id"].blank? ? 'block' : 'none' %>;">
+        <%= f.fields_for :restaurants do |restaurant| %>
+          <div class="row-fluid top10">
+            <div class="span12">
+              <%= restaurant.text_field :name, :placeholder=>"Restaurant Name",:class=>"input-block-level", :value=>"#{@location.try(:name)}" %>
+              <%= restaurant.text_field :chain_name, :placeholder=>"Restaurant Chain",:class=>"input-block-level", :value=>"#{@location.try(:chain_name)}" %>
+              <%= restaurant.text_field :address, :placeholder=>"Restaurant Address",:class=>"input-block-level", :value=>"#{@location.try(:address)}" %>
+              <%= restaurant.hidden_field :skip_primary_cuisine_validation, value: 1 %>
+            </div>
+          </div>
+          <div class="row-fluid top10">
+            <div class="span4">
+              <%= restaurant.select(:state, options_from_collection_for_select(State.all, 'name', 'name'), {:prompt=>"Select State"}, :class => "span12") %>
+              <% previous_state = restaurant.object.state %>
+            </div>
+            <div class="span4">
+              <%= restaurant.text_field :city, :placeholder=>"City", :class=>"input-block-level", :value=>"#{@location.try(:city)}" %>
+              <% previous_city = restaurant.object.city %>
+            </div>
+            <div class="span4">
+              <%= restaurant.text_field :zip, :placeholder=>"Zip",:class=>"input-block-level", :maxlength => 5, :value=>"#{@location.try(:zip)}" %>
+            </div>
+          </div>
+        <% end %>
+      </div>      
+
+      <div class="row-fluid top10">
+        <div class="span12">
+          <p id="addloclb" class="text-center">Add Another Location</p>
+        </div>
+      </div>
+      <div class="row-fluid top10" style="margin-top:20px;">
+        <div class="span12">
+        <!--   <%= link_to "previous", previous_wizard_path %> -->
+        <!--   <%= f.submit "Continue", :class=> "btn btn-primary", :id=>'submit_form_register'%> -->
+        </div>
+      </div>
+    </div>
+    <div class="span3">
+      <div class="children location">
+        <center><%= image_submit_tag 'signup/right_btn.png' %></center>
+      </div>
+    </div>
+  </div>
+
+  <% end %>    
+  <!-- end of form -->
+
+  <!-- status bar -->
+  <div class="row-fluid">
+    <div class="span12">
+      <center><%= image_tag 'signup/status_3.png' %></center>
+    </div>
+  </div>  
+  <!-- end of status bar -->
+</div>
+

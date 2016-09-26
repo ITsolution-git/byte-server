@@ -1,0 +1,9 @@
+<% if @confirmed == true %>
+<% flash[:notice] = "You will receive an email with instructions about how to reset your password in a few minutes." %>
+<% else %>
+<% flash[:alert] = "User cannot change password until account is confirmed." %>
+<% end %>
+window.location.href="<%=search_user_accounts_path%>"
+// setTimeout(function(){
+//   $(".user_account_form_errors_container").html("<%= j render("layouts/form_success",:message=>"User account was deleted successfully!") %>");
+// }, 8000);

@@ -1,0 +1,22 @@
+<% #Bugsnag.notify(RuntimeError.new("Form Error")) %>
+<% if object.errors.any? %>
+  <div id="error_explanation" class="span12">
+    <h2>Please fix all below errors before submitting:</h2>
+
+    <ul>
+    <% object.errors.each do |attr,msg| %>
+    <% if object.errors[attr].first == msg %>
+	<li>
+
+    		<%if msg.index('^').nil? %>
+         <%= object.errors.full_message(attr.to_sym, object.errors[attr.to_sym].first) %>
+        <%else %>
+         <%="#{msg[1,msg.length]}"  %>
+      <%end %>
+ </li>
+  <% end %>
+    <% end %>
+
+    </ul>
+  </div>
+<% end %>

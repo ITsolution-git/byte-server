@@ -1,0 +1,9 @@
+<div id="myModal" class="modal hide fade bottom0 modal-rating-receipt" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-body">
+    <span>Are you sure you want to unsuspend this user?</span><br/>
+    <div class="top10 pull-right">
+        <%= link_to 'Yes',action_un_suspend_customer_restaurant_contact_index_path(
+        :customer_id => @customer_id, :restaurant_id => @restaurant) ,method: :get, :class => '', :remote=> true, :class=>'confirm_message_btn btn btn-primary'%>
+         <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">No</button>
+  </div>
+</div>

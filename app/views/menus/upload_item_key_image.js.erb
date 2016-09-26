@@ -1,0 +1,12 @@
+$('#item_key_image_form .crop-btn').html('<a href="#" class="btn"></a><%=image_tag("btn_rotate.png", :id => @item_key_image.id, :class => 'rotate_item_key_image top10 ')%>');
+$('#item_key_image_form').find(".selectedfile").text('<%= @item_key_image.image.file.filename %>');
+$('#item_key_image_form').find('.img-item-preview').html('<%= image_tag(@item_key_image.image_url(:primary) + "?time=#{DateTime.now.second}", :id=>'image_item_key_image', :class => @item_key_image.id) if @item_key_image.image.file %>');
+$("#modal_holder_item_key_image_form").html("<%= j render partial: "layouts/modal_image_crop",locals: {
+  heading: "Preview",
+  form: "item_key_image_form"
+  } %>");
+var image = Util.resize_image(<%= @item_key_image.image.width %>, <%= @item_key_image.image.height %>);
+$('#item_key_image_form #item_key_image_rate').val(image['rate']);
+
+$('#myModal_image_item_key_image_form .modal-body p').html('<img width="' + image['width'] + '" height="' + image['height'] + '" width_image="' + image['width'] + '" height_image="' + image['height'] + '" src="<%= @item_key_image.image.url if @item_key_image.image.file %>" />');
+$('.crop-helper').html("<%= j render partial: 'shared/crop_helper', locals: {:model => 'item_key_image'} %>");

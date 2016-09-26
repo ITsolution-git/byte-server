@@ -1,0 +1,25 @@
+<%
+  disabled = ''
+  if not @current_menu.nil? and @current_menu.published?
+    disabled = 'disabled=true'
+  end
+%>
+<div class="checkbox-dropdownlist">
+  <span class="btn add-nested-attributes">Select Menu Items</span>
+  <div class="wrapper-checkbox close">
+    <% @restaurant.items.all.sort_by!{ |m| m.name.downcase }.uniq {|m| [ m.name, m.price] }.each do |item| %>
+      <%
+        has_same_name = Item.where('name = ? AND price = ? AND location_id = ?', item.name, item.price, @restaurant.id)
+        checked = ''
+        has_same_name.each do |items|
+          if item_ids.include?(items.id)
+            checked = 'checked=checked'
+          end
+        end
+
+      %>
+      <input type="checkbox" name="items[]" id="build_menu_item_<%= item.id %>" value="<%= item.id %>" <%= checked %> <%= disabled %> class="nested-item" /> <%= item.name %> <%= number_to_currency(item.price, precision: 2) %> <br/>
+    <% end %>
+  </div>
+</div>
+  

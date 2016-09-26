@@ -1,0 +1,78 @@
+<div class="bread-crum">
+  <%if !@restaurant.nil? && !@restaurant.name.nil? %>
+  <%= link_to @restaurant.name, restaurants_path %>&nbsp;&nbsp;<small>>></small>&nbsp;&nbsp;<%= link_to  'Rewards','#' %>
+  <% end %>
+</div>
+
+<div class="statusHolder">
+  <table class= "reward_status_table">
+  <tr>
+     <td  class = "reward_status_td">Total Points = <%=number_with_delimiter(@total_points.to_i, :delimiter => ',') %></td>
+     <td  class = "reward_status_td">Share Points = 0</td>
+     <td  class = "reward_status_td">Check-In Points = 0</td>
+
+  </tr>
+  <tr>
+     <td  class = "reward_status_td">Rating Points = <%=number_with_delimiter(@total_rating_points.to_i, :delimiter => ',')%></td>
+     <td  class = "reward_status_td">Cust Sat Points = 0</td>
+     <td  class = "reward_status_td">Social Points = 0</td>
+  </tr>
+    </table>
+ </div>
+</br>
+
+<div class="searchHolder">
+  <%= form_tag search_rewards_points_path(), :method => :get, :class => "span12" do %>
+
+    <div class="row-fluid">
+      <div class="span5">
+      <%= text_field_tag :search,@search_text,:class=>"input-block-level",:placeholder=>"Search"%>
+      <% if  !@is_my_rewards_page %>
+           <%= hidden_field_tag :restaurant_id ,@restaurant.id%>
+      <% end %>
+    </div>
+    <%= submit_tag "Submit" , :class=>"btnSearch", :title=>"Go", :value => '' %>
+      <% if !@is_my_rewards_search_page %>
+        <%= link_to 'Show All',show_all_reward_points_path(:restaurant_id => @restaurant.id),:style => "margin-left :5px" %>
+      <% else %>
+        <%= link_to 'Show All', show_all_my_reward_points_path,:style => "margin-left :5px" %>
+      <% end %>
+      <div class="floatright">
+      <!-- <span class="reward-action-items"><%= link_to image_tag("/assets/Redeem-Pasword.png"),'#' %></span> -->
+
+      <% if !@item_comments.blank? %>
+            <span class="reward-action-items"><%= link_to image_tag("/assets/PDF.png"), search_reward_export_pdf_points_path(:search => params[:search],:restaurant_id => @restaurant.id) %></span>
+            <span class="reward-action-items"><%= link_to image_tag("/assets/XLS.png"), search_reward_export_xls_points_path(:search => params[:search],:restaurant_id => @restaurant.id) %></span>
+
+            <span class="reward-action-items"><%= link_to  image_tag("/assets/CSV.png"),  search_reward_export_csv_points_path(:search => params[:search],:restaurant_id => @restaurant.id) %></span>
+      <% else %>
+              <span class="reward-action-items"><%= link_to image_tag("PDF_disable.png"),'#'  %></span>
+              <span class="reward-action-items"><%= link_to image_tag("XLS_disable.png"), '#' %></span>
+              <span class="reward-action-items"><%= link_to image_tag("CSV_disable.png"), '#' %></span>
+      <% end %>
+
+      </div>
+    </div>
+  <% end %>
+  <div class="clear"></div>
+</div>
+
+      <div class="reward_container">
+        <%= render :partial=>"search_body_data" %>
+
+</div>
+
+<div id="paginator">
+    <%= render :partial => "pagination" %>
+</div>
+<% content_for :scripts do %>
+  <script type="text/javascript">
+  (function() {
+    $(document).ready(function() {
+
+        $("#search").focus();
+
+         });
+    })();
+  </script>
+<% end %>

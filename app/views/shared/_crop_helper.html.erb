@@ -1,0 +1,80 @@
+<script type="text/javascript">
+(function(){
+  var x_crop;
+  var y_crop;
+  var w_crop;
+  var h_crop;
+  $(document).ready(function(){
+    width = $('#myModal_<%= model %>_form .resolution .r-width');
+    height = $('#myModal_<%= model %>_form .resolution .r-height');
+    var w = $('#myModal_<%= model %>_form .modal-body img:first').attr('width_image')
+    var h = $('#myModal_<%= model %>_form .modal-body img:first').attr('height_image')
+    var r = $('#<%= model %>_form').find('#photo_rate').val();
+
+    $('#myModal_<%= model %>_form .btn_save_crop').attr("disabled", true);
+    // console.log(w + h + r)
+    naturalWidth = parseFloat(w) * parseFloat(r)
+    naturalHeight = parseFloat(h) * parseFloat(r)
+    if (isNaN(naturalWidth) == true){
+      naturalWidth = 0;
+    }
+    if (isNaN(naturalHeight) == true){
+      naturalHeight = 0;
+    }
+    width.text(Math.floor(naturalWidth)+"px");
+    height.text(Math.floor(naturalHeight)+"px");
+
+    $('#myModal_<%= model %>_form .modal-body img').Jcrop({
+      boxWidth: 500,
+      boxHeight: 500,
+      onChange: showCoords,
+      onSelect: showCoords
+    });
+  });
+
+  // Simple event handler, called from onChange and onSelect
+  // event handlers, as per the Jcrop invocation above
+  function showCoords(c) {
+    var rate = $('#<%= model %>_form').find("#photo_rate").val();
+
+    x_crop = parseInt(c.x * rate);
+    y_crop = parseInt(c.y * rate);
+    w_crop = parseInt(c.w * rate);
+    h_crop = parseInt(c.h * rate);
+
+    var $width = $('#myModal_<%= model %>_form .resolution .r-width');
+    var $height = $('#myModal_<%= model %>_form .resolution .r-height');
+    $width.text(Math.floor(c.w * rate) + 'px');
+    $height.text(Math.floor(c.h * rate) + 'px');
+    if (Math.floor(c.w * rate) > 0 && Math.floor(c.h * rate)) {
+      $('#myModal_<%= model %>_form .btn_save_crop').attr("disabled", false);
+   }else {
+      width = $('#myModal_<%= model %>_form .resolution .r-width');
+      height = $('#myModal_<%= model %>_form .resolution .r-height');
+      var w = $('#myModal_<%= model %>_form .modal-body img:first').attr('width_image')
+      var h = $('#myModal_<%= model %>_form .modal-body img:first').attr('height_image')
+      naturalWidth = parseFloat(w) * parseFloat(rate)
+      naturalHeight = parseFloat(h) * parseFloat(rate)
+      width.text(Math.floor(naturalWidth)+"px");
+      height.text(Math.floor(naturalHeight)+"px");
+      $('#myModal_<%= model %>_form .btn_save_crop').attr("disabled", true);
+   }
+  };
+
+  $(document).on('click', '#myModal_<%= model %>_form .btn_save_crop', function(event) {
+    event.preventDefault();
+    console.log(x_crop);
+    $("#<%= model %>_crop_x").val(x_crop);
+    $("#<%= model %>_crop_y").val(y_crop);
+    $("#<%= model %>_crop_w").val(w_crop);
+    $("#<%= model %>_crop_h").val(h_crop);
+    var src = $('.img-item-preview img').attr('src');
+    var src_split = src.split('/');
+    var a = $("#photo_angle").val();
+    console.log(src_split)
+    src_split[6] = 'c_crop,h_'+h_crop+',w_'+w_crop+',x_'+x_crop+',y_'+y_crop;
+    $("#photo_form").find('.img-item-preview img').attr('src', src_split.join('/'));
+    $("#myModal_<%= model %>_form").modal('hide');
+  });
+})();
+</script>

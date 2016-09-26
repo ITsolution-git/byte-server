@@ -1,0 +1,14 @@
+.flashes
+  - flash.each do |name, msg|
+    - if msg.is_a?(String)
+      div class="flash-messages-block alert alert-#{flash_class_name(name)}"
+        a.close data-dismiss='alert' ×
+        = content_tag :div, msg, class: "flash flash_#{name}"
+
+javascript:
+  setTimeout( function(){
+    $('.flash-messages-block').fadeOut(3000);
+    setTimeout(function(){
+      $('.flash-messages-block').parent().remove();
+    }, 3000 );
+  }, 5000 );

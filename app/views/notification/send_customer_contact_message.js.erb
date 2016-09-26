@@ -1,0 +1,29 @@
+$('.check_user_contact_app_message').each(function() { //loop through each checkbox
+  this.checked = false; //deselect all checkboxes with class "check_user_contact_app_message"
+});
+document.getElementById('check_all_customer_contact_message').checked = false;
+$('#myModal').modal('hide');
+var cur_val = $('#user_emails').val();
+var new_val = "<%= @user_username.join('; ') %>";
+if(cur_val){
+  $('#user_emails').val(cur_val + "; " + new_val);
+  $('#user_emails').text(cur_val + "; " + new_val);
+   // $('#user_emails').trigger( "keypress", [13,14,15,16] );
+   // $('#user_emails').text($('#user_emails').text() + "12345\n");
+} else {
+  $('#user_emails').val(new_val);
+  $('#user_emails').text(new_val);
+   // $('#user_emails').trigger( "keypress", [13,14,15,16] );
+   // $('#user_emails').text($('#user_emails').text() + "12345\n");
+}
+// if ($('#user_emails').hasClass('user_height')){
+//   $('#user_emails').removeClass('user_height');
+//   // $('#user_emails').css({'height': ''});	
+// }
+// $('#user_emails').css({'height': 'auto'});
+// $('#user_emails').autosize();
+// $('#user_emails').autosize({append: "\n"});
+$('#user_emails').removeClass('user_height');
+$('#user_emails').css({'height': ''});
+$('#user_emails').flexible();
+// $('#user_emails').trigger('updateHeight');

@@ -1,0 +1,35 @@
+</br>
+<%= form_for([:admin, @price]) do |f| %>
+  <% if @price.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@price.errors.count, "error") %> prohibited this admin_price from being saved:</h2>
+
+      <ul>
+      <% @price.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="row offset2">
+    <div class="row">
+      <div class="field span2">
+        <%= f.label :plan_id, "Plan Name" %>
+      </div>
+      <div class="field span4">
+        <%= f.select(:plan_id, Plan.find(:all).collect {|u| [u.name, u.id]}, :prompt => 'Select') %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="field span2">
+        <%= f.label :app_service_id, "Service" %>
+      </div>
+      <div class="field span4">
+        <%= f.select(:app_service_id, AppService.find(:all).collect {|u| [u.name, u.id]}, :prompt => 'Select') %>
+      </div>  
+    </div>
+    <div class="actions">
+      <%= f.submit %>
+    </div>
+  </div>  
+<% end %>

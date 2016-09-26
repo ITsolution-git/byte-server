@@ -1,0 +1,10 @@
+ <% if @check == true %>
+   alert('The group already exists. Please choose another name.');
+ <% else %>
+  <% flash[:notice] = "The group '#{@group_name}' has been created" %>
+  <% if @mycontact ==1 %>
+    window.location.href="<%=search_contact_index_path%>"
+  <% else %>
+    window.location.href="<%=search_restaurant_contact_index_path(@restaurant)%>"
+  <% end %>
+<% end %>

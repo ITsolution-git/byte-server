@@ -1,0 +1,3 @@
+<% item_ids.each_with_index do |id, index| %>
+  <li data-target="#myCarousel" data-slide-to="<%= index %>" class="<%= 'active' if index == 0 %>"></li>
+<% end %>

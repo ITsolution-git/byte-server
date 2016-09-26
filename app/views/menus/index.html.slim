@@ -1,0 +1,52 @@
+.bread-crum
+  = link_to @restaurant.name, restaurants_path
+  = "&nbsp;&nbsp;".html_safe
+  small >>>
+  = "&nbsp;&nbsp;".html_safe
+  = link_to 'Menu Management','#'
+
+  .row-fluid
+    .span12
+      #modal_holder
+        - if @restaurant.menus.count == 0
+          = render 'layouts/modal_message', heading: 'Notice', body: 'Restaurant has no menu items. Start adding them now.'
+      .row-fluid
+        .span5
+          .server_form_block_container#server_form_container= render 'server_form'
+          - if current_user.admin?
+            = link_to 'Edit Tutorial Video', edit_tutorial_video_path(1)
+
+          .menu_form_block_container.top10#menu_form_container= render 'form'
+          - if current_user.admin?
+            = link_to 'Edit Tutorial Video', edit_tutorial_video_path(2)
+
+          .category_form_block_container.top10= render 'category_form', category: @category
+          - if current_user.admin?
+            = link_to 'Edit Tutorial Video', edit_tutorial_video_path(3)
+
+          .item_key_form_block_container.top10= render 'item_key_form', item_key: @itemKey, item_key_image: @item_key_image
+          - if current_user.admin?
+            = link_to 'Edit Tutorial Video', edit_tutorial_video_path(4)
+
+          .menu_option_form_block_container.top10= render 'menu_option_form', item_option: @item_option
+          - if current_user.admin?
+            = link_to 'Edit Tutorial Video', edit_tutorial_video_path(5)
+
+          .item_form_block_container.top10= render 'item_form', item: @item, item_image: @item_image
+          - if current_user.admin?
+            = link_to 'Edit Tutorial Video', edit_tutorial_video_path(6)
+
+          .build_menu_block_container.top10= render 'build_menu'
+          - if current_user.admin?
+            = link_to 'Edit Tutorial Video', edit_tutorial_video_path(7)
+
+        .span6.offset1
+          span.icon-plus.btn.togglebtn.icon-menu-collapsu data-toggle='collapse' data-target='#wrapper-menus' style='display: inline; width: 100%;'
+            h4.setup_heading style='margin-left: 18px; margin-top: -4px; text-align:left;' Menus
+            #wrapper-menus.collapse
+              .menus_container#menus_container style='width: 450px' = render 'menus', restaurant_menus: @restaurant_menus, restaurant_copying_menus: @restaurant_copying_menus
+            - if @shared_menus.present?
+              span.icon-minus.btn.togglebtn.icon-menu-collapsu data-toggle='collapse' data-target='#wrapper-shared-menus' style='display: inline; width: 0; margin-left: -10px;'
+                h4.setup_heading style=' margin-top: -5px; width: 120px; padding-left: 10px' Shared Menus
+                #wrapper-shared-menus.collapse.in
+                  .menus_container#shared_menus_contaner style='width: 450px' = render 'menus', restaurant_menus: @shared_menus, restaurant_copying_menus: nil

@@ -1,0 +1,110 @@
+<div class="bread-crum">
+  <% if @restaurant.present? && @restaurant.name.present? %>
+    <%= link_to @restaurant.name, restaurants_path %>
+    &nbsp;&nbsp;<small>>></small>&nbsp;&nbsp;
+    <%= link_to  ' Rewards', rewards_restaurant_points_path(@restaurant) %>
+     &nbsp;&nbsp;<small>>></small>&nbsp;&nbsp;
+    <%= link_to  ' Social', '#' %></p>
+  <% end %>
+</div>
+<div class="searchHolder">
+  <div class="row-fluid">
+    <div class="span5" style="margin-left: 700px;">
+      <% if @restaurant.present? && @restaurant.name.present? %>
+        <div class="icon-reward span2">
+          <%= link_to image_tag("social_prize.png"), socical_points_path(restaurant_id: @restaurant.id) %>
+        </div>
+        <div class="icon-reward span2">
+          <%= link_to image_tag("prize_image.png"), prize_points_path(@restaurant, :status_prize_id => 0) %>
+        </div>
+        <div class="icon-reward span2">
+          <%= link_to image_tag("points_prize.png"), rewards_restaurant_points_path(@restaurant) %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+<hr style="margin-top: 0px;"/>
+<div class="row" style="margin-top: -32px;">
+  <div class="span12" >
+    <%= form_for :social_point, url: socical_point_points_path, remote: true do |f| %>
+      
+      <%= f.hidden_field :location_id %>
+      
+      <div class="span12">
+        <div class="padding-image-social top10 span6">
+          <%= image_tag("/assets/FB-active.jpg", class: 'image') %>
+          Facebook
+        </div>
+        <div class="points-top top10 span6">
+          <h5>Points</h5>
+          <%= f.text_field :facebook_point, class: 'width-social' %>
+        </div>
+      </div>
+
+      <div class="span12">
+        <div class="padding-image-social top10 span6">
+          <%= image_tag("/assets/Google_active.jpg", class: 'image') %>
+          Google+
+        </div>
+        <div class="points-top top10 span6">
+          <h5>Points</h5>
+          <%= f.text_field :google_plus_point, class: 'width-social' %>
+        </div>
+      </div>
+
+      <div class="span12">
+        <div class="padding-image-social top10 span6">
+          <%= image_tag("/assets/Twitter.jpg", class: 'image') %>
+          Twitter
+        </div>
+        <div class="points-top top10 span6">
+          <h5>Points</h5>
+          <%= f.text_field :twitter_point, class: 'width-social' %>
+        </div>
+      </div>
+
+      <div class="span12">
+         <div class="padding-image-social top10 span6">
+           <%= image_tag("/assets/Instagram.png", class: 'image') %>
+           Instagram
+         </div>
+         <div class="points-top top10 span6">
+           <h5>Points</h5>
+           <%= f.text_field :instragram_point, class: 'width-social' %>
+         </div>
+      </div>
+
+      <div class="span12">
+        <div class="padding-image-social top10 span6">
+          <%= image_tag("/assets/ibecon.jpg", class: 'image') %>
+          iBeacon Check-in
+        </div>
+        <div class="points-top top10 span6">
+          <h5>Points</h5>
+          <%= f.text_field :ibecon_point, class: 'width-social'%>
+        </div>
+      </div>
+
+      <div class="span12">
+        <div class="padding-image-social top10 span6">
+          <%= image_tag('comment-symbol.png', class: 'image') %>
+          Ratings/Comments
+        </div>
+        <div class="points-top top10 span6">
+          <h5>Points</h5>
+          <%= f.text_field :comment_point, class: 'width-social'%>
+        </div>
+      </div>
+
+      <div class="span12">
+        <div class="span7 pull-right top20">
+          <%= f.submit value: 'Save', id: 'social_form_submit', class: 'width-submit-social btn btn-primary' %>
+        </div>
+        <div class="span6"></div>
+      </div>
+
+    <% end %>
+    <div class="clear"></div>
+  </div>
+</div>

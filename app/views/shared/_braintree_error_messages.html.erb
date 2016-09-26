@@ -1,0 +1,10 @@
+<% Bugsnag.notify(RuntimeError.new("Braintree broke")) %>
+
+<div id="error_explanation" class="span12">
+  <h2>Please fix all below errors before signing up:</h2>
+  <ul>
+    <% @braintree_errors.each do |error| %>
+      <li><%= error %></li>
+    <% end %>
+  </ul>
+</div>

@@ -1,0 +1,18 @@
+<% unless @order.nil?%>
+  <% if @accepted == true %>
+    <% flash[:notice] = "The status has been changed successfully." %>
+    window.location.reload();
+  <% else %>
+    <% if @order.status == 0 %>
+      $("#confirmation_dialog .modal-body").html('<p>Are you sure you want to change status from <strong>New</strong> to <strong>Ordered</strong>?</p>');
+    <% elsif @order.status == 1 %>
+      $("#confirmation_dialog .modal-body").html('<p>Are you sure you want to change status from <strong>Ordered</strong> to <strong>Completed</strong>?</p>');
+    <% end %>
+    $("#confirmation_dialog .modal-footer").html('<a data-method="get" data-remote="true" href="<%= change_status_order_index_path(:order_id => @order.id, :accept => true) %>" class="btn btn-primary">Yes</a>\
+        <a href="#" class="btn btn-danger" data-dismiss="modal" aria-hidden="true">No</a> \
+        ');
+$("#confirmation_dialog").modal();
+  <% end %>
+<% else %>
+  alert("You cannot change the status of this order!");
+<% end %>

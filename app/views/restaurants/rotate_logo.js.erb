@@ -1,0 +1,5 @@
+//alert('fhdjfgd')
+var image = Util.resize_image(<%= @location_logo.image.width %>, <%= @location_logo.image.height %>);
+$('#location_logo_form #location_logo_rate').val(image['rate']);
+$('#myModal_image_location_logo_form .modal-body p').html('<img width="' + image['width'] + '" height="' + image['height'] + '" width_image="' + image['width'] + '" height_image="' + image['height'] + '" src="<%= @location_logo.image.url if @location_logo.image.file %>" />');
+$('.crop-helper').html("<%= j render partial: 'shared/crop_helper', locals: {:model => 'location_logo'} %>");

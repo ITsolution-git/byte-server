@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+    <style type="text/css">
+        body {
+            padding: 0 10px;
+        }
+
+        .footer {
+            position: relative;
+        }
+
+        .footer img {
+          float: left;
+        }
+
+        .footer .support {
+            position: relative;
+            left: 20px;
+            top: 60px;
+        }
+        p.header {
+          margin-left: 70px;
+          display: inline-block;
+        }
+    </style>
+</head>
+<body>
+<%= @published_date_tz %> <p class="header">Status Approved - <%= @menu.name %></p><br />
+<%= @menu.location.name %> - <%= @menu.location.full_address %> <br /><br />
+<% BuildMenu.get_categories_by_menu(@menu.id).each do |build_menu| %>
+  <% category = Category.find(build_menu.category_id) %>
+  <%= category.name %>
+  <ul>
+    <% menu_form_build_category_item = BuildMenu.where(menu_id: @menu.id, category_id: category.id); %>
+    <% menu_form_build_category_item.each do |menu_built| %>
+      <li><%= menu_built.item.name %></li>
+    <% end %>
+  </ul>
+<% end %>
+<div class="footer">
+  <%= image_tag('byte_logo.png', :width => '100px') %>
+  <div class="support">
+      <p>Smarter Restaurants…. Happier Customers!</p>
+      <p><%= $support_mail %> / 512.981.MENU (6368)</p>
+  </div>
+</div>
+</body>
+</html>

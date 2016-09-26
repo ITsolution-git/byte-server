@@ -1,0 +1,33 @@
+var appendOnCreation = function(){
+  var addToModal = '<li data-id="<%= @category.id %>"><div class="items-dropdown"><input data-id="<%= @category.id.to_s %>" class="delete-item-action" type="checkbox"></input><span><a href="<%= '/category/' + @category.id.to_s + '/edit'%>" data-remote="true"><%= @category.name %></a></span></div></li>'
+  <% if @category.location.categories.count == 1 %>
+      var appendedHtml = '<form accept-charset="UTF-8" action="/restaurants/' + '<%= @category.location.slug %>' + '/menus" class="batch-delete-form" data-error-class="category_form_errors_container" data-source="category"><a class="btn" data-toggle="modal" data-target="#category-modal">Edit Category<span class="caret"></span></a></form>'
+    $('.category-edit').append(appendedHtml);
+    $('.category-edit form').append('<%= escape_javascript render(partial: '/menus/menu_modal', locals: {array: [], is_published: 'has_menu_published?', modal_id: 'category-modal', link: 'edit_category_path(item)'})%>');
+    $('.category-edit .modal-body').append('<ul>' + addToModal + '</ul>');
+
+  <% else %>
+    $('.category-edit .modal-body ul:first').append(addToModal);
+  <% end %>
+}
+<% if @check == true %>
+  <% if @category.errors.full_messages.any? %>
+    $(".category_form_errors_container").html("<%= j render("layouts/form_errors",:object=>@category) %>").show().delay(3000).fadeOut();
+  <% else %>
+    $(".category_form_errors_container").html("<%= j render("layouts/form_success", :message => "Category is created successfully.") %>").show().delay(3000).fadeOut();
+    appendOnCreation();
+    $('#category_form')[0].reset();
+    <% if remotipart_submitted? %>
+      $(".build_menu_block_container #build_menu_toggle").html("<%= j "#{render 'build_menu_form_primary'}" %>");
+    <% else %>
+      $(".build_menu_block_container #build_menu_toggle").html("<%= j render "build_menu_form_primary" %>");
+    <% end %>
+
+    <%
+        @category = Category.new
+      %>
+    $('.category_form_block_container #category_form .edit-items-form').html("<%= j render partial: "menus/category_records", locals: {:category => @category} %>");
+  <% end %>
+<% else %>
+  $(".category_form_errors_container").html("<%= j render("layouts/form_error_agreement", :message => "The restaurant you were looking for doesn't exist in current user.")%>").show().delay(3000).fadeOut();
+<% end %>

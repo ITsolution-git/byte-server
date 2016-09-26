@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+    <style type="text/css">
+        body {
+            padding: 0 10px;
+        }
+        p.header {
+          margin-left: 70px;
+          display: inline-block;
+        }
+    </style>
+</head>
+<body>
+  <div>
+    <p>Rating : <%= rating_to_letter_grade(@rating) %></p>
+    <p>Comment : <%= @comment %></p>
+  </div>
+</body>
+</html>

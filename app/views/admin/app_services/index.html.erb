@@ -1,0 +1,25 @@
+<h1>Listing app_services</h1>
+
+<table class="table">
+  <tr>
+    <th>Name</th>
+    <th>Price</th>
+    <th>Unit</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @app_services.each do |app_service| %>
+  <tr>
+    <td><%= app_service.name %></td>
+    <td><%= link_to 'Show', admin_app_service_path(app_service) %></td>
+    <td><%= link_to 'Edit', edit_admin_app_service_path(app_service) %></td>
+    <td><%= link_to 'Destroy', admin_app_service_path(app_service), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New App service', new_admin_app_service_path %>

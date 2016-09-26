@@ -1,0 +1,15 @@
+<%= form_for @restaurant, url: create_photos_restaurant_path, method: :put, :html => {:id => :photo_form}, :remote => true do |f| %>
+  <%= f.hidden_field :id%>
+  <%= f.hidden_field :owner_id%>
+  <div class="upload_widget_container">
+    <a href="#" id="upload_widget_opener" class="btn btn-primary">Upload multiple images</a>
+  </div>
+  <br/>
+  <div id="image_list_container">
+    <%= render partial: 'image_list', locals: { photos: f.object.photos } %>
+  </div>
+<% end %>
+
+<script src="//widget.cloudinary.com/global/all.js" type="text/javascript"></script>
+
+<%= javascript_include_tag "photo_upload" %>

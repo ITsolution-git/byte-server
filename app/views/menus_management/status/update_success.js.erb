@@ -1,0 +1,3 @@
+$('#flash_header').append("<%= escape_javascript render('layouts/shared/messages') %>");
+$(".share-menu-<%= menu.id %>").replaceWith('<%= escape_javascript link_to(share_menu_icon(menu), menus_management_status_path(menu, { menu: { is_shared: !menu.is_shared? } }), class: "share-menu-#{menu.id} with-loader", remote: true, method: :put, :title => "Share") %>');
+app.instances.loadingPanel.hide();

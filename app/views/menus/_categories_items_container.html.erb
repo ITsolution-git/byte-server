@@ -1,0 +1,39 @@
+<% @menu_form_build_category = BuildMenu.get_categories_by_menu(menu.id).order('category_sequence ASC') %>
+  <% if !@menu_form_build_category.blank? %>
+    <% category_ids = @menu_form_build_category.map(&:category_id).uniq.compact %>
+    <% category_ids.each do |category_id|%>
+      <% category = Category.find(category_id) %>
+          <div class="block-child-head clearfix right_category_row top10" id="Category_<%= category.id%>"
+              category-id="<%= category.id %>" >
+            <div class="row-fluid remove-margin-bottom">
+              <span class="category_combo_type_icon hide" style="text-align: left;"></span>
+              <div class="span12" style="text-align: left;">
+                <span class="icon-plus btn togglebtn icon-menu-collapsu"  data-toggle="collapse" data-target="#<%= "menu_#{menu.id}_category_#{category.id}"%>"></span>
+                  <span class="btn btn-link collapsu category_name_row_<%=category.id%>"><%= category.name%></span>
+                  <% if !category.category_points.nil?%>
+                    <span class="muted">
+                      <small><%= category.category_points%> Points</small>
+                    </span>
+                  <% end %>
+                <span class="category_row">
+                  <%= render partial: "menus/category_row",locals:{category: category, menu: menu, restaurant: @restaurant} %>
+                </span>
+              </div>
+            </div>
+            <div id="<%= "menu_#{menu.id}_category_#{category.id}"%>" class="collapse block-child-content item-drag-container" menu="<%= menu.id %>">
+            <% @menu_form_build_category_item = BuildMenu.where(menu_id: menu.id, category_id: category.id).order('item_sequence ASC') %>
+            <% if !@menu_form_build_category_item.blank?%>
+              <% @menu_form_build_category_item.each do |menu_built|%>
+                <% item = Item.find(menu_built.item_id) %>
+                <%= render partial: "menus/item_row",:locals=>{:item => item, menu: menu, restaurant: @restaurant, category: category} %>
+              <%end%>
+
+             <% else %>
+                  <div class="dotted-bottom clearfix right_item_row" style="text-align: left !important;>
+                    <span class="muted">No items available in this category</span>
+                  </div>
+             <% end %>
+            </div>
+          </div>
+      <% end %>
+    <% end %>

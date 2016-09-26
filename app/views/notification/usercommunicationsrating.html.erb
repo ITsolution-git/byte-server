@@ -1,0 +1,141 @@
+<% if @notification.alert_type =='Rating' && !@notification.item_comment_id.nil?
+  @item = Item.find(@notification.item_id)
+    item_comment = ItemComment.find(:first,:conditions => ['user_id = ? and id = ?',@notification.from_user,@notification.item_comment_id])
+    value = -1
+    value = item_comment.rating unless item_comment.nil?
+  if value == -1
+    ratingGrade = ""
+  else
+    score = ['A+','A','A-','B+','B','B-','C+','C','C-','D+','D','D-','F']
+    ratingGrade = score[value.to_i - 1]
+  end
+end
+%>
+
+<% if @notification.alert_type =='Restaurant Rating' && !@notification.location_comment_id.nil?
+    location_comment = LocationComment.find(:first,:conditions => ['user_id = ? and id = ?',@notification.from_user,@notification.location_comment_id])
+    value = -1
+    value = location_comment.rating unless location_comment.nil?
+  if value == -1
+    ratingGrade = ""
+  else
+    score = ['A+','A','A-','B+','B','B-','C+','C','C-','D+','D','D-','F']
+    ratingGrade = score[value.to_i - 1]
+  end
+end
+%>
+<% fromuser=User.find(@notification.from_user) %>
+<% @resturant=Location.find_by_id(@notification.location_id)%>
+<div class="bread-crum">
+ <% unless @restaurant_current.nil? %>
+  <%= link_to @restaurant_current.name, edit_restaurant_path(@restaurant_current) %>&nbsp;&nbsp;<small>>></small>&nbsp;&nbsp;<%= link_to 'Communications', communications_restaurant_notification_index_path(@restaurant_current) %>
+  <% else %>
+  <%= link_to @resturant.name, edit_restaurant_path(@resturant) %>&nbsp;&nbsp;<small>>></small>&nbsp;&nbsp;<%= link_to 'Communications', communications_restaurant_notification_index_path(@resturant) %>
+  <% end %>
+</div>
+  <div class="border-rating well">
+    <div class="margin-rating span6">
+      <hr/>
+      <div>
+        <div class="userIcon">
+            <% if @notification.sender.user? %>
+              <%  user = User.find_by_id(@notification.sender.id) %>
+                <% unless user.nil? %>
+                  <% if !user.avatar.nil? %>
+                    <% if !user.avatar.public_id.nil? %>
+                      <%= cl_image_tag user.avatar.public_id, class: 'photo-display' %>
+                    <% elsif !user.avatar.path.nil? && File.exist?(user.avatar.path) %>
+                     <%= image_tag user.avatar.url,:class=>"user_image span2" ,:alt=>'UserImage', :id => 'user-image-rating' %>
+                    <% else %>
+                      <%= image_tag 'https://byteprod.s3.amazonaws.com/staging/avatar_profile.png',:class=>"user_image span2" ,:alt=>'UserImage' , :id => 'user-image-rating'%>
+                    <% end %>
+                  <% else %>
+                    <%= image_tag 'https://byteprod.s3.amazonaws.com/staging/avatar_profile.png',:class=>"user_image span2" ,:alt=>'UserImage' , :id => 'user-image-rating'%>
+                  <% end %>
+                <% else %>
+                  <%= image_tag 'https://byteprod.s3.amazonaws.com/staging/avatar_profile.png',:class=>"user_image span2" ,:alt=>'UserImage' , :id => 'user-image-rating'%>
+                <% end %>
+            <% elsif @notification.sender.owner? %>
+                <%  user = User.find_by_id(@notification.sender.id) %>
+                <% unless user.nil? %>
+                  <%
+                    user_avatar = UserAvatar.where('user_id=?',user.id).order('id ASC').last
+                  %>
+                  <% unless user_avatar.nil?%>
+                      <% if !user_avatar.image.nil? && !user_avatar.image.path.nil? %>
+                        <% if File.exist?(user_avatar.image.path) %>
+                            <%= image_tag user_avatar.image.url(:primary),:class=>"user_image span2" ,:alt=>'UserImage', :id => 'user-image-rating' %>
+                        <% else %>
+                            <%= image_tag 'https://byteprod.s3.amazonaws.com/staging/avatar_profile.png',:class=>"user_image span2" ,:alt=>'UserImage' , :id => 'user-image-rating'%>
+                        <% end %>
+                      <% else %>
+                        <%= image_tag 'https://byteprod.s3.amazonaws.com/staging/avatar_profile.png',:class=>"user_image span2" ,:alt=>'UserImage' , :id => 'user-image-rating'%>
+                      <% end %>
+                  <% else %>
+                    <%= image_tag 'https://byteprod.s3.amazonaws.com/staging/avatar_profile.png',:class=>"user_image span2" ,:alt=>'UserImage' , :id => 'user-image-rating'%>
+                  <% end %>
+                <% else %>
+                  <%= image_tag 'https://byteprod.s3.amazonaws.com/staging/avatar_profile.png',:class=>"user_image span2" ,:alt=>'UserImage' , :id => 'user-image-rating'%>
+                <% end %>
+            <% else %>
+              <%= image_tag 'https://byteprod.s3.amazonaws.com/staging/avatar_profile.png',:class=>"user_image span2" ,:alt=>'UserImage', :id => 'user-image-rating'%>
+            <% end %>
+        </div>
+        <div class="userCommunicationRating">
+          <p class="text-font-rating-name"><%= fromuser.first_name.to_s+" "+fromuser.last_name.to_s%></p>
+        </div>
+      </div>
+
+
+      <% if @notification.alert_type == 'Rating' %>
+        <div class="user-rating">
+          <p class="text-font-italic">Date: </p>
+          <p class="text-font-rating-date"><%=@notification.created_at.strftime("%d/%m/%Y")%></p>
+        </div>
+        <div class="top10">
+          <p class="text-font-italic">Item Rated: </p>
+          <p class="text-font-rating-item"><%=@item.name unless @item.nil?%></p>
+        </div>
+        <div class="top10">
+          <p class="text-font-italic">Rating: </p>
+          <p class="text-font-rating-grade"><%=ratingGrade%></p>
+        </div>
+        <div class="top10">
+          <p class="text-font-italic">Points: </p>
+          <p class="text-font-rating-grade"><% if !@notification.points.blank?%><%= @notification.points.to_i %><% end %></p>
+        </div>
+      <% else %>
+        <div class="user-rating">
+          <p class="text-font-italic">Date: </p>
+          <p class="text-font-rating-date"><%=@notification.created_at.strftime("%d/%m/%Y")%></p>
+        </div>
+        <div class="top10">
+          <p class="text-font-italic">Restaurant Rated: </p>
+          <p class="text-font-rating-item"><%=@restaurant_current.name unless @restaurant_current.nil?%></p>
+        </div>
+        <div class="top10">
+          <p class="text-font-italic">Rating: </p>
+          <p class="text-font-rating-grade"><%=ratingGrade%></p>
+        </div>
+      <% end %>
+      <div class="top10">
+        <p class="text-font-italic" style="display: inline-block">To: </p>
+        <p class="text-font-rating-to" style="display: inline-block"><%= @notification.to_user %> </p>
+      </div>
+
+      <div class="top10">
+        <p class="text-font-italic" style="display: inline-block">Message: </p>
+        <div class="text-font-italic" style="display: inline-block"><%= @notification.message.html_safe %> </div>
+      </div>
+      <div class="top10">
+        <p class="text-font-italic">Comment: </p>
+        <div class="comment-rating">
+        <p class="text-font-rating-comment"><%= item_comment.text.to_s.html_safe unless item_comment.nil? %><%= location_comment.text.to_s.html_safe unless location_comment.nil? %></p>
+        </div>
+      </div>
+      <div class="top20 sendmessagerating">
+        <%= link_to 'Send Message' ,{:action=>'sendmessage',:controller=>'notification', :useremail=>fromuser.email,:restaurant =>@notification.location_id,:item_id=>@notification.item_id,:current_user_id => current_user.id},{:title=>'Reply Back'}%>
+      </div>
+    </div>
+  </div>
+<!-- </div> -->

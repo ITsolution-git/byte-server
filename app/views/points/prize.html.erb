@@ -1,0 +1,627 @@
+<div class="bread-crum">
+  <%if !@restaurant.nil? && !@restaurant.name.nil? %>
+  <%= link_to @restaurant.name, restaurants_path %>
+  &nbsp;&nbsp;<small>>></small>&nbsp;&nbsp;
+  <%= link_to  ' Rewards', rewards_restaurant_points_path(@restaurant) %>
+   &nbsp;&nbsp;<small>>></small>&nbsp;&nbsp;
+  <%= link_to  'Prize', '#' %></p>
+  <% end %>
+</div>
+<div class="searchHolder">
+  <div class="row-fluid">
+    <div class="span5" style="margin-left: 700px;">
+      <%if !@restaurant.nil? && !@restaurant.name.nil? %>
+      <div class="span2">
+        <%= link_to image_tag("social_prize.png"), socical_points_path(restaurant_id: @restaurant.id) %>
+        </div>
+        <div class="icon-reward span2"><%= link_to image_tag("prize_image.png"), prize_points_path(@restaurant, :status_prize_id => 0) %>
+        </div>
+        <div class="icon-reward span2"><%= link_to image_tag("points_prize.png"), rewards_restaurant_points_path(@restaurant) %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+<hr style="margin-top: 0px;"/>
+<div id="modal_holder_prize_level">
+
+</div>
+<div class="span7" style="position: relative;">
+<% if @prize.empty? %>
+    <%@prize = Prize.new %>
+    <%= form_for @prize, :url => insert_points_path, :remote => true, :id =>'new_prize', :method => 'post' do |f| %>
+        <%= f.hidden_field :location_id , :value => @restaurant.id %>
+        <% unless @status_prize.empty? %>
+            <div class="row-fluid span8">
+             <% if  @status_prize_id == 0 %>
+              <%= f.text_field :status_name , :value => @status_prize[0].name, :class => 'status_prize_name', :autocomplete => 'off' %>
+              <span id ="status_name" class="status-name-span hide-status" style="margin-left: 10px;color: red;">Can't be empty!</span>
+              <%= f.hidden_field :status_prize_id , :value => @status_prize[0].id %>
+              <% else %>
+                <% if @status_prize_id.nil? %>
+                  <%= f.text_field :status_name , :value => @status_prize[0].name, :class => 'status_prize_name', :autocomplete => 'off' %>
+                  <span id ="status_name" class="status-name-span hide-status" style="margin-left: 10px;color: red;">Can't be empty!</span>
+                <%= f.hidden_field :status_prize_id , :value => @status_prize[0].id %>
+                <% else %>
+                 <%= f.text_field :status_name , :value => @status_name, :class => 'status_prize_name', :autocomplete => 'off' %>
+                 <span id ="status_name" class="status-name-span hide-status" style="margin-left: 10px;color: red;">Can't be empty!</span>
+                <%= f.hidden_field :status_prize_id , :value => @status_prize_id.id %>
+                <% end %>
+              <%end %>
+            </div>
+              <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">Set Status<span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" style="margin-left: 367px;margin-top: 0px; top: inherit;">
+                <%
+                  @status_prize.each do |array|
+                %>
+                <li id="<%= array.id%>">
+                  <div class="items-dropdown" style="width: 184px;">
+                    <span class="item-name status_level_prize"><!-- <span class="span4" style="margin-left: 14px;word-wrap: break-word;"><%=array.name%></span> -->
+                       <%= link_to array.name, status_prize_points_path(@restaurant, :status_prize_id =>array.id), :method => :get, remote: true, :class=> 'span4', :style=>"margin-left: 14px;word-wrap: break-word; color: black; text-decoration: none;" %>
+                    <span class="span2">
+                      <%= link_to 'edit', status_prize_points_path(@restaurant, :status_prize_id =>array.id), :method => :get, remote: true, :class=> 'status_level_prize_edit'%></span></span>
+                    <div class="clear"></div>
+                  </div>
+                </li>
+                 <% end %>
+              </ul>
+        <% end %>
+
+        <div class="span11 clonable root-prize-item" style="margin-left: 20px;">
+           <div class="accordion-group">
+            <div class="accordion-heading">
+              <h5 class="accordion-toggle" data-toggle="collapse" data-parent="#new_prize" href="#collapse_1">
+                <span class="icon-plus btn togglebtn"></span><span style="padding-left: 25px;">Level</span> <span class="prize-order">1</span> <span>Prize</span>
+                <%= link_to "","#",:class=>"icon-delete btn floatright remove", :id => 'level_tooltip2', :title=> 'Delete', "data-placement"=>"right","data-html"=>"true",:rel=>"tooltip",:style=>"color:#333;" %>
+                <%= link_to "","#",:class=>"icon-question-sign btn floatright", :id => 'level_tooltip_1', :title=> load_content_of_file('/public/tooltip/level_prize.html'),:"data-toggle"=>"tooltip","data-placement"=>"right","data-html"=>"true",:rel=>"tooltip",:style=>"color:#333;" %>
+              </h5>
+
+            </div>
+            <div id="collapse_1" class="accordion-body collapse">
+              <div class="accordion-inner">
+                <div class="regrow">
+                   <div class="span12">
+                      <%= text_field_tag "prize[name][]", nil, :id=>'prize_name_1', :placeholder=>"Prize Name (Brief Description)", :class => 'prize_name width100', :autocomplete => 'off'%>
+                      <span id ="prize-name-span_1" class="prize-name-span hide-prize" style="margin-left:-1px;color: red;">Can't be empty!</span>
+                    </div>
+                </div>
+                <div class="prize_point span12">
+                  <%= text_field_tag "prize[redeem_value][]", nil, :id=>'redeem_value_1', :placeholder=>"Redemption Value", :class => 'redeem_value', :autocomplete => 'off'%>
+                  <%= text_field_tag "prize[build_menu_id][]", nil,:class => 'prize_item', :id=>"prize_item_1", :style=>"display:none"%>
+                  <%= text_field_tag "prize[category_id][]", nil,:id=>"prize_category_1", :class => 'prize_category', :style=>"display:none"%>
+                  <button class="btn btn-default dropdown-toggle prize-button" data-toggle="dropdown" type = "button" style = "width: 240px" id="null">
+                    Select Menu Item / Category
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu prize-menu">
+                    <li class="none-prize">Select Menu Item / Category</li>
+                    <span class="prize-header">MENU ITEM</span>
+                    <ul role = "presentation" class = "dropdown-header wrap-prize-item">
+                    </ul>
+                    <span class="prize-header">CATEGORY</span>
+                    <ul role = "presentation" class = "dropdown-header wrap-prize-category">
+                    </ul>
+                  </ul>
+                  <span id="prize-redeem-value-span_1" class="prize-redeem-value-span hide-prize" style="margin-left:-1px;color: red;" maxlength="6">Can't be empty!</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="formbuttons" class="regrow span5">
+            <a type="button" class="hide button" id="clonetrigger" value="Clone" style="margin-left: 32px;cursor: pointer;font-weight: bold;">Add a level</a>
+        </div>
+        <div class="top10 span8">
+            <%= f.submit 'Save', :class => 'normal-btn btn btn-primary', :id=>'submit_prize_form', :remote => true, disable_with: "Please wait...", :disabled => true %>
+        </div>
+    <% end %>
+
+<% else %>
+    <form accept-charset="UTF-8" action="<%= prize_level_points_path %>" id ="new_prize" data-remote="true" method="post" style="margin-top: -12px;">
+      <%= hidden_field_tag :location_id , @restaurant.id %>
+        <% unless @status_prize.empty? %>
+            <div class="row-fluid span8">
+              <% if @status_prize_id == 0 && !@status_prize_id.nil?%>
+              <%= text_field_tag :status_name , @status_prize[0].name, :class => 'status_prize_name', :autocomplete => 'off' %>
+              <span id ="status_name" class="status-name-span hide-status" style="margin-left: 10px;color: red;">Can't be empty!</span>
+              <%= hidden_field_tag :status_prize_id ,  @status_prize[0].id %>
+              <% else %>
+              <% if @status_prize_id.nil? %>
+                 <%= text_field_tag :status_name , @status_prize[0].name, :class => 'status_prize_name', :autocomplete => 'off' %>
+                 <span id ="status_name" class="status-name-span hide-status" style="margin-left: 10px;color: red;">Can't be empty!</span>
+                <%= hidden_field_tag :status_prize_id ,  @status_prize[0].id %>
+              <% else %>
+                <%= text_field_tag :status_name , @status_name, :class => 'status_prize_name', :autocomplete => 'off' %>
+                <span id ="status_name" class="status-name-span hide-status" style="margin-left: 10px;color: red;">Can't be empty!</span>
+                <%= hidden_field_tag :status_prize_id ,  @status_prize_id.id %>
+              <% end %>
+              <%end %>
+            </div>
+            <!-- <div class="pull-right"> -->
+              <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">Set Status<span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" style="margin-left: 367px;margin-top: 0px;">
+                <%
+                  @status_prize.each do |array|
+                %>
+                <li id="<%= array.id%>">
+                  <div class="items-dropdown" style="width: 184px;">
+                    <span class="item-name status_level_prize"><!-- <span class="span4"  style="margin-left: 14px;word-wrap: break-word;"><%=array.name%></span> -->
+                    <%= link_to array.name, status_prize_points_path(@restaurant, :status_prize_id =>array.id), :method => :get, remote: true, :class=> 'span4', :style=>"margin-left: 14px;word-wrap: break-word; color: black; text-decoration: none;" %>
+                    <span class="span2">
+                      <%= link_to 'edit', status_prize_points_path(@restaurant, :status_prize_id =>array.id), :method => :get, remote: true, :class=> 'status_level_prize_edit'%></span></span>
+                    <div class="clear"></div>
+                  </div>
+                </li>
+                 <% end %>
+              </ul>
+            <!-- </div> -->
+        <% end %>
+
+        <%@prize.each do |prize|%>
+            <!-- <%= hidden_field_tag "prize[level][]" , prize.level %> -->
+            <div class="span11 clonable root-prize-item" style="margin-left: 20px;">
+              <div class="accordion-group">
+                <div class="accordion-heading">
+                  <h5 class="accordion-toggle" data-toggle="collapse" data-parent="#new_prize" href="#collapse_<%=prize.level%>">
+                    <span class="icon-plus btn togglebtn"></span><span style="padding-left: 25px;">Level</span> <span class="prize-order"><%=prize.level %></span> <span>Prize</span>
+                    <%= link_to "",delete_prize_level_points_path(:level =>prize.level, :status_prize_id =>prize.status_prize_id),:class=>"icon-delete btn floatright", :id => "level_tooltip2", :title=> 'Delete', "data-placement"=>"right","data-html"=>"true",:rel=>"tooltip",:style=>"color:#333;", :remote => true %>
+                    <%= link_to "","#",:class=>"icon-question-sign btn floatright", :id => "level_tooltip_#{prize.level}", :title=> load_content_of_file('/public/tooltip/level_prize.html'),:"data-toggle"=>"tooltip","data-placement"=>"right","data-html"=>"true",:rel=>"tooltip",:style=>"color:#333;" %>
+                  </h5>
+                </div>
+                <div id="collapse_<%=prize.level%>" class="accordion-body collapse">
+                  <div class="accordion-inner">
+                    <div class="regrow">
+                       <div class="span12">
+                          <%= text_field_tag "prize[level][]", prize.level, :id=>"prize_level_delete_#{prize.level}", :class => 'display_level_prize'%>
+                          <%= text_field_tag "prize[name][]", prize.name, :id=>"prize_name_#{prize.level}", :placeholder=>"Prize Name (Brief Description)", :class => 'prize_name width100', :autocomplete => 'off'%>
+                          <span id ="prize-name-span_<%=prize.level%>" class="prize-name-span hide-prize" style="margin-left: -1px;color: red;">Can't be empty!</span>
+                        </div>
+                    </div>
+                    <div class="prize_point span12">
+                      <%= text_field_tag "prize[redeem_value][]", prize.redeem_value, :id=>"redeem_value_#{prize.level}", :placeholder=>"Redemption Value", :class => 'redeem_value', :maxlength=>"6",:autocomplete => 'off'%>
+                      <%= text_field_tag "prize[build_menu_id][]", prize.build_menu_id, :class => 'prize_item', :id=>"prize_item_#{prize.level}", :style=>"display:none"%>
+                      <%= text_field_tag "prize[category_id][]", prize.category_id, :id=>"prize_category_#{prize.level}", :class => 'prize_category', :style=>"display:none"%>
+                      <%if !prize.build_menu_id.nil?%>
+                        <button class="btn btn-default dropdown-toggle prize-button" data-toggle="dropdown" type = "button" style = "width: 240px" id=<%= prize.build_menu_id%>>
+                          <%= BuildMenu.find(prize.build_menu_id).get_item_name%>
+                          <span class="caret"></span>
+                        </button>
+                      <%elsif !prize.category_id.nil?%>
+                        <button class="btn btn-default dropdown-toggle prize-button" data-toggle="dropdown" type = "button" style = "width: 240px" id=<%= prize.category_id%>>
+                          <%= prize.category.name%>
+                          <span class="caret"></span>
+                        </button>
+                      <%else%>
+                        <button class="btn btn-default dropdown-toggle prize-button" data-toggle="dropdown" type = "button" style = "width: 240px" id="null">
+                          Select Menu Item / Category
+                          <span class="caret"></span>
+                        </button>
+                      <%end%>
+                      <ul class="dropdown-menu prize-menu">
+                        <li class = "none-prize">Select Menu Item / Category</li>
+                        <span class="prize-header">MENU ITEM</span>
+                        <ul role = "presentation" class = "dropdown-header wrap-prize-item"></ul>
+                        <span class="prize-header">CATEGORY</span>
+                        <ul role = "presentation" class = "dropdown-header wrap-prize-category"></ul>
+                      </ul>
+                      <span id="prize-redeem-value-span_<%=prize.level%>" class="prize-redeem-value-span hide-prize" style=" margin-left: -1px;color: red;">Can't be empty!</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        <% end %>
+        <div id="formbuttons" class="regrow span5">
+           <a type="button" class="button" id="clonetrigger" value="Clone" style="margin-left: 32px;cursor: pointer; font-weight: bold;">Add a level</a>
+        </div>
+        <div class="span8">
+             <input type="submit" value="Save" class="normal-btn btn btn-primary" id="submit_prize_form" data-disable-with="Please wait...">
+            <input type='button' value="Cancel" class = "normal-btn go-back-link btn btn-cancel" data-toggle="modal" data-target="#myModal1" %>
+        </div>
+    </form>
+<% end %>
+</div>
+
+<div class="span4" style="margin-top: 27px;">
+  <% unless @status_prize_arr.empty?
+  @status_prize_arr.each do |st|
+  %>
+    <div class="accordion-group">
+      <div class="accordion-heading">
+        <h5 class="accordion-toggle collapsed status_table" data-toggle="collapse" data-parent="#new_status_prize" href="#status_prize_<%=st.id%>" id='status_prize_collap'>
+          <span class=" btn togglebtn status_prize_icon"></span><span style="padding-left: 46px;word-wrap: break-word;display: inherit;"><%=st.name%></span>
+        </h5>
+
+      </div>
+      <div id="status_prize_<%=st.id%>" class="status_level_prize_list accordion-body collapse" style="margin-bottom: -20px;">
+        <% prize_arr = Prize.where("status_prize_id=? AND is_delete=?",st.id, 0).order('id ASC') %>
+        <%unless prize_arr.empty?%>
+            <% prize_arr.each_with_index do |pr, index|%>
+               Prize <%= index + 1 %> <%=pr.name%> (<%=pr.redeem_value%> points)<br/>
+            <% end %>
+        <% end %>
+        <span style="color: white;">test</span>
+      </div>
+    </div>
+  <% end %>
+<% end %>
+</div>
+
+<div id="myModal1" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <div class=" modal-body">
+           <p>The current page contains unsaved text that will be lost if you leave this page.<br/>
+           Are you sure you want to leave the unsave text?</p>
+             <%= link_to 'OK', prize_points_path(@restaurant,:status_prize_id => 0), :class => 'btn btn-primary', :id=>'delete_user_account_button' %>
+             <button class="btn no_delete_user_account" data-dismiss="modal" aria-hidden="true">Cancel</button>
+        </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+//The jQuery Setup
+$(document).ready(function(){
+  $('#level_tooltip_1').on('click', function (e) {
+    e.preventDefault();
+    if($(e.target).parent().hasClass("collapsed")){
+      $(e.target).parent().find(".togglebtn").removeClass("icon-plus").addClass("icon-minus");
+    }
+    else {
+      $(e.target).parent().find(".togglebtn").removeClass("icon-minus").addClass("icon-plus");
+    }
+  });
+  $('#new_prize').on('show', function (e) {
+         // if($(".tooltip").length == 0){
+      if($("#level_tooltip_1:hover").length == 0){
+         $(e.target).parent().find(".togglebtn").removeClass("icon-plus").addClass("icon-minus");
+      }
+       //}
+    }).on('hidden', function (e) {
+       if($(".tooltip").length == 0){
+       $(e.target).parent().find(".togglebtn").removeClass("icon-minus").addClass("icon-plus");
+     }
+    });
+
+    $('#status_prize_collap').on('show', function (e) {
+
+      $(".status_prize_icon").removeClass("icon-plus").addClass("icon-minus");
+    }).on('hidden', function (e) {
+      $(".status_prize_icon").removeClass("icon-minus").addClass("icon-plus");
+    });
+
+    var count = 0
+    $("#new_prize .accordion-group").each(function(index, element){
+        count = (index + 1)
+    });
+    if (count == 1){
+      $('.icon-delete').addClass('hide');
+    }
+
+    $('#level_tooltip_1').tooltip();
+    // for ( i = 0 i <= 100; i++){
+    //   $('#redeem_value_'+i).mask('?999999',{placeholder: ""});
+    // }
+    for ( i = 2; i <= 100; i++){
+      $('#level_tooltip_'+ i).addClass('hide');
+    }
+    // for ( i = 0; i <= 100; i++){
+    //   $('#level_tooltip_'+ i).tooltip();
+    // }
+
+    //comment button remove
+    $(document).on("click", ".remove", function(){
+        count = 0
+        $("#new_prize .accordion-group").each(function(index, element){
+            count += (index + 1)
+            //
+            $(element).find(".prize-order").text(index + 1);
+
+            $(element).find(".accordion-heading .accordion-toggle").attr("href", "#collapse_" + (index + 1));
+            $(element).find(".accordion-body").attr("id", "collapse_" + (index + 1));
+
+            // $(element).find(".redeem_value").attr("name", "redeem_value_" + (index + 1));
+            // $(element).find(".prize_name").attr("name", "prize_name_" + (index + 1));
+            $(element).find(".redeem_value").attr("id", "redeem_value_" + (index + 1));
+            $(element).find(".prize_name").attr("id", "prize_name_" + (index + 1));
+
+            // $(element).find(".accordion-body").attr("id", "collapse_" + (index + 1));
+            // $(element).find(".accordion-toggle").attr("href", "collapse_" + (index + 1));
+
+            $(element).find(".prize-name-span").attr("id", "prize-name-span_" + (index + 1));
+
+            $(element).find(".icon-question-sign").attr("id", "level_tooltip_" + (index + 1));
+            $('#level_tooltip_1').removeClass('hide');
+            $('#level_tooltip_1').tooltip();
+
+            $(element).find(".prize-redeem-value-span").attr("id", "prize-redeem-value-span_" + (index + 1));
+        })
+        if (count == 1){
+           $('.icon-delete').addClass('hide');
+        } else {
+            $('.icon-delete').removeClass('hide');
+        }
+
+    })
+    $('#clonetrigger').click(function(){
+        $(this).addClass('hide');
+        var yourclass=".clonable";  //The class you have used in your form
+        var clonecount = $(yourclass).length;   //how many clones do we already have?
+        //
+        // if (clonecount == 0){
+        //   yourclass=".clonable_new";
+        // }
+
+        var newid = Number(clonecount) + 1;     //Id of the new clone
+
+        $(yourclass+":first").fieldclone({      //Clone the original elelement
+            newid_: newid,                      //Id of the new clone, (you can pass your own if you want)
+            target_: $("#formbuttons"),         //where do we insert the clone? (target element)
+            insert_: "before",                  //where do we insert the clone? (after/before/append/prepend...)
+            limit_: 100                           //Maximum Number of Clones
+        });
+        //
+        $(yourclass+":eq("+(newid - 1)+")").find(".prize-order").text(newid);
+         // $(yourclass+":eq("+(newid - 1)+")").find(".tooltip_prize").addClass('hide');
+        $("#new_prize .accordion-group").each(function(index, element){
+            count = 0
+            count = (index + 1)
+            if (count == 1){
+              $('.icon-delete').addClass('hide');
+            }else {
+                $('.icon-delete').removeClass('hide');
+            }
+            //
+       })
+        return false;
+    });
+
+});
+
+//The Plugin Script
+(function($) {
+    $.fn.fieldclone = function(options) {
+        //==> Options <==//
+        var settings = {
+            newid_ : 0,
+            target_: $(this),
+            insert_: "before",
+            limit_: 0
+        };
+        if (options) $.extend(settings, options);
+
+        if( (settings.newid_ <= (settings.limit_+1)) || (settings.limit_==0) ){ //Check the limit to see if we can clone
+
+            //==> Clone <==//
+            var fieldclone = $(this).clone();
+            var node = $(this)[0].nodeName;
+            var classes = $(this).attr("class");
+
+            //==> Increment every input id <==//
+            var srcid = 1;
+            $(fieldclone).find(':input').each(function(){
+                var s = $(this).attr("name");
+                if (typeof s !== 'undefined' && s !== null) {
+                  $(this).attr("name", s.replace(eval('/_'+srcid+'/ig'),'_'+settings.newid_));
+                }
+            });
+
+            $(fieldclone).find('.icon-question-sign').each(function(){
+                var s = $(this).attr("id");
+                $(this).attr("id", s.replace(eval('/_'+srcid+'/ig'),'_'+settings.newid_));
+                $(this).addClass('hide');
+            });
+
+            $(fieldclone).find('.prize_name').each(function(){
+                var s = $(this).attr("id");
+                $(this).attr("id", s.replace(eval('/_'+srcid+'/ig'),'_'+settings.newid_));
+
+            });
+
+            $(fieldclone).find('.redeem_value').each(function(){
+                var s = $(this).attr("id");
+                $(this).attr("id", s.replace(eval('/_'+srcid+'/ig'),'_'+settings.newid_));
+                $(this).removeAttr("old-value old-button-value");
+            });
+
+            $(fieldclone).find('.prize_category').each(function(){
+                var s = $(this).attr("id");
+                $(this).attr("id", s.replace(eval('/_'+srcid+'/ig'),'_'+settings.newid_));
+            });
+
+            $(fieldclone).find('.prize_item').each(function(){
+                var s = $(this).attr("id");
+                $(this).attr("id", s.replace(eval('/_'+srcid+'/ig'),'_'+settings.newid_));
+            });
+
+            $(fieldclone).find('.prize-name-span').each(function(){
+                var s = $(this).attr("id");
+                $(this).attr("id", s.replace(eval('/_'+srcid+'/ig'),'_'+settings.newid_));
+                $(this).addClass('hide-prize')
+            });
+
+            $(fieldclone).find('.prize-redeem-value-span').each(function(){
+                var s = $(this).attr("id");
+                $(this).attr("id", s.replace(eval('/_'+srcid+'/ig'),'_'+settings.newid_));
+                $(this).addClass('hide-prize');
+            });
+
+            $(fieldclone).find('input[type=text]').each(function(){
+                var s = $(this).attr("value");
+                $(this).attr("value", '');
+            });
+
+            $(fieldclone).find('.icon-delete').each(function(){
+                $(this).attr("href", '');
+                $(this).addClass('remove');
+            });
+
+            $(fieldclone).find('.accordion-body').attr("id",  'collapse_' + settings.newid_).addClass("in").attr("style", "");
+            $(fieldclone).find('.accordion-toggle').attr("href",  '#collapse_' + settings.newid_).removeClass("collapsed");
+            $(fieldclone).find(".togglebtn").removeClass("icon-plus").addClass("icon-minus");
+
+            var root_prize = $(fieldclone).closest('.root-prize-item');
+            root_prize.find(".prize-menu .item-prize").remove();
+            root_prize.find(".prize_point .prize-button").html('Select Menu Item / Category <span class="caret"></span>');
+            root_prize.find(".prize_point .prize-button").attr('id', "null");
+            // console.log(root_prize.find(".prize_point .prize-button"));
+            //==> Locate Target Id <==//
+            var targetid = $(settings.target_).attr("id");
+            if(targetid.length<=0){
+                targetid = "clonetarget";
+                $(settings.target_).attr("id",targetid);
+            }
+
+            //==> Insert Clone <==//
+            var newhtml = $(fieldclone).html().replace(/\n/gi,"");
+            newhtml = '<'+node+' class="'+classes+'">'+newhtml+'</'+node+'>';
+            eval("var insertCall = $('#"+targetid+"')."+settings.insert_+"(newhtml)");
+        }
+    };
+
+    $(document).on('keyup', 'input[id^="redeem_value_"]', function(event) {
+      var self = this;
+      var current_closest = $(this).closest('.prize_point');
+      var prize_btn = current_closest.find('.prize-button');
+      var params = {
+        redeem_value: $(this).val(),
+        location_id: '<%= @restaurant.id %>'
+      };
+      if ($(this).val() != ""){
+        $.ajax({
+          url: "<%= get_item_and_categories_points_path %>",
+          type: "GET",
+          dataType: "json",
+          data: params,
+          success: function(response) {
+            var data = response.results,
+                prize_item = $(self).closest(".prize-menu"),
+                prize_items,
+                prize_categories,
+                items_buffer = [],
+                categories_buffer = [];
+            prize_item.find('.item-prize:gt(0)').remove();
+            for(var i = 0; i < data.length; i++){
+              if (data[i].build_menu_id !== null && data[i].build_menu_id !== undefined){
+                var element_item = '<li data-type="item" class="item-prize" id="'
+                var extra_item = data[i].build_menu_id + '">' + data[i].name + '</li>'
+                items_buffer.push(element_item + extra_item);
+              }
+
+              if(data[i].category_id !== null && data[i].category_id !== undefined){
+                var element_category = '<li data-type="category" class="item-prize" id="'
+                var extra_category = data[i].category_id + '">' + data[i].name + '</li>'
+                categories_buffer.push(element_category + extra_category);
+              }
+            }
+
+            prize_items = $(self).closest('.root-prize-item').find('.wrap-prize-item');
+            prize_items.html(items_buffer.join(''));
+
+            prize_categories = $(self).closest('.root-prize-item').find('.wrap-prize-category');
+            prize_categories.html(categories_buffer.join(''));
+
+            // keep old value of redemption textfield and button prize
+            var old_redemption = $(self).closest(".redeem_value");
+            if (!old_redemption.attr('old-value')){
+              old_redemption.attr('old-value', old_redemption.val());
+              old_redemption.attr('old-button-value', prize_btn.text().trim());
+            }
+
+            var current_redemption = parseInt(self.value);
+            var old_redemption_value = parseInt($(self).attr('old-value'));
+            var current_btn_text = prize_btn.text().trim();
+            var  old_button_text = $(self).attr('old-button-value');
+            if (current_redemption != old_redemption_value){
+              text = 'Select Menu Item / Category';
+              prize_btn.html(text + '<span class="caret"></span>');
+            }
+            else{
+              prize_btn.html(old_button_text + '<span class="caret"></span>');
+            }
+          },
+          error: function(error) {
+          }
+        });
+      }
+    });
+
+    $('input[id^="redeem_value_"]').trigger('keyup');
+
+    $(document).on('click', '.none-prize', function(){
+      var current_closest = $(this).closest('.prize_point')
+      var prize_btn = current_closest.find('.prize-button');
+      var text = $(this).text();
+      prize_btn.html(text + '<span class="caret"></span>');
+      // reset value of hidden fields
+      var item_redeem_id = current_closest.find('.redeem_value').attr('id');
+      var item_redeem_id_lastChar = item_redeem_id[item_redeem_id.length - 1];
+      var item_id = '#' + 'prize_item_' + item_redeem_id_lastChar;
+      var category_id = '#' + 'prize_category_' + item_redeem_id_lastChar;
+      $(item_id).val('');
+      $(category_id).val('');
+    });
+
+    $(document).on('click', '.item-prize', function(){
+      // get text of item-prize
+      var text = $(this).text();
+      // replace text of prize button
+      var prize_btn = $(this).closest('.prize_point').find('.prize-button');
+      prize_btn.html(text + '<span class="caret"></span>');
+
+      // push data to hidden field
+      parent = $(this).closest('.wrap-prize-item')
+      var prize_item_class = 'prize_item_';
+      var prize_category_class = 'prize_category_';
+      if($(this).data('type') === 'item'){
+        var item_redeem_id = $(this).closest('.prize_point').find('.redeem_value').attr('id');
+        var item_redeem_id_lastChar = item_redeem_id[item_redeem_id.length - 1];
+        var item_id = '#' + prize_item_class + item_redeem_id_lastChar;
+        var category_id = '#' + prize_category_class + item_redeem_id_lastChar;
+        $(item_id).val(this.id);
+        $(category_id).val('');
+      }
+      else{
+        var category_redeem_id = $(this).closest('.prize_point').find('.redeem_value').attr('id');
+        var category_redeem_id_lastChar = category_redeem_id[category_redeem_id.length - 1];
+        var category_id = '#' + prize_category_class + category_redeem_id_lastChar;
+        var item_id = '#' + prize_item_class + category_redeem_id_lastChar;
+        $(category_id).val(this.id);
+        $(item_id).val('');
+      }
+      prize_btn.attr('id', this.id);
+    });
+
+    $(document).on('click', '.prize-button', function(){
+      btn_text = $(this).text().trim();
+      btn_id = this.id;
+      prize_menu_element = $(this).closest('.prize_point').find('.prize-menu');
+      if(btn_text.trim() === "Select Menu Item / Category"){
+        prize_menu_element.find('.item-prize').css({'background-color' : 'white', 'color' : 'black'});
+        prize_menu_element.find('.none-prize').css({'background-color' : '#3399FF', 'color' : 'white'});
+      }else{
+        if ((prize_menu_element.find('#'+ btn_id) !== "undefined") && (prize_menu_element.find('#'+ btn_id).text().trim() === btn_text.trim())){
+          prize_menu_element.find('.none-prize').css({'background-color' : 'white', 'color' : 'black'});
+          prize_menu_element.find('.item-prize').css({'background-color' : 'white', 'color' : 'black'});
+          prize_menu_element.find('#'+ btn_id).css({'background-color' : '#3399FF', 'color' : 'white'});
+        }
+      }
+    });
+
+    $(document).on('mouseenter', '.item-prize', function(){
+      prize_point_element = $(this).closest('.prize_point')
+      prize_point_element.find('.prize-menu').find('.item-prize').css({'background-color' : 'white', 'color' : 'black'});
+      prize_point_element.find('.prize-menu').find('.none-prize').css({'background-color' : 'white', 'color' : 'black'});
+      $(this).css({'background-color' : '#3399FF', 'color' : 'white'});
+    });
+
+    $(document).on('mouseenter', '.none-prize', function(){
+      $(this).closest('.prize_point').find('.prize-menu').find('.item-prize').css({'background-color' : 'white', 'color' : 'black'});
+      $(this).css({'background-color' : '#3399FF', 'color' : 'white'});
+    });
+
+})(jQuery);
+</script>

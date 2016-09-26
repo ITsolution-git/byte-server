@@ -1,0 +1,9 @@
+<% unless @shared_menus.present? && @shared_menus.include?(menu) %>
+  <div id ="category_row" class="margin-right-category">
+    <%= link_to image_tag('edit_icon.png'), edit_category_path(category), remote: true, :title => 'Edit' %>
+    <% unless menu.published? %>
+      <%= link_to image_tag('delete_icon.png'), remove_category_from_build_menu_restaurant_menu_path(:restaurant_id => restaurant.id, :id => menu.id, :category_id => category.id), :method => :delete,:remote => true, :title => 'Delete', :confirm => 'Are you sure you want to remove category from menu built?'%>
+      <%= image_tag('scroll_ico.png', :class => 'handle-drag') %>
+    <% end %>
+  </div>
+<% end %>

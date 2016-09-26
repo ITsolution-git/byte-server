@@ -1,0 +1,52 @@
+<%= form_for @photo, url: photo_path(@photo, restaurant_id: @restaurant.id), method: :put, :html=>{:id => "photo_form", :multipart => true}, :multipart=>true do |f| %>
+  <%= f.hidden_field :rate %>
+  <%= f.hidden_field :angle, {id: "orientation"} %>
+  <%= f.hidden_field :angle %>
+  <%= f.hidden_field :crop_x %>
+  <%= f.hidden_field :crop_y %>
+  <%= f.hidden_field :crop_w %>
+  <%= f.hidden_field :crop_h %>
+  <div class="full-img-item-preview span4 floatleft word-wrap" style="display: none;">
+    <%= cl_image_tag @photo.public_id %>
+  </div>
+  <div class="img-item-preview span4 floatleft word-wrap photo-display">
+    <%= cl_image_tag @photo.public_id, transformation: [
+       {x: (@photo.crop_x if @photo.crop_x), y: (@photo.crop_y if @photo.crop_y), width: (@photo.crop_w if @photo.crop_w), height: (@photo.crop_h if @photo.crop_h), crop: :crop},
+       {angle: @photo.angle}] %>
+  </div>
+  <div class="crop-btn">
+    <%= link_to '', '#', :class => 'btn' %>
+    <%= image_tag("btn_rotate.png", :id => @photo.id, :class => 'rotate_photo top10 ', :style=>"margin-left: 3px;border-radius: 4px;border: 1px solid #CCCCCC;")%>
+    <%= f.text_field :name, :placeholder => "Name", :maxlength => "28" %>
+  </div>
+  
+  <div class="row-fluid photo-btn top20" >
+    <div class="button-group">
+      <%= link_to "Cancel", manage_photos_restaurant_path(@restaurant.id), :class => "normal-btn go-back-link btn btn-cancel" %>
+      <%= f.submit "Save", class: "normal-btn btn btn-primary" %>
+    </div>
+  </div>
+
+  <div id="modal_holder_photo_form">
+    <%= render partial: "layouts/modal_image_crop", locals: {
+        heading: "Preview",
+        form: "photo_form"
+      }
+    %>
+  </div>
+
+  <div class="crop-helper">
+    <%= render partial: 'shared/crop_helper', locals: {:model => 'photo'} %>
+  </div>
+
+  <script type="text/javascript">
+
+    <% if @photo != nil %>
+      var image = Util.resize_image(<%= @photo.width %>, <%= @photo.height %>);
+      $('#photo_form #photo_rate').val(image['rate']);
+      $('#myModal_photo_form .modal-body p').html('<img width="' + image['width'] + '" height="' + image['height'] + '" width_image="' + image['width'] + '" height_image="' + image['height'] + '" src="'+$('#photo_form').find('.full-img-item-preview img').attr('src')+'" />');
+    <% end %>
+  </script>
+<% end %>
+
+

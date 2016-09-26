@@ -1,0 +1,50 @@
+.line-bottom.menu-container[
+  id="menu_container_#{menu.id}"
+  data-menu-id="#{menu.id}"
+  data-order-build-menu-path="#{order_build_menu_path}"
+]
+  .row-fluid.block-head.remove-margin-bottom.top20
+    .span12
+      span.icon-plus.btn.togglebtn.icon-menu-collapsu data-toggle='collapse' data-target="#menu_#{menu.id}"
+      .wrapper-menu-item-built
+        span.btn.btn-link.collapsu.menu-title= menu.name
+        span.muted
+          small style='display: block'
+            span class="menu_items_count_#{menu.id}" = menu.items.count
+            = "Items - #{menu.reward_points} Reward Points Each"
+
+      - if @shared_menus.present? && @shared_menus.include?(menu)
+        .margin-right-menu
+          = link_to image_tag('c_ic.png'), menus_management_copy_shared_index_path(menu_id: menu.id, restaurant_id: @restaurant.id), remote: true, method: :post, class: 'copy-menu with-loader', title: 'Copy'
+          / = link_to '', '#', class: 'icon-info-sign btn floatright'
+      - else
+        .margin-right-menu
+          = link_to share_menu_icon(menu), menus_management_status_path(menu, { menu: { is_shared: !menu.is_shared? } }), class: "share-menu-#{menu.id} with-loader", remote: true, method: :put, title: 'Share'
+          - if menu.approved?
+            = link_to image_tag('publish_icon.png'), publish_restaurant_menu_path(@restaurant, menu), remote: true, disable_with: '', method: :put, id: "publish_#{menu.id}", class: "publish_menu_tz_#{menu.id} publish_menu_button", title: 'Publish' unless menu.published?
+          - elsif menu.published?
+            = link_to image_tag('unpublish_icon.png'), unpublish_restaurant_menu_path(@restaurant, menu), remote: true, disable_with: '', method: :put, id: "unpublish_#{menu.id}", class: "unpublish_menu_tz_#{menu.id} unpublish_menu_button", title: 'Unpublish the menu'
+          - unless menu.published?
+            = link_to image_tag('edit_icon.png'), edit_restaurant_menu_path(@restaurant, menu), remote: true, :title => 'Edit'
+            - if menu.was_built?
+              span.menu_icon_delete= render 'menus/menu_icon_delete', restaurant: @restaurant, menu: menu
+          = link_to image_tag('c_ic.png'), copy_menu_path(menu), remote: true, menu_id: menu.id, class: 'copy-menu', title: 'Copy'
+        span.row-fluid
+          span.menu-status
+            strong Status:
+            span class="menu-#{MENU_STATUS[menu.publish_status].downcase}" = MENU_STATUS[menu.publish_status]
+  .collapse.category-drag-container id="menu_#{menu.id}" = render 'menus/categories_items_container', menu: menu
+.menu-built-action.top10
+  = link_to 'Update', '#', class: 'btn btn-primary span3 hide', id: "update_order_#{menu.id}", remote: true, disable_with: 'Please wait...'
+  - unless @shared_menus.present? && @shared_menus.include?(menu)
+    - if menu.publish_status == PENDING_STATUS && @menu_form_build_category.present?
+      = link_to 'Approve', { controller: 'menus', action: 'approve_menu', menu_id: menu.id, loc_id: @restaurant.id }, class: 'btn btn-primary span3', remote: true
+    - if menu.was_built?
+      = link_to image_tag('calendar_icon.png'), { controller: 'menus', action: 'add_publish_date', menu_id: menu.id, loc_id: @restaurant.id }, remote: true, class: 'calendar-menu'
+      = link_to 'Preview', { controller: 'menus', action: 'build_preview', menu_id: menu.id, loc_id: @restaurant.id }, class: 'btn btn-warning menu_preview span3', id: "#{menu.id}", remote: true, disable_with: 'Please wait...'
+  - else
+    = link_to 'Preview', { controller: 'menus', action: 'build_preview', menu_id: menu.id, loc_id: @restaurant.id }, class: 'btn btn-warning menu_preview span3', id: "#{menu.id}", remote: true, disable_with: 'Please wait...'
+  .clear
+
+
+

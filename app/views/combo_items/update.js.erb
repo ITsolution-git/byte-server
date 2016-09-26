@@ -1,0 +1,18 @@
+<% if @combo_item.errors.full_messages.any? %>
+    $(".combo_item_form_errors_container").html("<%= j render("layouts/form_errors",:object=>@combo_item) %>").show().delay(3000).fadeOut();
+<% else %>
+  // console.log("<%=@combo_item.inspect%>");
+  // console.log("<%=@combo_item_old.inspect%>");
+  <%
+    is_equal = @combo_item == @combo_item_old
+    @combo_item = ComboItem.new
+  %>
+  <% if is_equal %>
+    $(".combo_item_form_errors_container").html("<%= j render("layouts/form_warning", :message => "There are no changes on this screen to be saved. Please make any changes to update") %>").show().delay(3000).fadeOut();
+  <% else %>
+    $("#menus_container").html("<%= escape_javascript render('menus', restaurant_menus: @restaurant.menus, restaurant_copying_menus: @restaurant.copy_shared_menu_statuses) %>");
+    $(".combo_item_form_block_container .wrap_title_form").html("<%= j render partial: "menus/combo_item_title_form", locals: {combo_item: @combo_item} %>");
+    $(".combo_item_form_block_container #combo_item_form_toggle").html("<%= j render partial: "menus/combo_item_form_primary", locals: {combo_item: @combo_item} %>");
+    $(".combo_item_form_errors_container").html("<%= j render("layouts/form_success", :message => "Combos Menu Item is updated successfully") %>").show().delay(3000).fadeOut();
+  <% end %>
+<% end %>

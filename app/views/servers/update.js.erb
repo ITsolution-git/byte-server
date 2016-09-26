@@ -1,0 +1,25 @@
+<% if @server.errors.full_messages.any? %>
+    $(".server_form_errors_container").html("<%= j render("layouts/form_errors",:object=>@server) %>").show().delay(3000).fadeOut();
+<% else %>
+  <%
+    is_equal = @server == @server_old
+    @server = Server.new
+    @server_avatar = ServerAvatar.new
+  %>
+  angle = $('.rotate_server_image').attr('angle');
+  if (angle != undefined) {
+     $(".server_form_block_container .wrap_title_form").html("<%= j render "menus/server_title_form" %>");
+     $(".server_form_block_container #server_form_toggle").html("<%= j render "menus/server_form_primary" %>");
+     $(".server_form_errors_container").html("<%= j render("layouts/form_success",:message=>"Server is updated successfully.") %>").show().delay(3000).fadeOut();
+  }else{
+    <% if is_equal %>
+      $(".server_form_errors_container").html("<%= j render("layouts/form_warning",:message=>"There are no changes on this screen to be saved. Please make any changes to update") %>").show().delay(3000).fadeOut();
+    <% else %>
+      $(".server_form_block_container .wrap_title_form").html("<%= j render "menus/server_title_form" %>");
+      $(".server_form_block_container #server_form_toggle").html("<%= j render "menus/server_form_primary" %>");
+      $(".server_form_errors_container").html("<%= j render("layouts/form_success",:message=>"Server is updated successfully.") %>").show().delay(3000).fadeOut();
+    <% end %>
+  }
+<% end %>
+
+new app.classes.MenuManagement('.menus_container');

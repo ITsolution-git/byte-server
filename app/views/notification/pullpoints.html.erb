@@ -1,0 +1,33 @@
+<% @resturant = Location.find(@notification.location_id)%>
+<%= link_to @resturant.name+' ->',restaurants_path %><%= link_to  ' Communications->',communications_restaurant_notification_index_path(@resturant) %>
+<%= link_to  ' User Communications->',usercommunications_restaurant_notification_path(@resturant,@notification) %>
+<%= link_to  ' Pull User Points','#'%>
+<%= form_tag "pull_user_points" ,:class => "pull_points" do %>
+<h5>Pull Down User Points</h5>
+
+  <div class="row ">
+		<div class="span12">
+			<div class="well">
+				
+				<div class="row ">
+					<div class="span4">
+						<%= text_field_tag :useremail,"",:class=>"input-block-level",:placeholder=>"Enter Email", :value=> @user.email%>
+					</div>
+				</div>
+				<div class="row ">
+					<div class="span4">
+						<%= text_field_tag :points,"",:class=>"input-block-level",:placeholder=>"Enter Points"%>
+					</div>
+				</div>
+				<%= hidden_field_tag :location_id, @notification.location_id%>
+				<%= hidden_field_tag :notification_id ,@notification.id%>
+				<div class="row">
+				    <div class="span5">
+				        <%= submit_tag "Submit" ,:class=>"btn btn-primary " %>
+				    </div>
+				</div>
+			</div>
+		</div>
+  </div>
+     
+<% end %>

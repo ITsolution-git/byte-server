@@ -1,0 +1,15 @@
+<div class="block-head clearfix header-menu-mgt">
+  <span class="<%if combo_item.new_record? %>icon-plus<% else %>icon-minus<%end %> btn togglebtn" data-toggle="collapse" data-target="#combo_item_form_toggle"></span>
+  <span class="wrap_title_form">
+     <%= render partial: 'menus/combo_item_title_form', locals: {combo_item: combo_item} %>
+  </span>
+
+  <%= link_to "","#",:class=>"icon-question-sign btn floatright", :id => 'combo_item_tooltip', :title=> load_content_of_file('/public/tooltip/combo_item.html'), "data-toggle" => "tooltip","data-placement"=>"right","data-html"=>"true",:rel=>"tooltip",:style=>"color:#333;" %>
+
+</div>
+<div id="combo_item_form_toggle"  class="collapse <%= toogle_state(combo_item) %>">
+  <%= render partial: 'menus/combo_item_form_primary', locals: {combo_item: combo_item} %>
+</div>
+<script type="text/javascript">
+  $('#combo_item_tooltip').tooltip();
+</script>

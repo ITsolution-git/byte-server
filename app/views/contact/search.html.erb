@@ -1,0 +1,715 @@
+
+<% if @mycontact != 1 %>
+<div id="modal_holder_contact_app">
+
+</div>
+<div class="span12 group-header">
+    <div class="top20 btn-group pull-left">
+    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" style="color: white !important;">
+      <%if @group_id.nil? %>
+        Customers
+        <% else %>
+          <%group = Group.find_by_id(@group_id)%>
+          <% unless group.nil?%>
+            <%= group.name %>
+          <% else %>
+            Customers
+          <% end %>
+
+        <% end %>
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+         <li>
+            <div class="items-dropdown" style="margin-left: 10px;">
+            <span class="contact_group_name item-name"><%= link_to 'Customers',search_restaurant_contact_index_path(@restaurant) %></span>
+            </div>
+          </li>
+      <% @group = @group.sort_by!{ |m| m.name.downcase } %>
+      <% unless @group.empty? %>
+        <% @group.each do |g| %>
+          <% if @mycontact == 1 %>
+            <li>
+              <div class="items-dropdown">
+              <div>
+              <span class="contact_group_name item-name"><%= link_to g.name,search_contact_index_path(:group_id => g.id) %></span>
+
+               <%= link_to image_tag('delete_icon.png'), '',method: :get, :class => 'delete-item-action pull-right',:title => "Delete", :"data-toggle" => "tooltip", :rel => "tooltip", :remote=> true, :confirm => 'Are you sure to delete this group?'%>
+               </div>
+              </div>
+            </li>
+
+          <% else %>
+            <li>
+               <div class="top10 items-dropdown" style="margin-right: 10px;">
+              <div class="group_name_dropdown">
+              <span class="contact_group_name item-name"><%= link_to g.name,search_restaurant_contact_index_path(@restaurant, :group_id => g.id) %></span>
+              </div>
+               <%= link_to image_tag('delete_icon.png'), delete_group_restaurant_contact_index_path(:group_id => g.id),method: :get, :class => 'delete-group-action pull-right',:title => "Delete", :"data-toggle" => "tooltip", :rel => "tooltip", :remote=> true, :confirm => 'Are you sure to delete this group?',:style=>" margin-top: -20px;"%>
+              </div>
+            </li>
+          <% end %>
+        <% end %>
+      <% end %>
+    </ul>
+</div>
+  <div class="top20 search-contact_customer">
+    <% if @mycontact == 1 %>
+      <%= form_tag search_contact_index_path(:group_id=>@group_id), :class => "" do %>
+        <div class="span5">
+          <%= text_field_tag :search,  @search_params, :class=>"input-block-level", :placeholder=>"Search...", :autocomplete => 'off', :id => "search_user_account" %>
+        </div>
+        <%= submit_tag "Submit", :class => "btnSearchUserAccount",:title=>"Go", :value => 'SEARCH' %>
+      <% end %>
+    <% else %>
+       <%= form_tag search_restaurant_contact_index_path(:group_id=>@group_id,:restaurant_id=>@restaurant), :class => "" do %>
+      <div class="span5">
+        <%= text_field_tag :search,  @search_params, :class=>"input-block-level", :placeholder=>"Search...", :autocomplete => 'off', :id => "search_user_account" %>
+      </div>
+      <%= submit_tag "Submit", :class => "btnSearchUserAccount inline-search-button",:title=>"Go", :value => 'SEARCH' %>
+    <% end %>
+    <% end %>
+  </div>
+</div>
+
+<div class="pull-right">
+  <% if current_user.admin? %>
+    <%= link_to image_tag("CSV.png"), search_restaurant_contact_index_path(format: :csv) %>
+  <% end %>
+</div>
+
+<table class="contact_table_restaurant table table-striped table-hover" id="contact_table">
+    <thead class="contactHeader">
+        <tr class="success">
+            <th><input class="checkbox" id='check_all_customer_contact' type=
+            "checkbox"></th>
+
+            <th class="image-arrows-name">
+              Name
+              <%= image_tag 'arrows.png', :class=>'name-sort hide' %></th>
+            <th class="image-arrows-status">
+              Status
+              <%= image_tag 'arrows.png', :class=>'status-sort hide' %></th>
+            </th>
+            <th class="image-arrows-username">
+              Username
+              <%= image_tag 'arrows.png', :class=>'username-sort hide' %></th>
+            </th>
+            <th class="image-arrows-point">
+              Total Points
+              <%= image_tag 'arrows.png', :class=>'point-sort hide' %></th>
+            </th>
+            <th class="image-arrows-date">
+              Date Created
+              <%= image_tag 'arrows.png', :class=>'date-sort hide' %></th>
+            </th>
+            <th class="image-arrows-zipcode">
+              ZipCode
+              <%= image_tag 'arrows.png', :class=>'zipcode-sort hide' %></th>
+            </th>
+            <th class="image-arrows-account">
+              Account
+              <%= image_tag 'arrows.png', :class=>'account-sort hide' %></th>
+            </th>
+        </tr>
+    </thead>
+
+    <tbody>
+    <% if !@customer.empty? %>
+      <% @customer.each do |user| %>
+      <% unless user.nil?%>
+          <% unless user.admin? || user.owner? %>
+            <tr>
+                <td><%=check_box_tag "customer_contact[]", user.id, false, :class => 'check_user_contact_app nested-item' %></td>
+                <td><%=user.first_name %>  <%=user.last_name %></td>
+
+                <% if !@current_location.status_prizes.empty? %>
+                  <% base_status = @current_location.status_prizes.first.name %>
+                <% else %>
+                  <% base_status = "Bronze" %>
+                <% end %>
+                
+                <% users_last_prize = UserPrize.where(user_id: user.id, location_id: @current_location.id).last %>
+
+                <!-- Use the users last prize from the location to determine their status, otherwise they have base_status -->
+                <% if (users_last_prize) %>
+                  <% status_name = users_last_prize.status_prize.name %>
+                <% else %>
+                  <% status_name = base_status %>
+                <% end %>
+                
+                <!-- 
+                  Below is the old code for getting users status.
+
+                  # status_name = nil
+                  # user_prize = UserPrize.where('user_id=?',user.id).last
+                  # unless user_prize.blank? || user_prize.status_prize
+                  #   status_name = user_prize.status_prize.name
+                  # end 
+                -->
+
+                <td class="status_name_contact"><%=status_name%></td>
+                <td><%=user.username%></td>
+                <% point = 0 %>
+                <% if @mycontact == 1 %>
+                  <% point = User.get_total_point_my_contact(user.id) %>
+                <% else %>
+                  <% point = User.get_total_point_contact(user.id, @restaurant_id) %>
+                <% end %>
+                <td class=""><%= point.to_i %></td>
+                <td><!--<%#= user.created_at.in_time_zone("#{request.cookies['timezone']}").strftime("%m.%d.%y")%>-->
+                   <%= user.created_at.strftime("%Y-%m-%d ") %>
+                </td>
+                <td><%=user.zip%>
+                </td>
+                <td>
+                  <% if @check %>
+                      <% if user.check_suspend(@restaurant) == 1%>
+                        <%= link_to 'Suspended', '#', method: :get, :class => '', :remote=> true, :class=>'confirm_message_btn btn btn-danger', :disabled=>'disabled'%>
+                      <% else %>
+                        <%= link_to 'Suspend', '#', method: :get, :class => '', :remote=> true, :class=>'confirm_message_btn btn btn-default', :style=>"color: black; width: 65px;", :disabled=>'disabled'%>
+                      <% end %>
+                  <% else %>
+                      <% if user.check_suspend(@restaurant) == 1%>
+                        <%= link_to 'Suspended', un_suspend_customer_restaurant_contact_index_path(:customer_id => user.id, :group_id=>@group_id, :restaurant_id=>@restaurant), method: :get, :class => '', :remote=> true, :class=>'confirm_message_btn btn btn-danger'%>
+                      <% else %>
+                        <%= link_to 'Suspend', suspend_customer_restaurant_contact_index_path(:customer_id => user.id, :group_id=>@group_id, :restaurant_id=>@restaurant), method: :get, :class => '', :remote=> true, :class=>'confirm_message_btn btn btn-default', :style=>"color: black; width: 65px;"%>
+                      <% end %>
+
+                  <% end %>
+                </td>
+            </tr>
+            <% end %>
+         <% end %>
+        <% end %>
+      <% else %>
+         <tr><td></td><td class="width-no-result"><h5>No Result Found</h5></td><td></td><td></td><td></td></td><td></td><td></td><td></td><td></td></tr>
+        <% end %>
+    </tbody>
+</table>
+<% if !@customer.empty? %>
+  <%= link_to 'Delete', delete_customer_restaurant_contact_index_path(), {:remote => true,  'data-dismiss' =>  "modal", 'aria-hidden' => 'true', :class => 'btn btn-primary', :id=>'delete_customer_contact_app', disable_with: "Please wait..."} %>
+
+<%if @group_id.nil? %>
+   <a href="#myModalCreateGroup" data-toggle="modal" role="button" class="btn btn-primary" id="create_group_service">Create Group</a>
+  <% if @mycontact == 1 %>
+    <%= link_to 'Add', add_customer_contact_index_path(:customer_id => params[:customer_contact], :restaurant_id => nil), {:remote => true,  'data-dismiss' =>  "modal", 'aria-hidden' => 'true', :class => 'btn btn-primary', :id=>'add_contact_btn', disable_with: "Please wait...",} %>
+  <% else %>
+     <% unless @group.empty? %>
+     <%= link_to 'Add', add_customer_restaurant_contact_index_path(:customer_id => params[:customer_contact], :group => @group, :restaurant_id => @restaurant), {:remote => true,  'data-dismiss' =>  "modal", 'aria-hidden' => 'true', :class => 'btn btn-primary', :id=>'add_contact_btn', disable_with: "Please wait...",} %>
+     <% end %>
+  <% end %>
+<% end %>
+<% end %>
+ <%= link_to "Send a Message" ,{:controller=>"notification",:action=>"groupmessage" ,:restaurant=>@restaurant.id ,:alert=>'GM',:user_contact =>''}, :class=>"send_message_contact btn btn-primary"%>
+
+<%if @group_id.nil? %>
+  <div class="btn-group">
+  <select id="e1" class="selectpicker" data-style="btn-primary">
+    <option value=""></option>
+    <% unless @items.empty?%>
+       <%@items.each do |item|%>
+         <option value="<%=search_restaurant_contact_index_path(:item_id => item.id, :group_id => @group_id, :restaurant_id => @restaurant)%>" class ="all_item_fav select_item_favorite_<%=item.name%>"><%=item.name%></option>
+       <%end%>
+    <%end%>
+  </select>
+  </div>
+<%end %>
+
+<%if !@customer.blank? %>
+  <div class="floatright" id="pager"><%= paginate @customer %> </div>
+<% end %>
+<!-- Modal Create Group Service -->
+<div id="myModalCreateGroup" class="modal hide fade bottom0 modal-rating-receipt" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-body">
+    <h5>New group</h5>
+    <span>Please enter a new group name.</span><br/>
+    <%
+    group = Group.new
+    if @mycontact == 1
+      url = create_group_contact_index_path
+    else
+      url = create_group_restaurant_contact_index_path
+    end
+     %>
+    <%= form_for group, :url => url, :remote => true do |f| %>
+      <%= f.text_field :name, :placeholder=>"", :class => 'add_group_text' %>
+      <%=f.hidden_field :customer_arr, :value=>"" %>
+
+    <br/>
+      <div class="top10">
+         <%= f.submit :value => 'OK', :id => 'create_group_btn',:class => 'btn btn-primary'%>
+        <!--  <%= f.submit :value => 'OK', :id => '',:class => 'btn btn-primary', :disabled => 'disabled' %> -->
+           <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancel</button>
+      </div>
+    <% end %>
+  </div>
+</div>
+<%
+  @group_id_arr = []
+  if !@group.empty?
+    @group.each do |g|
+      @group_id_arr << g.id
+    end
+  end
+
+%>
+<% else %>
+    <!--<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" style="color: white !important;">
+        Customers
+      <span class="caret"></span>
+    </button> -->
+
+    <div class="my_contact_search search-contact_customer">
+    <% if @mycontact == 1 %>
+      <%= form_tag search_contact_index_path(), :class => "" do %>
+          <%= text_field_tag :search,  @search_params, :class=>"input-block-level", :placeholder=>"Search...", :autocomplete => 'off', :id => "search_user_account" %>
+        <%= submit_tag "Submit", :class => "btnSearchUserAccount",:title=>"Go", :value => 'SEARCH' %>
+      <% end %>
+    <% end %>
+  </div>
+<table class="table table-striped table-hover" id="my_contact_table">
+    <thead class="contactHeader">
+        <tr class="success">
+            <!-- <th><input class="checkbox" id='check_all_customer_contact' type=
+            "checkbox"></th> -->
+
+            <th class="image-arrows-name">
+              Name
+              <%= image_tag 'arrows.png', :class=>'name-sort hide' %></th>
+            <th class="image-arrows-status">
+              Status
+              <%= image_tag 'arrows.png', :class=>'status-sort hide' %></th>
+            </th>
+            <th class="image-arrows-username">
+              Username
+              <%= image_tag 'arrows.png', :class=>'username-sort hide' %></th>
+            </th>
+            <th class="image-arrows-point">
+              Total Points
+              <%= image_tag 'arrows.png', :class=>'point-sort hide' %></th>
+            </th>
+            <th class="image-arrows-date">
+              Date Created
+              <%= image_tag 'arrows.png', :class=>'date-sort hide' %></th>
+            </th>
+            <th class="image-arrows-zipcode">
+              ZipCode
+              <%= image_tag 'arrows.png', :class=>'zipcode-sort hide' %></th>
+            </th>
+            <th class="image-arrows-account">
+              Account
+              <%= image_tag 'arrows.png', :class=>'account-sort hide' %></th>
+            </th>
+            <th class="image-arrows-delete">
+              Action
+            </th>
+        </tr>
+    </thead>
+
+    <tbody>
+    <% if !@customer.empty? %>
+      <% @customer.each do |user| %>
+      <% unless user.nil?%>
+          <% unless user.admin? || user.owner?%>
+            <tr>
+                <!-- <td><%=check_box_tag "customer_contact[]", user.id, false, :class => 'check_user_contact_app nested-item' %></td> -->
+                <td><%=user.first_name %>  <%=user.last_name %></td>
+                <%
+                   status_name = nil
+                   user_prize = UserPrize.where('user_id=?',user.id).last 
+                   unless user_prize.blank?
+                     unless user_prize.status_prize.blank?
+                       status_name = status_prize.name
+                     end
+                   end
+                %>
+                <td class="status_name_contact"><%=status_name%></td>
+                <td><%=user.username%></td>
+                <% point = 0 %>
+                <% if @mycontact == 1 %>
+                  <% point = User.get_total_point_my_contact(user.id) %>
+                <% else %>
+                  <% point = User.get_total_point_contact(user.id, @restaurant_id) %>
+                <% end %>
+                <td class=""><%= point.to_i %></td>
+                <td><!--<%#= user.created_at.in_time_zone("#{request.cookies['timezone']}").strftime("%m.%d.%y")%>-->
+                  <%= user.created_at.strftime("%Y-%m-%d ") %>
+                </td>
+                <td><%=user.zip%>
+                </td>
+                <td>
+                   <%unless user.nil?%>
+                    <% if !user.is_suspended.nil?%>
+                      <% if user.is_suspended == 1%>
+                        <%= link_to 'Suspended','#' ,method: :get, :class => '', :remote=> true, :class=>'confirm_message_btn btn btn-danger',:disabled=>'disabled'%>
+                      <% else %>
+                        <%= link_to 'Suspend','#' ,method: :get, :class => '', :remote=> true, :class=>'confirm_message_btn btn btn-default', :style=>"color: black; width: 65px;", :disabled=>'disabled'%>
+                      <% end %>
+                    <% else %>
+                     <%= link_to 'Suspend','#' ,method: :get, :class => '', :remote=> true, :class=>'confirm_message_btn btn btn-default', :style=>"color: black; width: 65px;", :disabled=>'disabled'%>
+                    <% end %>
+                  <% else %>
+                     <%= link_to 'Suspend','#' ,method: :get, :class => '', :remote=> true, :class=>'confirm_message_btn btn btn-default', :style=>"color: black; width: 65px;", :disabled=>'disabled'%>
+                  <%end%>
+                </td>
+                <td>
+                <%= link_to image_tag('delete_icon.png'),{:controller=>'contact',:action=>'delete_my_contact', :user_id => user.id} ,:title=>"Delete" ,:remote=> false,:confirm => 'Are you sure you want to Delete?' %>
+                </td>
+            </tr>
+            <% end %>
+         <% end %>
+        <% end %>
+      <% else %>
+         <tr><td></td><td class="width-no-result"><h5>No Result Found</h5></td><td></td><td></td><td></td></td><td></td><td></td><td></td><td></td></tr>
+        <% end %>
+    </tbody>
+</table>
+<%if !@customer.blank? %>
+  <div class="floatright"><%= paginate @customer %> </div>
+<% end %>
+<%end %>
+<% content_for :scripts do %>
+  <script type="text/javascript">
+    $(document).ready(function() {
+
+      // $(".confirm_message_btn").on('click', function(){
+      //   console.log('vao')
+      //    // yesnodialog('Yes', 'No', $(this));
+      //     "OK" : "Yes",
+      //     "Cancel" : "No",
+      // });
+
+      if($(".alert-success").length!=0){
+          $(".alert-success").delay(3000).fadeOut();
+      }
+      if($(".alert-error").length!=0){
+          $(".alert-error").delay(3000).fadeOut();
+      }
+
+      var ContactGroupObj = {
+        'group' : "<%=@group_id%>"
+      };
+
+     $("#delete_customer_contact_app").on('click', function(){
+        var ids = [];
+        $('.check_user_contact_app:checked').each(function() {
+          ids.push($(this).val());
+        });
+        // console.log(ids.length)
+        length = ids.length
+        if (length == 0){
+          alert('Please select at least a contact to delete')
+          return false;
+        } else {
+          if (length == 1){
+            r = confirm('Are you sure you want to delete contact?');
+          } else{
+            r = confirm('Are you sure you want to delete contacts?');
+          }
+
+          if(r) {
+            var user_contact_delete = ids.join(",");
+            $(this).attr('href', $(this).attr('href') + "?&user_contact=" + user_contact_delete + "&group_id=" + ContactGroupObj['group']);
+            return true;
+           //alert("OK:" + $(this).attr('href'));
+          } else {
+            return false;
+          }
+        }
+
+      });
+
+      $("#create_group_service").on('click', function(){
+        var ids = [];
+        $('.check_user_contact_app:checked').each(function() {
+          ids.push($(this).val());
+        });
+        var user_contact_list = ids.join(",");
+        $("#group_customer_arr").val(user_contact_list);
+       //alert("OK:" + $(this).attr('href'));
+      });
+
+
+
+    $.tablesorter.addParser({
+            // set a unique id
+            <% if @mycontact != 1 %>
+              id: 'positions',
+            <% else %>
+               id: 'positions_my_contact',
+            <% end %>
+            // id: 'positions_my_contact',
+            // id: 'positions',
+            is: function(s) {
+                    // return false so this parser is not auto detected
+                    return false;
+            },
+            format: function(s) {
+              // alert(s)
+                    // format your data for normalization
+                    return s.toLowerCase()
+                            .replace("b", "a")
+                            .replace("s", "b")
+                            .replace("g", "c")
+                            .replace("p", "d");
+            },
+            // set type, either numeric or text
+            type: 'text'
+    });
+
+    // $.tablesorter.addParser({
+    //         // set a unique id
+    //         id: 'positions_my_contact',
+    //         // id: 'positions',
+    //         is: function(s) {
+    //                 // return false so this parser is not auto detected
+    //                 return false;
+    //         },
+    //         format: function(s) {
+    //           // alert(s)
+    //                 // format your data for normalization
+    //                 return s.toLowerCase()
+    //                         .replace("b", "a")
+    //                         .replace("s", "b")
+    //                         .replace("g", "c")
+    //                         .replace("p", "d");
+    //         },
+    //         // set type, either numeric or text
+    //         type: 'text'
+    // });
+
+    var COOKIE_KEY = 'sort';
+    var COOKIE_KEY_MY_ACCOUNT = 'sortMyAccount';
+
+    function getCookieSortList(cookieKey){
+        var sortCondition = undefined;
+        if (!jQuery.cookie(cookieKey)){
+          sortCondition = [];
+        } else{
+          sortCondition = JSON.parse(jQuery.cookie(cookieKey));
+        }
+        jQuery.cookie(cookieKey, JSON.stringify(sortCondition));
+        console.log("SORT COOKIE:", sortCondition);
+        return sortCondition;
+    }
+
+    function updateSortListToUI(tableId, sortList){
+        // console.log("UPDATE:", JSON.stringify([sortList]));
+        if (sortList.length > 0) {
+          $(tableId).trigger("sorton", [sortList]);
+        }
+    }
+
+    function updateSortListData(sortList, sortDefault, index, cookieKey){
+        var isUpdate = false;
+        // console.log("IDX:", index);
+
+        if (sortDefault && sortDefault.hasOwnProperty(index) && sortDefault[index] && sortDefault[index].hasOwnProperty('sorter') && sortDefault[index]['sorter'] == false){
+            // console.log("This field is not sort");
+        } else{
+            if (sortList && sortList.length > 0){
+              // console.log("SORT LIST LENGTH:", sortList.length);
+
+              for (var i = 0; i < sortList.length; i++) {
+                // console.log("SORT LIST 2:", sortList[i]);
+                var sortItem = sortList[i];
+                if (sortItem[0] == index){
+                  var direction = sortItem[1];
+                  if (direction == 0){
+                    direction = 1;
+                  } else{
+                    direction = 0;
+                  }
+                  sortList[i] = [index, direction];
+                  isUpdate = true;
+                }
+              };
+            }
+            if (!isUpdate){
+              sortList = [];
+              sortList.push([index, 0]);
+            }
+        }
+        // console.log("SORT LIST:", JSON.stringify(sortList));
+        jQuery.cookie(cookieKey, JSON.stringify(sortList));
+        return sortList;
+    }
+
+    var sortDefault = {
+            0:{ sorter: false },
+            1:{
+               sortInitialOrder: "desc",
+            },
+            2:{
+                    sorter: 'positions',
+                    sortInitialOrder: 'desc'
+                },
+            3:{
+               sortInitialOrder: "desc",
+            },
+            4:{
+               sortInitialOrder: "desc",
+            },
+            5:{
+               sortInitialOrder: "desc",
+            },
+            6:{
+               sortInitialOrder: "desc",
+            },
+            7:{
+               sortInitialOrder: "desc",
+            },
+            8:{
+               sortInitialOrder: "desc",
+            },
+    };
+
+    var sortDefaultMyAccount = {
+            8:{ sorter: false },
+            2:{
+               sortInitialOrder: "desc",
+            },
+            1:{
+                    sorter: 'positions_my_contact',
+                    sortInitialOrder: 'desc'
+                },
+            3:{
+               sortInitialOrder: "desc",
+            },
+            4:{
+               sortInitialOrder: "desc",
+            },
+            5:{
+               sortInitialOrder: "desc",
+            },
+            6:{
+               sortInitialOrder: "desc",
+            },
+            7:{
+               sortInitialOrder: "desc",
+            },
+            0:{
+               sortInitialOrder: "desc",
+            },
+    };
+
+    var sortList = getCookieSortList(COOKIE_KEY);
+    $("#contact_table").tablesorter({
+      headers: sortDefault
+    });
+    updateSortListToUI("#contact_table", sortList);
+
+    // setTimeout(function(){
+      // console.log("CALL:", 3000);
+    //   var sorting = [[2,0],[4,1]];
+    //         // sort on the first column
+    //   $("#contact_table").trigger("sorton",[sorting]);
+    // }, 3000);
+
+    // setTimeout(function(){
+    //   console.log("CALL:", 6000);
+    //   var sorting = [[2,1],[4,0]];
+    //         // sort on the first column
+    //   $("#contact_table").trigger("sorton",[sorting]);
+    // }, 6000);
+
+    $("#contact_table thead th").on("click", function(){
+      // console.log('ok')
+      $('.btn-group').removeClass('open');
+      // changeOrder(sortList, $(this).index());
+      sortList = updateSortListData(sortList, sortDefault, $(this).index(), COOKIE_KEY);
+      updateSortListToUI("#contact_table", sortList);
+    });
+
+    // $("#my_contact_table th").on("click", function(){
+    //   // console.log('ok')
+    //   $('.btn-group').removeClass('open');
+    //   var index = $("#my_contact_table th").index($(this));
+    //   console.log(index)
+    // });
+
+
+    var sortListMyAcc = getCookieSortList(COOKIE_KEY_MY_ACCOUNT);
+    $("#my_contact_table").tablesorter({
+      headers: sortDefaultMyAccount
+    });
+    updateSortListToUI("#my_contact_table", sortListMyAcc);
+
+      // $("#my_contact_table").tablesorter({
+      //       // sortInitialOrder: "desc",
+      //       headers: {
+      //         2: {
+      //               sorter: 'positions',
+      //               sortInitialOrder: 'asc'
+      //           },
+      //         8: { sorter: false },
+      //         // 4:{sorter: 'digit'},
+      //         // 7:{sorter: 'digit'}
+      //       }
+      // });
+
+  $("#my_contact_table thead th").on("click", function(){
+      // console.log('ok')
+      // $('.btn-group').removeClass('open');
+      // changeOrder(sortList, $(this).index());
+      sortListMyAcc = updateSortListData(sortListMyAcc, sortDefaultMyAccount, $(this).index(), COOKIE_KEY_MY_ACCOUNT);
+      updateSortListToUI("#my_contact_table", sortListMyAcc);
+    });
+
+      var ItemGroupObj = {
+        'item_id' : "<%=@item_id%>",
+        'item_name' : "<%=@item_name%>"
+      };
+
+      // alert(ItemGroupObj['item_name'])
+      var holder = "";
+      if (ItemGroupObj['item_id']==""){
+          holder= "Favorite Menu Items";
+      } else {
+          holder = ItemGroupObj['item_name'];
+      }
+
+      $("#e1").select2({
+          placeholder: holder,
+          allowClear: true,
+      }).on("change", function(e) {
+          // $.ajax({
+          //   url: e.val,
+          //   // data: {logo: id, direction: value},
+          //   type: 'get',
+          //   success: function (dataCheck) {
+          //     // alert('ok')
+          //   }
+          // });
+          document.location.href= e.val;
+      });
+
+      $('#e1').on('select2-open', function(e){
+        console.log('vao')
+        //if($('.select_item_favorite').hasClass('select2-highlighted')){
+       // }
+         if (ItemGroupObj['item_id'] != ""){
+           $('.all_item_fav').removeClass('select2-highlighted');
+            $('.select_item_favorite_<%=@item_name%>').addClass('select2-highlighted');
+         }
+          //console.log($('#select_item_favorite_<%=@item_name%>'));
+      });
+
+      var GroupObj = {
+        'group' : "<%=@group_id_arr%>"
+      };
+      // alert(GroupObj['group'])
+      $("#add_contact_btn").on('click', function() {
+        var ids = [];
+        $('.check_user_contact_app:checked').each(function() {
+          ids.push($(this).val());
+        });
+        var customer_id = ids.join(",");
+        $(this).attr('href', $(this).attr('href') + "?&customer_id=" + customer_id + '&group=' + GroupObj['group']);
+       //alert("OK:" + $(this).attr('href'));
+      });
+
+    });
+  </script>
+<% end %>

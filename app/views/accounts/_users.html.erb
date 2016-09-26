@@ -1,0 +1,39 @@
+<table class=" table table-striped table-hover" id="restaurant_account_listing">
+  <tbody>
+
+  <tr class="success">
+    <td>
+      Role
+    </td>
+    <td>
+      Username
+    </td>
+    <td>
+      Login id
+    </td>
+    <td>
+
+    </td>
+  </tr>
+
+  <% @restaurant.users.each do |user| %>
+    <% unless user.new_record? %>
+      <tr>
+          <td><%= Location::ROLES.invert[user.role] %></td>
+          <td><%= user.username %></td>
+          <td><%= user.email%>  </td>
+          <td>
+            <%= link_to "",edit_restaurant_account_path(@restaurant,user),:class=>"icon-pencil btn btn-small",remote: true %>
+            <%= link_to '', restaurant_account_path(@restaurant,user), method: :delete,class:"icon-remove btn btn-small", data: { confirm: 'Are you sure?' },remote: true %>
+          </td>
+      </tr>
+    <% end %>
+  <% end %>
+  <% unless @restaurant.users.count > 0 %>
+  <tr>
+    <td colspan="5" style="text-align:center">No users added</td>
+  </tr>
+  <% end %>
+  </tbody>
+
+</table>

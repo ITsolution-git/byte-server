@@ -1,0 +1,13 @@
+<p>
+  <b>Plan:</b>
+  <%= @price.plan.try(:name) %>
+</p>
+
+<p>
+  <b>Service:</b>
+  <%= @price.app_service.try(:name) %>
+</p>
+
+
+<%= link_to 'Edit', edit_admin_price_path(@price) %> |
+<%= link_to 'Back', admin_prices_path %>

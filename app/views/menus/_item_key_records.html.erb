@@ -1,0 +1,16 @@
+<% if not @key_array.empty? %>
+  <% modal_id = 'item-key-modal' %>
+  <%= form_tag({}, {class: 'batch-delete-form', data: {source: 'item_key', error_class: 'itemKey_form_errors_container'}}) do |f| %>
+    <a class="btn" data-toggle="modal" data-target="#<%= modal_id %>">
+    <% if item_key.new_record? %>
+      Edit Item Key
+    <% else %>
+      <%= item_key.name %>
+    <% end %>
+
+    <span class="caret"></span>
+  </a>
+    <% link = 'edit_item_key_path(item)' %>
+    <%= render partial: 'menus/menu_modal', locals: {array: @key_array, is_published: 'has_item_contains_menu_published?', modal_id: modal_id, link: link} %>
+  <% end %>
+<% end %>

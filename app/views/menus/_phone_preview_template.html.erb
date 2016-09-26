@@ -1,0 +1,25 @@
+<div class="primary">
+  <% if device == 'iPhone' %>
+    <h2><%= menu.name %></h2>
+  <% else %>
+    <% if location.logo.present? && location.logo.try(:public_id) %>
+      <%= cl_image_tag(location.logo.fullpath, class: "location-logo") %>
+    <% else %>
+      <%= image_tag('load_img_7050.png', class: "location-logo") %>
+    <% end %>
+    <div class="item-rating">A+</div>
+  <% end %>
+  <div id="wrapper-myCarousel">
+      <!-- Carousel items -->
+      <%= render partial: 'menus/item_images_of_category', locals: {items: @items} %>
+  </div>
+
+    <div class="wrapper-items" id="items_from_category">
+      <%= render partial: 'menus/items_from_category_preview', locals: {item: @item, device: device, menu: menu, category: @category} %>
+    </div> <!-- end .wrapper-items -->
+
+</div> <!-- end .primary -->
+
+<div class="category">
+  <%= select_tag "category", options_from_collection_for_select(@categories, :id, :name), {:menu_id => menu.id} %>
+</div>

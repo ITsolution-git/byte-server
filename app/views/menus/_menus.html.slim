@@ -1,0 +1,17 @@
+- if restaurant_menus.present?
+  - restaurant_menus.each do |menu|
+    = render 'menus/menu', menu: menu, list_published_buildmenu: @list_published_buildmenu
+- else
+  = render 'menus/instructions'
+
+- if restaurant_copying_menus.present?
+  .copying-menus[
+    data-polling-timeout = '10000'
+    data-update-path = "#{status_menus_management_copy_shared_index_path}"
+    data-location-id = "#{@restaurant.id}"
+  ]
+    .header List of processed Shared Menus
+    .body
+      ul
+        - restaurant_copying_menus.each do |menu|
+          = render 'menus/copying_menu', menu: menu

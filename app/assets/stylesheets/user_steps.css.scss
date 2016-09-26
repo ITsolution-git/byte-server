@@ -1,0 +1,62 @@
+// Place all the styles related to the user_steps controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+input[type="image"]:focus {
+  border: none;
+  outline: none;
+}
+
+div.children.restaurant_type {
+  margin-top: 100px;  
+}
+div.children.serve {
+  margin-top: 10px;
+}
+div.children.location {
+  margin-top: 40px;
+}
+div.children.credit_card {
+  margin-top: 70px;
+}
+
+.children {
+  a:focus {
+    outline: none;
+  }
+}
+
+.selected { 
+  padding: 5px;
+  background-color: #B6B6B6;
+  border-radius: 8px
+}
+
+input {
+  margin-top: -1px;
+  border-radius: 0 !important;
+}
+
+#restaurant-types img {
+  cursor: pointer;
+}
+#user_restaurants_attributes_0_name {
+  border-radius: 5px 5px 0 0 !important;
+}
+#user_restaurants_attributes_0_address {
+  border-radius: 0 0 5px 5px !important;
+}
+#user_credit_card_holder_name {
+  border-radius: 5px 5px 0 0 !important;
+}
+#user_credit_card_number {
+  border-radius: 0 0 5px 5px !important;
+}
+#addloclb {
+  font-size: 18px;
+  color: #DA2A50;
+}
+#linktag a {
+  font-size: 18px !important;
+  color: #DA2A50;
+}

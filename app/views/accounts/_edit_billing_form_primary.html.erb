@@ -1,0 +1,258 @@
+<div class="row-fluid">
+  <div class="billing_form_errors_container">
+
+  </div>
+   <%= form_for customer, :url => update_billing_accounts_path, :html => {:autocomplete => "off"}, :remote => true do |f| %>
+  <div class="span12">
+     <div class="row-fluid top10">
+      <div class="span12">
+         <div class="span4 title-address top10">
+            <h6>Statement</h6>
+         </div>
+         <div class="span3 top10 select-monthly" id = "select-month">
+            <select class="multiselect" multiple="multiple">
+             <% @dates.each do |date| %>
+                <option value="<%= date %>">
+                  <%=date%>
+                </option>
+             <% end %>
+            </select>
+         </div>
+         <div class="span1 top10">
+            <span class="reward-action-items" id="export-pdf"><%=image_tag("/assets/PDF.png")%></span>
+         </div>
+         <div class="span4 top10">
+            <span>Subscription ID:<font style="color:blue; text-decoration:underline;"><br><%=@customer.credit_cards.first.token %></font></span>
+         </div>
+      </div>
+      <div class="span12">
+         <div class="span4 title-address top10">
+            <h6>Credit Card</h6>
+         </div>
+         <div class="span8 top10 pading-left">
+          <%= f.fields_for :credit_cards, @customer.credit_cards.first do |c| %>
+            <% if get_credit_card_type(@customer.credit_cards.first) == 1%>
+              <%= c.radio_button :card_type, VISA, :checked => true %>
+              <%= image_tag("/assets/Visa-40.png", :id => 'visa_card') %>
+              <%= c.radio_button :card_type, MASTERCARD, :checked => false %>
+              <%= image_tag("/assets/Mastercard-40.png",  :id => 'mastercard') %>
+              <%= c.radio_button :card_type, AMERICAN_EXPRESS, :checked => false %>
+              <%= image_tag("/assets/Amex-40.png", :id => 'amex_card') %>
+              <%= c.radio_button :card_type, DISCOVER, :checked => false %>
+              <%= image_tag("/assets/Discover-40.png", :id => 'discover_card') %>
+            <% elsif get_credit_card_type(@customer.credit_cards.first) == 2%>
+              <%= c.radio_button :card_type, VISA, :checked => false %>
+              <%= image_tag("/assets/Visa-40.png", :id => 'visa_card') %>
+              <%= c.radio_button :card_type, MASTERCARD, :checked => true %>
+              <%= image_tag("/assets/Mastercard-40.png", :id => 'mastercard') %>
+              <%= c.radio_button :card_type, AMERICAN_EXPRESS, :checked => false %>
+              <%= image_tag("/assets/Amex-40.png", :id => 'amex_card') %>
+              <%= c.radio_button :card_type, DISCOVER, :checked => false %>
+              <%= image_tag("/assets/Discover-40.png", :id => 'discover_card') %>
+             <% elsif get_credit_card_type(@customer.credit_cards.first) == 3%>
+               <%= c.radio_button :card_type, VISA, :checked => false %>
+              <%= image_tag("/assets/Visa-40.png", :id => 'visa_card') %>
+              <%= c.radio_button :card_type, MASTERCARD, :checked => false %>
+              <%= image_tag("/assets/Mastercard-40.png", :id => 'mastercard') %>
+              <%= c.radio_button :card_type, AMERICAN_EXPRESS, :checked => true %>
+              <%= image_tag("/assets/Amex-40.png", :id => 'amex_card') %>
+              <%= c.radio_button :card_type, DISCOVER, :checked => false %>
+              <%= image_tag("/assets/Discover-40.png", :id => 'discover_card') %>
+            <% elsif get_credit_card_type(@customer.credit_cards.first) == 4%>
+              <%= c.radio_button :card_type, VISA, :checked => false %>
+              <%= image_tag("/assets/Visa-40.png", :id => 'visa_card') %>
+              <%= c.radio_button :card_type, MASTERCARD, :checked => false %>
+              <%= image_tag("/assets/Mastercard-40.png", :id => 'mastercard') %>
+              <%= c.radio_button :card_type, AMERICAN_EXPRESS, :checked => false %>
+              <%= image_tag("/assets/Amex-40.png", :id => 'amex_card') %>
+              <%= c.radio_button :card_type, DISCOVER, :checked => true %>
+              <%= image_tag("/assets/Discover-40.png", :id => 'discover_card') %>
+            <% end %>
+         </div>
+      </div>
+      <div class="span12">
+         <div class="span4 title-address top10">
+            <h6>Name On Card</h6>
+         </div>
+         <div class="span8 top10 pad10">
+            <%= c.text_field :cardholder_name, :placeholder => "Name on Card", :class => "width100" %>
+         </div>
+      </div>
+      <div class="span12">
+         <div class="span4 title-address top10">
+            <h6>Credit Card Number</h6>
+         </div>
+         <div class="span8 top10 pad10">
+           <%= c.text_field :number, :placeholder => "Credit Card Number", :class => "width100"%>
+            <span id="error_credit_card"></span>
+         </div>
+      </div>
+      <div class="span12">
+         <div class="span4 title-address top10">
+            <h6>Expiration Date</h6>
+         </div>
+         <div class="span3 top10 pad10">
+           <%= c.select :expiration_month, options_for_select(MONTH,[customer.credit_cards.first.expiration_month]),{:prompt=>"Select Month"}, :class => "span12" %>
+         </div>
+         <div class="span3 top10 pad10">
+           <% year_furture = (Time.now.year).to_i + 10 %>
+           <%= c.select :expiration_year, options_for_select(Time.now.year..year_furture, [customer.credit_cards.first.expiration_year]),{:prompt=>"Select Year"}, :class => "span12" %>
+         </div>
+         <div class="span2 top10 pad10">
+            <%= c.text_field :cvv, :placeholder => "CVV", :class=>"span12"%>
+         </div>
+      </div>
+      <div class="span12">
+         <div class="span4 title-address top10">
+            <h6>Billing Address</h6>
+         </div>
+         <div class="span8 top10 pad10">
+          <%= c.fields_for :billing_address, @customer.credit_cards.first.billing_address do |b| %>
+            <%= b.text_field :extended_address, :placeholder => "Billing Address",:class => "width100" %>
+         </div>
+      </div>
+
+      <!-- <div class="span12">
+       <div class="span4 title-address top10">
+          <h6>Billing</h6>
+       </div>
+       <div class="span8 top10 pad10">
+          <%= b.text_field :locality, :placeholder => "City",:class => "width100" %>
+       </div>
+      </div> -->
+
+      <div class="span12 billing">
+         <div class="span3 pad10">
+          <%= b.text_field :locality, :placeholder => "City",:class => "width100" %>
+         </div>
+         <div class="span3 width-text top10">
+            <%= b.text_field :postal_code, :class => 'zip', :placeholder=>"zip", :maxlength => 5 %>
+         </div>
+         <div class="span3 width-text top10">
+              <%= b.select(:region, options_from_collection_for_select(State.all, 'name', 'name'), {:prompt=>"Select State"}, :class => "span12") %>
+         </div>
+         <div class="span3 width-text top10">
+              <%= b.select(:country_name, options_for_select([['United States','United States']],'United States'),{:prompt=>"Select Country"}, :class => "span12") %>
+         </div>
+      </div>
+    </div>
+    <div class="row-fluid top10">
+      <div class="span4 pull-right">
+          <%= f.submit 'Update', :class => 'btn span12 btn-primary', :remote => true, disable_with: "Please wait...", :id => 'billing_form_submit' %>
+      </div>
+      <div class="span4 pull-right">
+          <%= link_to 'Cancel', canel_billing_accounts_path, :class => 'btn btn-cancel', id: "cancel_service", :remote => true ,disable_with: "Please wait..." %>
+      </div>
+    </div>
+  <% end %>
+  <% end %>
+  </div>
+</div>
+<% end %>
+<script type="text/javascript">
+  //$('.multiselect').multiselect();
+     $(".multiselect").multiselect({
+     buttonText: function(options, select) {
+        if (options.length == 0) {
+          return 'Monthly <b class="caret"></b>';
+        }
+        else if (options.length > 3) {
+          return options.length + ' selected <b class="caret"></b>';
+        }
+        else {
+          var selected = '';
+          // options.each(function() {
+            selected += $(options[0]).text();
+          // });
+          console.log(selected)
+          if (options.length == 1) {
+            return selected + '<b class="caret"></b>';
+          }
+          else{
+            return selected.substr(0, selected.length -2) + '... <b class="caret"></b>';
+          }
+        }
+      },
+    });
+  //$('.multiselect').text('Monthly');
+  //$('.select-month > .btn-group > .multiselect').append("<b class="caret"></b>");
+  var account = new AccountForm();
+  account.modelName = 'customer';
+  account.loadAllBillingCountriesFromWS('#customer_credit_cards_billing_address_country_name');
+
+  $(document).on('click', '#visa_card', function(){
+    $('#customer_credit_cards_card_type_visa').prop('checked',true);
+     card_type = 'Visa'
+  });
+  $(document).on('click', '#mastercard', function(){
+    $('#customer_credit_cards_card_type_mastercard').prop('checked',true);
+     card_type = 'Mastercard'
+  });
+  $(document).on('click', '#amex_card', function(){
+    $('#customer_credit_cards_card_type_american_express').prop('checked',true);
+     card_type = 'American Express'
+  });
+  $(document).on('click', '#discover_card', function(){
+    $('#customer_credit_cards_card_type_discover').prop('checked',true);
+     card_type = 'Discover'
+  });
+
+  var billingform = Util.validate(account, {
+    credit_cards_cardholder_name:[
+    Validate.Presence,
+    [Validate.Length, { minimum: 3, maximum: 30 }]
+    ],
+    credit_cards_billing_address_extended_address:[Validate.Presence],
+    credit_cards_number:[
+      //[Validate.Presence,{failureMessage: "Please enter your card number again or other card number"}],
+      Validate.Numericality,
+      [
+        Validate.Custom,
+        {
+          against: function(value, args) {
+            if (card_type == 'Visa') {
+              var regVisaCard = /^(?:4[0-9]{12}(?:[0-9]{3})?)$/;
+              if (!value.match(regVisaCard)) {
+                return Validate.fail("Visa card starting with 4, length 13 or 16 digits.");
+              }
+            }else if(card_type == 'Mastercard') {
+              var regMasterCard = /^(?:5[1-5][0-9]{14}(?:[0-9]{3})?)$/;
+              if (!value.match(regMasterCard)) {
+                return Validate.fail("MasterCard starting with 51 through 55, length 16 or 19 digits.");
+              }
+            }else if(card_type == 'American Express'){
+              var regAmericanCard = /^(?:3[47][0-9]{13})$/;
+              if (!value.match(regAmericanCard)) {
+                return Validate.fail("American Express credit card starting with 34 or 37, length 15 digits.");
+              }
+            }else if(card_type == 'Discover'){
+              //var regDiscoverCard = /^(?:6(?:011|65[0-9][0-9])[0-9]{12})$/;
+               var regDiscoverCard =  /^(?:6(?:011|5[0-9][0-9])[0-9]{12})$/;
+               if(!value.match(regDiscoverCard)){
+                return Validate.fail("Discover Card starting with 6011, length 16 digits or starting with 5, length 15 digits.");
+               }
+            }
+            return true;
+          },
+        }
+      ]
+    ],
+    credit_cards_billing_address_postal_code: [
+    Validate.Presence,
+    Validate.Numericality,
+    [Validate.Length, {is: 5}]
+  ],
+});
+
+$('#billing_form_submit').click(function() {
+    for (var element in billingform) {
+      // important check that this is objects own property
+      // not from prototype prop inherited
+      if(billingform.hasOwnProperty(element)){
+        if (billingform[element].validationFailed) {
+          return false;
+        }
+      }
+    }
+  });
+</script>

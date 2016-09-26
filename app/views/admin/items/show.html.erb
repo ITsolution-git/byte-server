@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+
+<p>
+  <b>Name:</b>
+  <%= @item.name %>
+</p>
+<p>
+  <b>Price:</b>
+  <%= @item.price %>
+</p>
+<p>
+  <b>Description:</b>
+  <%= @item.description %>
+</p>
+<p>
+  <b>Location:</b>
+  <%= @item.location.name %>
+</p>
+
+<p>
+  <b>Category:</b>
+  <%= @item.try(:categories).first.try(:name) %>
+</p>
+<p>
+  <b>Logo:</b>
+  <%= image_tag @item.try(:logo).try(:url) %>
+</p>
+
+<% @item.item_images.each do |i| %>
+    <%= image_tag(i.image.url) if i.image.file %>  <br/>
+<% end %>
+<%= link_to 'Edit', edit_admin_location_item_path(@location,@item) %> |
+<%= link_to 'Back', admin_location_items_path(@location) %>

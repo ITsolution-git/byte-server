@@ -1,0 +1,522 @@
+<%
+  url = @restaurant.new_record? ? restaurants_path : restaurant_path(@restaurant)
+  id = ''
+  if not @restaurant.new_record?
+    @restaurant.tax = '%.2f' % @restaurant.tax if @restaurant.tax?
+    id = @restaurant.id
+  end
+%>
+<div id="error_div" class="restaurant_form_errors_container"></div>
+<h4>Restaurant Info</h4>
+<div class="row-fluid">
+  <%= nested_form_for @restaurant,url: url, :html=>{:id => "location_form", :multipart => true}, as: "restaurant", :multipart=>true do |f| %>
+    <%= render 'shared/error_messages', :object => @restaurant %>
+    <%= f.hidden_field :token, value: @restaurant.token %>
+    <div class="location_form_container span6">
+      <fieldset class="span12">
+        <div class="row-fluid top10">
+          <div class="span12">
+            <%= f.text_field :name, :autofocus => true, :placeholder=>"Restaurant Name",:class=>"input-block-level" %>
+          </div>
+        </div>
+        <div class="row-fluid top10">
+          <div class="span12">
+            <%= f.text_field :chain_name, :placeholder=>"Restaurant Chain",:class=>"input-block-level" %>
+          </div>
+        </div>
+        <div class="row-fluid top10">
+          <div class="span9">
+            <%= f.text_field :address,:placeholder=>"Address",:class=>"input-block-level" %>
+          </div>
+          <% modal_id = "mapModal" %>
+          <a class="btn" data-toggle="modal" data-target="#<%= modal_id %>">
+              Select Location
+          </a>
+          <%= render partial: 'shared/gmaps_marker', locals: {modal_id: modal_id} %>
+        </div>
+        <div class="row-fluid top10">
+
+          <div class="span3" id="city_div">
+            <%= f.text_field :city,:placeholder=>"City",:class=>"input-block-level" %>
+          </div>
+          <div class="span2">
+            <%= f.text_field :zip,:placeholder=>"Zip",:class=>"input-block-level" ,:maxlength => 5%>
+          </div>
+          <% Rails.logger.warn "***STATE #{@restaurant.state}" %>
+          <div class="span3">
+            <%= f.select(:state, options_from_collection_for_select(State.all, 'name', 'name', @restaurant.state), {:prompt=>"Select State"}, :class => "span12",) %>
+          </div>
+
+          <div class="span4">
+            <%= f.select(:country, options_for_select([['United States','United States']],'United States'),{:prompt=>"Select Country"}, :class => "span12") %>
+          </div>
+        </div>
+
+       <!--  <div class="row-fluid top10">
+          <div class="span4">
+            <%= f.text_field :phone,:placeholder=>"Contact Phone",:class=>"input-block-level" %>
+          </div>
+          <div class="span5">
+            <%= f.text_field :url,:placeholder=>"Contact Url",:class=>"input-block-level" %>
+            <em>Example : www.example.com </em>
+          </div>
+          <div class="span3">
+            <%= f.text_field :tax, :placeholder => "Tax", :class => "input-block-level"%>
+          </div>
+        </div> -->
+
+        <!-- add field primary and seconddary Cuisine type categories -->
+        <div class="row-fluid top10">
+          <div class="span5">
+
+             <!-- <p>Primary Food Type (required)</p> -->
+             <%= f.select :primary_cuisine, options_from_collection_for_select(CuisineType.order('name'), 'name', 'name', @restaurant.try(:primary_cuisine)), { :include_blank => "Primary Food Type"}, :class => 'primary_cuisine' %>
+          </div>
+          <div class="span5">
+            <!-- <p>Secondary Food Type (optional)</p> -->
+             <%= f.select :secondary_cuisine, options_from_collection_for_select(CuisineType.order('name'), 'name', 'name', @restaurant.try(:secondary_cuisine)), { :include_blank => "Secondary Food Type"}, :class => 'secondary_cuisine' %>
+          </div>
+          <div class="span2">
+            <%= f.text_field :tax, :placeholder => "Tax", :class => "input-block-level"%>
+          </div>
+        </div>
+        <!-- end code -->
+
+         <!-- <p>Hours of Operation</p> -->
+         <% unless @group_hour.blank?%>
+            <% @group_hour.each_with_index do |group, i| %>
+              <% day_operation = []
+                 hour_operation = HourOperation.where("group_hour = ? AND location_id=?", group, @restaurant.id).order("day asc")
+                 hour_operation.each do |hour|
+                   day_operation << hour.day
+                 end
+                 hour_operation_group = HourOperation.where("group_hour = ? AND location_id=?", group, @restaurant.id).group('group_hour')
+              %>
+                <% hour_operation_group.each do |hour|
+                      checked_all= ""
+                      if day_operation.count ==7
+                        checked_all= "checked=checked"
+                      end
+                  %>
+
+                  <div class="clonable_hour_operation top10 row-fluid">
+                    <div class="span5">
+                       <div class="checkbox-dropdownlist">
+                          <span class="name_day_choose btn add-nested-attributes">
+                          <%=getOrderDay(day_operation) %>
+                          <span class="caret" style="float:right"></span></span>
+                          <!-- <span class="caret"></span> -->
+                          <div class="wrapper-checkbox close" style="width: 160px;">
+                            <label style="padding-left: 10px;">Select Days</label>
+                            <% DAY.each_with_index do |day, index|%>
+                              <%
+                                checked = ''
+                                if day_operation.include?(index + 2)
+                                  checked = 'checked=checked'
+                                end
+
+                                day_checked = ''
+                                count = index + 2
+                                if count == 9
+                                  day_checked = 'mon_to_fri'
+                                elsif count == 10
+                                  day_checked = 'sat_to_sun'
+                                elsif count == 7 || count == 8
+                                  day_checked = 'weekends'
+                                else
+                                  day_checked = 'every_day'
+                                end
+                              %>
+                              <div class="cb-item">
+                                <input type="checkbox" <%= checked %> name="restaurant[days][<%=hour.group_hour%>][]" value="<%= index + 2 %>" class="case nested-item hour_of_operation_day every_day <%=day_checked%>" id="hour_of_operation_day_1" text="<%= day %>"/>
+                                <%= day %>
+                              <input type="hidden" value="<%=hour.group_hour%>" class="group_hour_name">
+                              </div>
+                            <% end %>
+                            <div class="cb-item">
+                                <input type="checkbox" <%= checked_all %> class="nested-item hour_of_operation_day select_all_day" text="All days" />
+                                All days
+                              <input type="hidden" value="1" class="group_hour_name">
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                  <div class="span3">
+                    <select class="span12 time_open select-time" name="restaurant[time_open][]">
+                      <option value="" style="display:none"></option>
+                      <% TIMES.each_with_index do |time, index|%>
+                        <% if hour.time_open == time%>
+                          <option selected value="<%= time %>"><%= time%></option>
+                        <%else%>
+                          <option value="<%= time %>"><%= time%></option>
+                        <%end%>
+                      <% end %>
+                    </select>
+                  </div>
+                  <div class="span3">
+                    <select class="span12 time_close select-time" name="restaurant[time_close][]">
+                      <option value="" style="display:none"></option>
+                      <% TIMES.each_with_index do |time, index|%>
+                        <% if hour.time_close == time%>
+                          <option selected value="<%= time %>"><%= time%></option>
+                        <%else%>
+                          <option value="<%= time %>"><%= time%></option>
+                        <%end%>
+                      <% end %>
+                    </select>
+                  </div>
+                    <div class="span1 delete_hour">
+                       <%= link_to image_tag("/assets/del_ic.png", :style=>"margin-left: 10px;"),'#',:class=>'delete_hour_operation', :remote => true %>
+                    </div>
+                   <div class="span12 hour_error_message hide">
+                    <input type="hidden" class="group_hour" value="" id="group_hour_1"/>
+                      <div class="span5">
+                        <span class="primary_day_operation_error_1 day_error" style="color: red;"></span>
+                      </div>
+                      <div class="span3">
+                         <span class="primary_time_open_operation_error_1 time_open_error" style="color: red;"></span>
+                      </div>
+                      <div class="span3">
+                        <span class="primary_time_close_operation_error_1 time_close_error" style="color: red;"></span>
+                      </div>
+                    </div>
+                  </div>
+                <% end %>
+            <% end %>
+          <% else%>
+             <div class="clonable_hour_operation top10 row-fluid">
+                  <div class="span5">
+                    <div class="checkbox-dropdownlist">
+                        <span class="name_day_choose btn add-nested-attributes">
+                          Choose A Day
+                          <span class="caret" style="float:right"></span></span>
+                        <div class="wrapper-checkbox close" style="width: 160px;">
+                          <label style="padding-left: 10px;">Select Days</label>
+                          <% DAY.each_with_index do |day, index|%>
+                           <%
+                                day_checked = ''
+                                count = index + 2
+                                if count == 9
+                                  day_checked = 'mon_to_fri'
+                                elsif count == 10
+                                  day_checked = 'sat_to_sun'
+                                elsif count == 7 || count == 8
+                                  day_checked = 'weekends'
+                                else
+                                  day_checked = 'every_day'
+                                end
+                              %>
+                            <div class="cb-item">
+                              <input type="checkbox" name="restaurant[days][1][]" value="<%= index + 2 %>" class="nested-item hour_of_operation_day every_day" id="hour_of_operation_day_1" text="<%= day %>" /> <%= day %>
+                              <input type="hidden" value="1" class="group_hour_name">
+                            </div>
+                          <% end %>
+                          <div class="cb-item">
+                                <input type="checkbox" class="nested-item hour_of_operation_day select_all_day" text="All days">
+                                All days
+                              <input type="hidden" value="1" class="group_hour_name">
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="span3">
+                    <select class="select-time span12 time_open" name="restaurant[time_open][]">
+                      <% TIMES.each_with_index do |time, index|%>
+                        <option value="" style="display:none"></option>
+                        <option value="<%= time %>"><%= time%></option>
+                      <% end %>
+                    </select>
+                  </div>
+                  <div class="span3">
+                    <select class="select-time span12 time_close" name="restaurant[time_close][]">
+                      <% TIMES.each_with_index do |time, index|%>
+                        <option value="" style="display:none"></option>
+                        <option value="<%= time %>"><%= time%></option>
+                      <% end %>
+                    </select>
+                  </div>
+                  <div class="span1 delete_hour" >
+                     <%= link_to image_tag("/assets/del_ic.png", :style=>"margin-left: 10px;"),'#',:class=>'delete_hour_operation', :remote => true %>
+                  </div>
+                  <input type="hidden" class="group_hour" value="" id="group_hour_1"/>
+                  <div class="span12 hour_error_message hide">
+                    <div class="span5">
+                      <span class="primary_day_operation_error_1 day_error" style="color: red;"></span>
+                    </div>
+                    <div class="span3">
+                       <span class="primary_time_open_operation_error_1 time_open_error" style="color: red;"></span>
+                    </div>
+                    <div class="span3">
+                      <span class="primary_time_close_operation_error_1 time_close_error" style="color: red;"></span>
+                    </div>
+                  </div>
+                </div>
+          <% end %>
+        <div class="top10" id="formbuttons">
+          <button type="button" id="clonetrigger" class="btn btn-default">+ Add another set of hours: </button>
+        </div>
+         <!-- end <p>Hours of Operation</p> -->
+
+        <div class="row-fluid top10">
+          <div class="span12">
+            <%= f.text_area :bio,:placeholder=>"Restaurant Bio / About Us",:class=>"input-block-level",:rows=>4 %>
+          </div>
+        </div>
+        <!-- edit code TuanTran -->
+        <% if current_user.admin? %>
+        <div class="row-fluid top10">
+          <div class="span5">
+             <%= f.select(:service_fee_type, options_for_select([['Fixed','fixed'],['Percent','percent']],@restaurant.service_fee_type),{:prompt=>"Service Fee Type"}, :class => "span12") %>
+          </div>
+          <div class="span3">
+            <%= f.text_field :fee, :placeholder => "Fee", :class => "input-block-level"%>
+          </div>
+        </div>
+        <% end %>
+        <div class="row-fluid top10">
+          <div class="span2 top10">
+           <%= image_tag("/assets/Twitter_active.jpg") %>
+          </div>
+          <div class="sosial-media-info span4 top10">
+            <%= f.text_field :twiter_url,:placeholder=>"www.twitter.com/example",:class=>"input-block-level font-placeholder", :autocomplete => 'off' %>
+          </div>
+          <div class="span2 top10">
+           <%= image_tag("/assets/FB-active.jpg") %>
+          </div>
+          <div class="sosial-media-info span4 top10">
+            <%= f.text_field :facebook_url,:placeholder=>"www.facebook.com/example",:class=>"input-block-level font-placeholder", :autocomplete => 'off' %>
+          </div>
+        </div>
+
+        <div class="row-fluid top10">
+          <div class="span2 top10">
+           <%= image_tag("/assets/Google_active.jpg") %>
+          </div>
+          <div class="sosial-media-info span4 top10">
+            <%= f.text_field :google_url,:placeholder=>"plus.google.com/example",:class=>"input-block-level font-placeholder", :autocomplete => 'off' %>
+          </div>
+          <div class="span2 top10">
+           <%= image_tag("/assets/Instagram.png") %>
+          </div>
+          <div class="sosial-media-info span4 top10">
+            <%= f.text_field :instagram_username,:placeholder=>"www.instagram.com/example",:class=>"input-block-level font-placeholder", :autocomplete => 'off' %>
+          </div>
+        </div>
+
+        <div class="row-fluid top10">
+          <div class="span2 top10">
+           <%= image_tag("/assets/ic_web.jpg") %>
+          </div>
+          <div class="sosial-media-info span4 top10">
+            <%= f.text_field :com_url,:placeholder=>"www.example.com",:class=>"input-block-level font-placeholder", :autocomplete => 'off' %>
+          </div>
+          <div class="span2 top10">
+           <%= image_tag("/assets/contact-phone.png") %>
+          </div>
+          <div class="sosial-media-info span4 top10">
+            <%= f.text_field :phone,:placeholder=>"Contact Phone",:class=>"input-block-level" %>
+          </div>
+        </div>
+        <!-- end -->
+        <div class="row-fluid hide" style="margin-top:20px;">
+          <div class="span6">
+            <%= f.submit "Continue", :class=>"btn btn-primary btn-large btn-block"%>
+          </div>
+        </div>
+        <label id="total_county" style="display:none"></label>
+        <label id="count_county" style="display:none"></label>
+      <!-- <%= select_tag "hideselect", options_for_select([["redirect","redirect"],["state","state"]],"state"), {style:"display:none",:class=> "hideselect"} %> -->
+      </fieldset>
+    </div>
+    <div class="span5">
+      <div class="restaurant-image-container span5">
+        <div class="span12 ">
+          <strong>Restaurant Logo</strong>
+        </div>
+        <%= f.hidden_field :logo_url, id: 'logo_url' %>
+        <%= f.hidden_field :logo_id, id: 'logo_id' %>
+        <%= render partial: 'shared/select_photo', locals: { object: f.object.logo, association: 'logo', photo_source: @restaurant }  %>
+
+        <div id="modal_holder_photo_form">
+          <%= render partial: "layouts/modal_logo_crop", locals: {
+              heading: "Logo Preview",
+              form: "logo_form",
+              rest_id: @restaurant.id
+            }
+          %>
+        </div>
+
+        <% @logo = f.object.logo %>
+        <script type="text/javascript">
+          $(document).on('click', '#logo-select', function() {
+            image_preview = $("#myModal_logo_form");
+            console.log(image_preview);
+            image_preview.find("img").attr("src", image_preview.find("img").attr("src"));
+            $.get(image_preview.find("img").attr("src"), function(){
+              image_preview.find("img").attr("src", image_preview.find("img").attr("src"));
+
+              image_preview.find("img").attr("src", image_preview.find("img").attr("src"));
+              if(!$("#myModal_logo_form").hasClass('in')){
+                image_preview.modal();
+              }
+            });
+            return false;
+          });
+
+          $('.hide').on('shown.bs.modal', function() {
+           $('#myModal_logo_form .modal-body #img_logo').html('<img id= "' + "logo_id" + '"class="' + "img-logo" + '" width="' + 180 + '" height="' + 180 + '" width_image="' + 180 + '" height_image="' + 180 + '" margin-left=auto "' + '" src="'+$(document).find('.photo-display img').attr('src')+'" />');
+        });
+        </script>
+
+        <div class="span12 ">
+          <strong>Restaurant Images</strong>
+        </div>
+
+        <%= f.fields_for :location_image_photos do |location_image| %>
+          <%= location_image.hidden_field :photo_id %>
+          <div class="top10">
+            <%= render partial: 'shared/select_photo', locals: { object: location_image.object.photo, association: "restaurant_location_image_photos_attributes_#{location_image.object.index}_photo", photo_source: @restaurant }  %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>
+<div class="row-fluid restaurant-btn top20" >
+  <div class="button-group">
+    <%= link_to "Cancel", restaurants_path, :class => "normal-btn go-back-link btn btn-cancel" %>
+    <%= link_to "Save", '#', :class => "normal-btn fakesubmit btn btn-primary" %>
+  </div>
+</div>
+
+<div class="crop-helper">
+  <%= render partial: 'shared/crop_helper', locals: {:model => 'location_logo'} %>
+  <% 5.times do |index| %>
+    <%= render partial: 'shared/crop_helper', locals: {:model => "location_image_#{index}"} %>
+  <% end %>
+</div>
+
+<%= javascript_include_tag "restaurant_form" %>
+
+  <script type="text/javascript">
+
+  $(document).on('nested:fieldAdded', function(event){
+    $(".timepicker").timepicker();
+  })
+
+  var RestaurantObj = {
+    'restaurantNewRecord' : "<%=@restaurant.new_record? %>",
+    'dbstate' : "<%=@restaurant.state%>",
+    'dbcountry' : "<%=@restaurant.country%>",
+  };
+
+//The Plugin Script
+(function($) {
+    $.fn.fieldclone = function(options) {
+        //==> Options <==//
+        var settings = {
+            newid_ : 0,
+            target_: $(this),
+            insert_: "before",
+            limit_: 0
+        };
+        if (options) $.extend(settings, options);
+
+        if( (settings.newid_ <= (settings.limit_+1)) || (settings.limit_==0) ){ //Check the limit to see if we can clone
+
+            //==> Clone <==//
+            var fieldclone = $(this).clone();
+            var node = $(this)[0].nodeName;
+            var classes = $(this).attr("class");
+
+            //==> Increment every input id <==//
+            var srcid = 1;
+            $(fieldclone).find('.group_hour').each(function(){
+                var s = $(this).attr("id");
+                // console.log(settings.newid_)
+                $(this).attr("id", s.replace(eval('/_'+srcid+'/ig'),'_'+settings.newid_));
+            });
+            $(fieldclone).find('.group_hour_name').each(function(){
+                var s = $(this).attr("value");
+                $(this).attr("value", settings.newid_);
+            });
+            $(fieldclone).find('.hour_of_operation_day').each(function(){
+                $(this).removeAttr('checked');
+                $(this).prop("disabled", false);
+                var s = $(this).attr("id");
+                // $(this).data("id", s.replace(eval('/_'+srcid+'/ig'),'_'+settings.newid_));
+                // $(this).attr("id", s.replace(eval('/_'+srcid+'/ig'),'_'+settings.newid_));
+                $(this).attr("name", "restaurant[days][" + settings.newid_ + "][]");
+            });
+
+            $(".mon_to_fri:checked").each(function(){
+               //$(fieldclone).find(".every_day").attr("disabled", true);
+               $(fieldclone).find(".mon_to_fri").attr("disabled", true);
+            })
+
+            $(".sat_to_sun:checked").each(function(){
+              // $(fieldclone).find(".weekends").attr("disabled", true);
+               $(fieldclone).find(".sat_to_sun").attr("disabled", true);
+            })
+
+            $(".every_day:checked").each(function(){
+              var value = $(this).val();
+              // console.log(value)
+              //$(fieldclone).find(".every_day[value="+value+"]").attr("disabled", true);
+              $(fieldclone).find(".mon_to_fri").attr("disabled", true);
+            })
+            $(".weekends:checked").each(function(){
+              var value = $(this).val();
+               //$(fieldclone).find(".weekends[value="+value+"]").attr("disabled", true);
+               // console.log("value", value);
+               $(fieldclone).find(".sat_to_sun").attr("disabled", true);
+            })
+
+
+            $(fieldclone).find('.time_open').each(function(){
+                $(this).removeAttr("dirty");
+            });
+
+            $(fieldclone).find('.time_close').each(function(){
+                $(this).removeAttr("dirty");
+            });
+
+            $(fieldclone).find('.input[type=checkbox]').each(function(){
+                $(this).removeAttr("dirty");
+            });
+
+            // $(fieldclone).find('.time_open').each(function(){
+            //     $(this).removeAttr("dirty");
+            // });
+
+            // $(fieldclone).find('.time_close').each(function(){
+            //     $(this).removeAttr("dirty");
+            // });
+
+            $(fieldclone).find('.name_day_choose').each(function(){
+                // var s = $(this).attr("text");
+                $(this).text('Choose A Day');
+                $(this).append("<span class='caret' style='float:right''></span>");
+            });
+
+            $(fieldclone).find('.delete_hour_operation').each(function(){
+                var s = $(this).attr("href");
+                $(this).attr("href", '#');
+            });
+
+            //==> Locate Target Id <==//
+            var targetid = $(settings.target_).attr("id");
+            if(targetid.length<=0){
+                targetid = "clonetarget";
+                $(settings.target_).attr("id",targetid);
+            }
+
+            //==> Insert Clone <==//
+            var newhtml = $(fieldclone).html().replace(/\n/gi,"");
+            newhtml = '<'+node+' class="'+classes+'">'+newhtml+'</'+node+'>';
+            eval("var insertCall = $('#"+targetid+"')."+settings.insert_+"(newhtml)");
+        }
+    };
+
+})(jQuery);
+</script>

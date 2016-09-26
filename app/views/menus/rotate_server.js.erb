@@ -1,0 +1,5 @@
+var image = Util.resize_image(<%= @server_avatar.image.width %>, <%= @server_avatar.image.height %>);
+$('#server_avatar_form #server_avatar_rate').val(image['rate']);
+
+$('#myModal_image_server_avatar_form .modal-body p').html('<img width="' + image['width'] + '" height="' + image['height'] + '" width_image="' + image['width'] + '" height_image="' + image['height'] + '" src="<%= @server_avatar.image.url if @server_avatar.image.file %>" />');
+$('.crop-helper').html("<%= j render partial: 'shared/crop_helper', locals: {:model => 'server_avatar'} %>");

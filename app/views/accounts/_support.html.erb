@@ -1,0 +1,17 @@
+<div class="block-head clearfix header-menu-mgt">
+  <span class="icon-plus btn togglebtn" data-toggle="collapse" data-target="#support_form_toggle"></span>
+  <span class="wrap_title_form">
+    <span class="btn btn-link collapsu" id="build_menu_title">
+        Help/Support
+    </span>
+  </span>
+</div>
+<div id="support_form_toggle" class="collapse">
+  <%= render :partial=>'support_form_primary' %>
+</div>
+
+<% content_for :scripts do %>
+  <script type="text/javascript">
+
+  </script>
+<% end %>

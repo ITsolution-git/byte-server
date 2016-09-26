@@ -1,0 +1,23 @@
+<h1>List dinner_type</h1>
+
+<table>
+  <tr>
+    <th>Location id</th>
+    <th>Type</th>
+    <th>Point</th>
+    <th>Key</th>
+  </tr>
+
+  <% @dinner.each do |dinner| %>
+      <tr>
+        <td><%= dinner.location_id %></td>
+        <td><%= dinner.types %></td>
+        <td><%= dinner.point %></td>
+        <td><%= dinner.key %></td>
+      </tr>
+  <% end %>
+</table>
+
+<br />
+
+<%= link_to 'Create new', new_dinner_path %>

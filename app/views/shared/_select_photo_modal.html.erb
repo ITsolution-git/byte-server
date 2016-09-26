@@ -1,0 +1,30 @@
+<% select_id = (logo) ? "logo-select" : "photo-select" %>
+
+<div class="modal fade" id="<%= modal_id %>" style="display: none" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Select Photo</h4>
+      </div>
+      <div class="modal-body">
+        <% photo_source.photos.reverse.each do |photo| %>
+        <div class="photo-modal-outer-container" id="uploaded_photo_<%= photo.id %>">
+          <a href="#" class="photo-select-btn" id = "<%= select_id %>", data-photo-id="<%= photo.id %>", data-association="<%= association %>", data-fullpath="<%= photo.fullpath %>", data-publicId="<%= photo.public_id %>", data-deleteImagePath="<%= image_path 'delete_icon.png' %>", data-logopath = "<%=photo.logopath %>">
+            <%= cl_image_tag photo.public_id, transformation: [
+              {x: (photo.crop_x if photo.crop_x), y: (photo.crop_y if photo.crop_y), width: (photo.crop_w if photo.crop_w), height: (photo.crop_h if photo.crop_h), crop: :crop},
+              { width: 200, height: 200, crop: 'fill' },
+              {color: "black", overlay: ("text:Arial_30:" + photo.name if !photo.name.nil?), x: 0,  y: ((!photo.name.nil? && photo.name.length < 15) ? -40 : -80) , gravity: "south", width: 200, crop: "fit" },
+              {angle: photo.angle}], class: 'photo-display' %>
+          </a>
+        </div>
+        <% end %>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%= javascript_include_tag "photo_select" %>

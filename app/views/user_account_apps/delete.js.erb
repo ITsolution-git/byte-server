@@ -1,0 +1,7 @@
+  //load modal
+$("#modal_holder_user_account_app").html("<%= j render partial: "layouts/delete_user_account_app",locals: {
+    :heading => "Delete",
+     :user_account_array => @user_account_array,
+     :is_checked => @is_checked
+    } %>");
+$("#myModal").modal();

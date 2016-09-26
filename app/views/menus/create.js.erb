@@ -1,0 +1,23 @@
+<% if @check == true %>
+  <% if @menu.errors.full_messages.any? %>
+      $(".menu_form_errors_container").html("<%= j render("layouts/form_errors",:object=>@menu) %>").show().delay(3000).fadeOut();
+  <% else %>
+    $(".menu_form_errors_container").html("<%= j render("layouts/form_success", :message => "Menu is created successfully.") %>").show().delay(3000).fadeOut();
+    $(".row.top20.server_item").remove();
+    $('#menu_form')[0].reset();
+    $("#menus_container").html("<%= escape_javascript render('menus', restaurant_menus: @restaurant.menus, restaurant_copying_menus: @restaurant.copy_shared_menu_statuses) %>");
+    <% if remotipart_submitted? %>
+      $(".build_menu_block_container #build_menu_toggle").html("<%= j "#{render 'build_menu_form_primary'}" %>");
+    <% else %>
+      $(".build_menu_block_container #build_menu_toggle").html("<%= j render "build_menu_form_primary" %>");
+    <% end %>
+    <%
+      @menu = Server.new
+    %>
+    $('.menu_form_block_container #menu_form .edit-items-form').html("<%= j render 'menus/menu_records' %>");
+    try{$(".instructions").html("");}catch(err){}
+  <% end %>
+<% else %>
+  $(".menu_form_errors_container").html("<%= j render("layouts/form_error_agreement", :message => "The restaurant you were looking for doesn't exist in current user.")%>").show().delay(3000).fadeOut();
+<% end %>
+

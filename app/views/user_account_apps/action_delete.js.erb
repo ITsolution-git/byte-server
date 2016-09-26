@@ -1,0 +1,6 @@
+<% if @user_accounts_app.count == 1%>
+  <% flash[:notice] = "User account has been deleted successfully." %>
+<% else %>
+  <% flash[:notice] = "User accounts have been deleted successfully." %>
+<% end %>
+window.location.href="<%=search_user_account_apps_path%>"

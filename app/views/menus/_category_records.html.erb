@@ -1,0 +1,16 @@
+<% if not @cat_array.empty? %>
+  <% modal_id = 'category-modal' %>
+  <%= form_tag({}, {class: 'batch-delete-form', data: {source: 'category', error_class: 'category_form_errors_container'}}) do |f| %>
+    <a class="btn" data-toggle="modal" data-target="#<%= modal_id %>">
+      <% if category.new_record? %>
+        Edit Category
+      <% else %>
+        <%= category.name %>
+      <% end %>
+
+      <span class="caret"></span>
+    </a>
+    <% link = 'edit_category_path(item)' %>
+    <%= render partial: '/menus/menu_modal', locals: {array: @cat_array, is_published: 'has_menu_published?', modal_id: modal_id, link: link }%>
+<% end %>
+<% end %>

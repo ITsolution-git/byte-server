@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+    <style type="text/css">
+        body {
+            padding: 0 10px;
+        }
+        p.header {
+          margin-left: 70px;
+          display: inline-block;
+        }
+    </style>
+</head>
+<body>
+  <div>
+    <p>User name :  <%= @user %></p>
+    <p>Email : <%= @email %></p>
+    <p>Rating : <%= @rating.to_s %></p>
+    <p>Comment : <%= @comment %></p>
+  </div> 
+</body>
+</html>

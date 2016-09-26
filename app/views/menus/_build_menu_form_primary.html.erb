@@ -1,0 +1,32 @@
+<div class="row-fluid">
+  <div class="build_menu_errors_container">
+
+  </div>
+  <div class="span12">
+    <%= form_for @menu_build ,:url=>build_menu_menus_path(),:remote=>true do |f|  %>
+
+    <%= hidden_field_tag :location_id , @restaurant.id %>
+
+    <div class="row-fluid top20">
+      <div class="span12" id="build_menu_menu_id_wrapper">
+        <%= f.select :menu_id, options_for_select(@restaurant.menus.all.sort_by!{ |m| m.name.downcase }.collect {|x| [x.name, x.id]}.unshift(["Select a Menu", ""])), {}, :class => "span12", :tabindex => 27 %>
+      </div>
+    </div>
+
+    <div class="row-fluid">
+      <div class="span7" id="build_menu_category_id_wrapper">
+        <%= f.select :category_id, options_for_select(Category.where('location_id=?',@restaurant.id).sort_by!{ |m| m.name.downcase }.uniq{ |c| c.name }.collect {|x| [x.name, x.id]}.unshift(["Select a Category", ""])), {}, :class => "span12", :tabindex => 28 %>
+      </div>
+      <div class="span5" id="build_menu_item_id_wrapper">
+        <%= render partial: 'menus/build_menu_item_id', locals: {item_ids: []} %>
+      </div>
+    </div>
+
+    <div class="row-fluid">
+      <div class="span12">
+        <%= f.submit "Add", :id => 'build_btn', :class=>"btn btnSearch btn-primary span4", disable_with: "Please wait...", :title=>"Add", :tabindex => 29 %>
+      </div>
+    </div>
+    <% end %> <!-- end form -->
+  </div>
+</div>

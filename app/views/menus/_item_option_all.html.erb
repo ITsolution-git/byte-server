@@ -1,0 +1,16 @@
+
+<% if not @item_option_array.empty? %>
+  <% modal_id = 'option-modal' %>
+  <% link = 'edit_item_option_path(item)' %>
+  <%= form_tag({}, {class: 'batch-delete-form', data: {source: 'item_option', error_class: 'option_form_errors_container'}}) do |f| %>
+    <a class="btn" data-toggle="modal" data-target="#<%= modal_id %>">
+    <% if item_option.new_record? %>
+      Edit Menu Option
+    <% else %>
+      <%= item_option.name %>
+    <% end %>
+    <span class="caret"></span>
+  </a>
+    <%= render partial: '/menus/menu_modal', locals: {array: @item_option_array, is_published: 'has_item_contains_menu_published?', modal_id: modal_id, link: link} %>
+  <% end %>
+<% end %>

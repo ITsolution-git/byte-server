@@ -1,0 +1,19 @@
+<div class="row text-center">
+  <div class="col-md-6">
+    <h1>Twitter Photos</h1>
+    <% @twitter_photos.each do |photo_url| %>
+      <img src=<%= photo_url %>>
+      <br><br>
+    <% end %>
+  </div>
+  
+  <br><br>
+
+  <div class="col-md-6">
+    <h1>Instagram Photos</h1>
+    <% @instagram_photos.each do |photo_url| %>
+      <img src=<%= photo_url %>>
+      <br><br>
+    <% end %>
+  </div>
+</div>

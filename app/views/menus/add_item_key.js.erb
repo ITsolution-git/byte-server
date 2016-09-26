@@ -1,0 +1,30 @@
+<% if @check == true %>
+  <% if @itemKey.errors.full_messages.any? %>
+    <% if remotipart_submitted? %>
+      $(".itemKey_form_errors_container").html("<%= j "#{render('layouts/form_errors',:object=>@itemKey)}" %>").show().delay(3000).fadeOut();
+    <% else %>
+      $(".itemKey_form_errors_container").html("<%= j render("layouts/form_errors",:object=>@itemKey) %>").show().delay(3000).fadeOut();
+    <% end %>
+  <% else %>
+    <%
+      item_key = ItemKey.new
+      item_key_image = ItemKeyImage.new
+    %>
+    $('.item_key_form_block_container .wrap_title_form').html("<%= j render partial: 'menus/item_key_title_form', locals: {item_key: item_key} %>");
+    $('.item_key_form_block_container #itemkey_toggle').html("<%= j render :partial=> 'menus/item_key_form_primary' ,locals:{:item_key=>item_key,:item_key_image=> item_key_image} %>");
+    $('.item_key_form_block_container #item_key_form .edit-items-form').html("<%= j render partial: 'menus/item_key_records', locals: {:item_key => item_key, :item_key_image => item_key_image} %>");
+
+    <% if remotipart_submitted? %>
+      $(".itemKey_form_errors_container").html("<%= j "#{render('layouts/form_success', :message => 'Item Key is created successfully.')}" %>").show().delay(3000).fadeOut();
+      $(".item_form_block_container .wrap_title_form").html("<%= j "#{render partial: 'item_title_form',locals: {:item=>@item, :item_image => @item_image}}" %>");
+      $(".item_form_block_container #item_form_toggle").html("<%= j "#{render partial: 'item_form_primary',locals: {:item=>@item, :item_image => @item_image}}" %>");
+    <% else %>
+      <% @item.item_photos.build %>
+      $(".itemKey_form_errors_container").html("<%= j render('layouts/form_success', :message => 'Item Key is created successfully.') %>").show().delay(3000).fadeOut();
+      $(".item_form_block_container .wrap_title_form").html("<%= j render partial: 'item_title_form',locals: {:item=>@item, :item_image => @item_image} %>");
+      $(".item_form_block_container #item_form_toggle").html("<%= j render partial: 'item_form_primary',locals: {:item=>@item, :item_image => @item_image} %>");
+    <% end %>
+  <% end %>
+<% else %>
+  $(".itemKey_form_errors_container").html("<%= j render("layouts/form_error_agreement", :message => "The restaurant you were looking for doesn't exist in current user.")%>").show().delay(3000).fadeOut();
+<% end %>

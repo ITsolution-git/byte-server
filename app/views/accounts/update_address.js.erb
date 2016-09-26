@@ -1,0 +1,26 @@
+<%
+  is_equal = current_user == @user_old
+  unless is_equal 
+    is_equal_final = is_equal
+  else
+    is_equal_final = current_user.username == @user_old.username
+  end  
+%>
+
+<% if current_user.errors.full_messages.any? %>
+  <% if remotipart_submitted? %>
+    $(".accounts_form_errors_container").html("<%= j "#{render('layouts/form_errors', :object=>current_user)}" %>").show().delay(3000).fadeOut();
+  <% else %>
+    $(".accounts_form_errors_container").html('<%= j render("layouts/form_errors",:object=>current_user) %>').show().delay(3000).fadeOut();
+  <% end %>
+<% else %>
+  <% unless is_equal_final %>
+      $('.address_form_block_container #address_form_toggle').html("<%= j render partial: "accounts/address_form_primary", locals: {user: current_user} %>");
+      $(".accounts_form_errors_container").html("<%= j render("layouts/form_success", :message => "Account is updated successfully.") %>").show().delay(3000).fadeOut();
+  <% else %>
+       account.loadAllCountriesFromWS('#user_profile_attributes_physical_country');
+       account.loadAllMailingCountriesFromWS('#user_profile_attributes_mailing_country');
+      $('.address_form_block_container #address_form_toggle').html("<%= j render partial: "accounts/edit_address_form_primary", locals: {user: current_user} %>");
+      $(".accounts_form_errors_container").html("<%= j render("layouts/form_warning", :message => "There are no changes on this screen to be saved. Please make any changes to update") %>").show().delay(3000).fadeOut();
+  <% end %>
+<% end %>

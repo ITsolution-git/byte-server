@@ -1,0 +1,16 @@
+var mainDishWrapper = $('.combo_main_dish_built_wrapper .combo_main_dish_built');
+var btnAdd = $('.choose_combo .dropdown-toggle');
+var html = '<select class="span12" id="combo_item_item_id" name="combo_item[item_id]" tabindex="32">'
+  + '<option value="">Select Main Dish</option>';
+<% @items.each do |item| %>
+  html += '<option value="<%= item.id %>"><%= item.name %></option>';
+<% end %>
+mainDishWrapper.html(html);
+btnAdd.addClass('hide');
+$('.combo_main_dish_built_wrapper').removeClass('hide');
+$('#combo_item_form').attr('menu_id', '<%= @menu.id %>');
+Util.validate(Menu.combo_item, {
+  item_id: [
+    Validate.Presence,
+  ]
+});

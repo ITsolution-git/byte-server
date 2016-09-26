@@ -1,0 +1,33 @@
+<div id="myModal" class="modal hide fade bottom0 modal-rating-receipt" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-body">
+    <h5>Add to group</h5>
+    <span>Please select a group</span><br/>
+
+    <!-- <select style="width: 360px;">
+  	  <option value="volvo">Volvo</option>
+  	  <option value="saab">Saab</option>
+  	  <option value="mercedes">Mercedes</option>
+  	  <option value="audi">Audi</option>
+	  </select> -->
+
+   <!--  <%= select_tag "group_id", options_for_select(Group.all.map{|g| [g.name, g.id]}), {:include_blank => '--Select Group--'} %> -->
+
+ <!--     <select name="group_id">
+      <%= @group.each do |g| %>
+        <option value="<%= g.id %>"><%= g.name %></option>
+      <% end %>
+    </select> -->
+    <%=select_tag "group_id", options_from_collection_for_select(@group, "id", "name")%>
+	<br/>
+    <div class="top10">
+      <% if @mycontact == 1 %>
+        <%= hidden_field_tag :mycontact, 1 %>
+        <%= link_to 'OK', add_group_user_contact_index_path(), {:class => 'btn btn-primary', :id => 'add_user_group'} %>
+      <% else %>
+        <%= hidden_field_tag :mycontact, 0 %>
+        <%= link_to 'OK', add_group_user_restaurant_contact_index_path(), {:class => 'btn btn-primary', :id => 'add_user_group'} %>
+      <% end %>
+         <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancel</button>
+       </div>
+  </div>
+</div>

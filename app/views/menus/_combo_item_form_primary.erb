@@ -1,0 +1,392 @@
+<%
+  url = combo_item.new_record? ? add_combo_item_restaurant_menus_path(@restaurant) : combo_item_path(combo_item)
+  submit_val = combo_item.new_record? ? "Create Combo" : "Update Combo"
+  is_hide = combo_item.new_record? ? "hide" : ""
+  combo_item_records_is_hide = @combo_item_array.empty? ? "hide" : ""
+  pmi_is_hide = ''
+  gmi_is_hide = ''
+
+  combo_sub_dish_is_hide = 'hide'
+  unless combo_item.new_record?
+    pmi_is_hide = 'class=hide' if combo_item.pmi?
+    gmi_is_hide = 'class=hide' if combo_item.gmi?
+
+    pmi_is_hide = 'class=hide' if combo_item.cmi? && combo_item.combo_type == PMI_GMI
+    gmi_is_hide = 'class=hide' if combo_item.cmi? && combo_item.combo_type == GMI_PMI
+
+    combo_sub_dish_is_hide = '' if !combo_item.pmi? || !combo_item.gmi?
+  end
+
+%>
+<div class="row-fluid">
+  <div class="combo_item_form_errors_container">
+
+  </div>
+   <div class="combo_item_form_errors_container_second">
+
+  </div>
+  <div class="span12">
+    <%= form_for combo_item, :url => url,:html=>{:id=>"combo_item_form"}, :remote=>true do |f| %>
+    <%= f.hidden_field :check_combo_type, value: '' %>
+      <% if !combo_item.new_record? && combo_item.pmi? %>
+        <%= f.hidden_field :check_combo_type, value: 'pmi', :class =>'check_combo remove_check_combo_type' %>
+      <% elsif !combo_item.new_record? && combo_item.gmi? %>
+        <%= f.hidden_field :check_combo_type, value: 'gmi', :class =>'check_combo remove_check_combo_type' %>
+      <% elsif !combo_item.new_record? && combo_item.combo_type == 'PMI,GMI' %>
+        <%= f.hidden_field :check_combo_type, value: 'pmi', :class =>'check_combo remove_check_combo_type' %>
+      <% elsif !combo_item.new_record? && combo_item.combo_type == 'GMI,PMI' %>
+        <%= f.hidden_field :check_combo_type, value: 'gmi', :class =>'check_combo remove_check_combo_type' %>
+      <% end %>
+      <div class="row-fluid top20">
+        <div class="span8">
+          <%= f.select :menu_id, @restaurant.get_menus_built.sort_by!{ |m| m.name.downcase }.collect {|x| [x.name, x.id]}.unshift(["Select a Menu", ""]), {}, {:tabindex => 31, :class => 'span12'} %>
+        </div>
+      </div>
+      <div class="row-fluid">
+        <div class="span8">
+          <%= f.text_field :name, :placeholder=>"Combo Name", :class => 'span12', :tabindex => 30 %>
+        </div>
+      </div>
+      <div class="row-fluid combo_main_dish_built_wrapper <%= is_hide %> wrap-comboitem-first">
+        <div class="span8 combo_main_dish_built">
+          <% unless combo_item.new_record? %>
+            <select class="span12" id="combo_item_item_id" name="combo_item[item_id]" tabindex="32">
+              <option value="">Select Main Dish</option>
+              <% @main_items.each do |item| %>
+                <% selected = item.id == combo_item.item_id ? 'selected=selected' : '' %>
+                <option value="<%= item.id %>" <%= selected %>><%= item.name %></option>
+              <% end %>
+            </select>
+          <% end %>
+        </div>
+        <div class="span3 choose_combo">
+          <a class="btn dropdown-toggle" data-toggle="dropdown" tabindex="33" href="#">
+          <% if !combo_item.new_record? && combo_item.pmi? %>
+            PMI
+          <% elsif !combo_item.new_record? && combo_item.gmi? %>
+            GMI
+          <% elsif !combo_item.new_record? && combo_item.cmi? %>
+            <% if combo_item.combo_type == PMI_GMI %>
+              PMI
+            <% elsif combo_item.combo_type == GMI_PMI %>
+              GMI
+            <% end %>
+          <% else %>
+            Add
+          <% end %>
+          <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu">
+            <li <%= pmi_is_hide %>><%= link_to 'PMI', '#', id: 'combo_main_dish_pmi' %></li>
+            <li <%= gmi_is_hide %>><%= link_to 'GMI', '#', id: 'combo_main_dish_gmi' %></li>
+          </ul>
+        </div>
+         <%= image_tag('/assets/add1.png', class: 'is_not_pmi_and_gmi hide top5') %>
+      </div>
+      <div class="row-fluid combo_sub_categories_wrapper <%= combo_sub_dish_is_hide %>">
+        <div class="span8 combo_sub_categories">
+          <% if !combo_item.new_record? && combo_item.pmi? %>
+            <% pmi = combo_item.items.map(&:id) %>
+            <div class="checkbox-dropdownlist">
+              <span class="btn add-nested-attributes">Select Menu Items</span>
+              <div class="wrapper-checkbox close">
+                <%
+                @items.each do |item|
+                  checked = ''
+                  if pmi.include?(item.id)
+                    checked = 'checked=checked'
+                  end
+                %>
+                <input type="checkbox" <%= checked %> name="items[]" id="combo_item_<%= item.id %>" value="<%= item.id %>" class="nested-item" /> <%= item.name %><br />
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+
+          <% if !combo_item.new_record? && combo_item.gmi? %>
+          <%
+          gmi = combo_item.categories.map(&:id)
+          %>
+            <div class="checkbox-dropdownlist">
+              <span class="btn add-nested-attributes">Select Categories</span>
+              <div class="wrapper-checkbox close">
+                <table class="combo_sub_categories_table">
+                  <thead>
+                    <tr>
+                      <td>Flow</td>
+                      <td>Category</td>
+                      <td>Quantity</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <%
+                    @categories.each do |category|
+                      sequence = ''
+                      qty = ''
+                      if gmi.include?(category.id)
+                        combo_categories = ComboItemCategory.find_by_category_id_and_combo_item_id(category.id, combo_item.id)
+                        unless combo_categories.nil?
+                          sequence = combo_categories.sequence
+                          qty = combo_categories.quantity
+                        end
+                      end
+                    %>
+                    <tr class="combo_category_<%= category.id %>">
+                      <td><input type="text" maxlength="5" id="combo_flow_<%= category.id %>" class="combo-flow combo-mini-input" value="<%= sequence %>" name="sequence[]" /></td>
+                      <td><input type="hidden" name="categories[]" value="<%= category.id %>" /><%= category.name %></td>
+                      <td><input type="text" maxlength="5" category_id="<%= category.id %>" id="combo_quantity_<%= category.id %>" class="combo-quantity combo-mini-input" value="<%= qty %>" name="qty[]" /></td>
+                    </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          <% end %>
+
+          <% if !combo_item.new_record? && combo_item.cmi? %>
+            <% if combo_item.combo_type == PMI_GMI %>
+              <% pmi = combo_item.items.map(&:id) %>
+              <div class="checkbox-dropdownlist">
+                <span class="btn add-nested-attributes">Select Menu Items</span>
+                <div class="wrapper-checkbox close">
+                  <%
+                  @items.each do |item|
+                    checked = ''
+                    if pmi.include?(item.id)
+                      checked = 'checked=checked'
+                    end
+                  %>
+                  <input type="checkbox" <%= checked %> name="items[]" id="combo_item_<%= item.id %>" value="<%= item.id %>" class="nested-item" /> <%= item.name %><br />
+                  <% end %>
+                </div>
+              </div>
+            <% elsif combo_item.combo_type == GMI_PMI %>
+              <% gmi = combo_item.categories.map(&:id)%>
+              <div class="checkbox-dropdownlist">
+                <span class="btn add-nested-attributes">Select Categories</span>
+                <div class="wrapper-checkbox close">
+                  <table class="combo_sub_categories_table">
+                    <thead>
+                      <tr>
+                        <td>Flow</td>
+                        <td>Category</td>
+                        <td>Quantity</td>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <%
+                      @categories.each do |category|
+                        sequence = ''
+                        qty = ''
+                        if gmi.include?(category.id)
+                          combo_categories = ComboItemCategory.find_by_category_id_and_combo_item_id(category.id, combo_item.id)
+                          unless combo_categories.nil?
+                            sequence = combo_categories.sequence
+                            qty = combo_categories.quantity
+                          end
+                        end
+                      %>
+                      <tr class="combo_category_<%= category.id %>">
+                        <td><input type="text" maxlength="5" id="combo_flow_<%= category.id %>" class="combo-flow combo-mini-input" value="<%= sequence %>" name="sequence[]" /></td>
+                        <td><input type="hidden" name="categories[]" value="<%= category.id %>" /><%= category.name %></td>
+                        <td><input type="text" maxlength="5" category_id="<%= category.id %>" id="combo_quantity_<%= category.id %>" class="combo-quantity combo-mini-input" value="<%= qty %>" name="qty[]" /></td>
+                      </tr>
+                      <% end %>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+      <!-- function code tuantran -->
+    <div class='combo_main_dish_second hide'>
+        <div class="row-fluid combo_main_dish_built_wrapper <%= is_hide %> wrap-comboitem-second">
+          <div class="span8 combo_main_dish_built">
+            <% unless combo_item.new_record? %>
+              <select disabled class="span12" id="combo_item_item_id_change" name="combo_item[item_id_change]" tabindex="32">
+                <option value="">Select Main Dish</option>
+                <% @main_items.each do |item| %>
+                  <% selected = item.id == combo_item.item_id ? 'selected=selected' : '' %>
+                  <option value="<%= item.id %>" <%= selected %>><%= item.name %></option>
+                <% end %>
+              </select>
+            <% end %>
+          </div>
+
+        <div class="span3 choose_combo_extend">
+          <a class="btn dropdown-toggle" data-toggle="dropdown" tabindex="33" href="#" disabled>
+          
+          <span class="caret"></span>
+          </a>
+        </div>
+         <%= image_tag('/assets/delete1.png', class: 'delete_main_dish top5') %>
+        </div>
+        <div class="row-fluid combo_sub_categories_wrapper_extend <%= combo_sub_dish_is_hide %>">
+          <div class="span8 combo_sub_categories">
+            <% if !combo_item.new_record? && combo_item.pmi? %>
+              <% pmi = combo_item.items.map(&:id) %>
+              <div class="checkbox-dropdownlist">
+                <span class="btn add-nested-attributes">Select Menu Items</span>
+                <div class="wrapper-checkbox close">
+                  <%
+                  @items.each do |item|
+                    checked = ''
+                    if pmi.include?(item.id)
+                      checked = 'checked=checked'
+                    end
+                  %>
+                  <input type="checkbox" <%= checked %> name="items[]" id="combo_item_<%= item.id %>" value="<%= item.id %>" class="nested-item" /> <%= item.name %><br />
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+
+            <% if !combo_item.new_record? && combo_item.gmi? %>
+            <%
+            gmi = combo_item.categories.map(&:id)
+            %>
+              <div class="checkbox-dropdownlist">
+                <span class="btn add-nested-attributes">Select Categories</span>
+                <div class="wrapper-checkbox close">
+                  <table class="combo_sub_categories_table">
+                    <thead>
+                      <tr>
+                        <td>Flow</td>
+                        <td>Category</td>
+                        <td>Quantity</td>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <%
+                      @categories.each do |category|
+                        sequence = ''
+                        qty = ''
+                        if gmi.include?(category.id)
+                          combo_categories = ComboItemCategory.find_by_category_id_and_combo_item_id(category.id, combo_item.id)
+                          unless combo_categories.nil?
+                            sequence = combo_categories.sequence
+                            qty = combo_categories.quantity
+                          end
+                        end
+                      %>
+                      <tr class="combo_category_<%= category.id %>">
+                        <td><input type="text" maxlength="5" id="combo_flow_<%= category.id %>" class="combo-flow combo-mini-input" value="<%= sequence %>" name="sequence[]" /></td>
+                        <td><input type="hidden" name="categories[]" value="<%= category.id %>" /><%= category.name %></td>
+                        <td><input type="text" maxlength="5" category_id="<%= category.id %>" id="combo_quantity_<%= category.id %>" class="combo-quantity combo-mini-input" value="<%= qty %>" name="qty[]" /></td>
+                      </tr>
+                      <% end %>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            <% end %>
+
+            <% if !combo_item.new_record? && combo_item.cmi? %>
+              <% if combo_item.combo_type == PMI_GMI %>
+                <% gmi = combo_item.categories.map(&:id)%>
+                <div class="checkbox-dropdownlist">
+                  <span class="btn add-nested-attributes">Select Categories</span>
+                  <div class="wrapper-checkbox close">
+                    <table class="combo_sub_categories_table">
+                      <thead>
+                        <tr>
+                          <td>Flow</td>
+                          <td>Category</td>
+                          <td>Quantity</td>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <%
+                        @categories.each do |category|
+                          sequence = ''
+                          qty = ''
+                          if gmi.include?(category.id)
+                            combo_categories = ComboItemCategory.find_by_category_id_and_combo_item_id(category.id, combo_item.id)
+                            unless combo_categories.nil?
+                              sequence = combo_categories.sequence
+                              qty = combo_categories.quantity
+                            end
+                          end
+                        %>
+                        <tr class="combo_category_<%= category.id %>">
+                          <td><input type="text" maxlength="5" id="combo_flow_<%= category.id %>" class="combo-flow combo-mini-input" value="<%= sequence %>" name="sequence[]" /></td>
+                          <td><input type="hidden" name="categories[]" value="<%= category.id %>" /><%= category.name %></td>
+                          <td><input type="text" maxlength="5" category_id="<%= category.id %>" id="combo_quantity_<%= category.id %>" class="combo-quantity combo-mini-input" value="<%= qty %>" name="qty[]" /></td>
+                        </tr>
+                        <% end %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              <% elsif combo_item.combo_type == GMI_PMI %>
+                <% pmi = combo_item.items.map(&:id) %>
+                <div class="checkbox-dropdownlist">
+                  <span class="btn add-nested-attributes">Select Menu Items</span>
+                  <div class="wrapper-checkbox close">
+                    <%
+                    @items.each do |item|
+                      checked = ''
+                      if pmi.include?(item.id)
+                        checked = 'checked=checked'
+                      end
+                    %>
+                    <input type="checkbox" <%= checked %> name="items[]" id="combo_item_<%= item.id %>" value="<%= item.id %>" class="nested-item" /> <%= item.name %><br />
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+    </div>
+      <!-- end -->
+
+      <div class="row-fluid <%= combo_item_records_is_hide %>">
+        <div class="span12 edit-items-form btn-group">
+          <%= render partial: 'menus/combo_item_records', locals: {:combo_item => combo_item} %>
+        </div>
+      </div>
+      <%= f.hidden_field :location_id , :value => @restaurant.id %>
+
+      <div class="row-fluid">
+        <div class="span4">
+          <%= f.submit :value => submit_val, :class => "btn btn-primary submit_combo_item span11", disable_with: "Please wait...", :tabindex => 26 %>
+        </div>
+        <% unless combo_item.new_record? %>
+          <div class="span4">
+            <%= link_to(submit_tag('Cancel', :type => 'button', :class => 'btn btn-cancel span11'), cancel_combo_item_restaurant_menus_path(@restaurant), :remote => true) %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>
+<script type="text/javascript">
+  // var combo_form = Util.validate(Menu.combo_item, {
+  //   name: [
+  //     Validate.Presence,
+  //     [Validate.Length, {maximum: 40}]
+  //   ],
+  //   menu_id: [
+  //     Validate.Presence
+  //   ]
+  // });
+
+  //  $('.submit_combo_item').click(function() {
+  //   for (var element in combo_form) {
+  //     // important check that this is objects own property
+  //     // not from prototype prop inherited
+  //     if(combo_form.hasOwnProperty(element)){
+  //       if (combo_form[element].validationFailed) {
+  //         //return false;
+  //       }
+  //       else if (combo_form[element].validationFailed == undefined) {
+  //         $('#combo_item_form').find("select[name='combo_item[menu_id]']").trigger("click");
+  //         $('#combo_item_form').find("input[name='combo_item[name]']").trigger("onblur");
+  //       }
+  //     }
+  //   }
+  // });
+</script>

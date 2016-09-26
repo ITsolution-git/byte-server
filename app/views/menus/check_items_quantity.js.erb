@@ -1,0 +1,8 @@
+<% if @count == 0 %>
+  alert('There is no free item in this category.');
+  $('.combo_sub_categories_table').find('#combo_flow_<%= @category_id %>').val('');
+  $('.combo_sub_categories_table').find('#combo_quantity_<%= @category_id %>').val('');
+<% elsif @count < @value %>
+  alert('The quantity cannot be greater than the number of items in this category (maximum is <%= @count %>)');
+  $('.combo_sub_categories_table').find('#combo_quantity_<%= @category_id %>').val('');
+<% end %>

@@ -1,0 +1,29 @@
+<%
+  active_restaurant = (params[:controller] == 'restaurants' && params[:action] != 'mydashboard' && params[:action] != 'dashboard' || params[:controller] == 'menus' || (params[:controller] == 'notification' && params[:action] == 'communications' && @is_mycommunication == false) || (params[:controller] == 'points' && params[:action] == 'rewards' && @is_my_rewards_page == false) || (params[:controller] == 'points' && params[:action] == 'search_rewards' && @is_my_rewards_search_page == false)) ? 'class=active' : ''
+  active_menu = ''
+  active_dashboard = (params[:controller] == 'restaurants' && (params[:action] == 'mydashboard' || params[:action] == 'dashboard')) ? 'class=active' : ''
+  acitve_my_reward = ((params[:controller] == 'points' && params[:action] == 'rewards' && @is_my_rewards_page == true)  || (params[:controller] == 'points' && params[:action] == 'search_rewards' && @is_my_rewards_search_page == true) ) ? 'class=active' : ''
+  acitve_my_communication = (params[:controller] == 'notification' && params[:action] == 'communications' && @is_mycommunication == true)  ? 'class=active' : ''
+
+    acitve_my_contact = ((params[:controller] == 'contact' && params[:action] == 'search' && @mycontact == 1)) ? 'class=active' : ''
+  acitve_my_communication = (params[:controller] == 'notification' && params[:action] == 'communications' && @is_mycommunication == true)  ? 'class=active' : ''
+%>
+<div class="navbar main_nav">
+  <div class="navbar-inner">
+    <ul class="nav">
+
+      <li <%= active_restaurant %> <%== @active_restaurant_orders %>><%= link_to "MyRestaurants", restaurants_path %></li>
+      <!--<li %= active_menu %>>%= link_to "MyMenus", '#' %></li>-->
+      <li <%= active_dashboard %>><%= link_to "MyDashboards", mydashboard_restaurants_path%></li>
+      <% if current_user.restaurants || current_user.admin?%>
+        <li <%= acitve_my_communication %>><%= link_to "MyCommunications", communications_notification_index_path %></li>
+        <li <%= acitve_my_reward %>><%= link_to "MyRewards", rewards_points_path %></li>
+      <% end %>
+     <!--  <li><%= link_to "MyContacts", 'https://www.google.com/contacts/#contacts', :target => "_blank" %></li> -->
+     <%@restaurant = nil %>
+       <li <%== @active_myorders %>><%= link_to "MyOrders", my_orders_order_index_path%></li>
+     <li <%= acitve_my_contact %> ><%= link_to "MyContacts", search_contact_index_path(@restaurant)%></li>
+      <li><a href="http://byte.helpshift.com/a/byte/" target="_blank">MyHelp</a></li>
+    </ul>
+  </div>
+</div>

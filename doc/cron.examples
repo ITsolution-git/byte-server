@@ -1,0 +1,20 @@
+# ===================================================================
+# Cron Format Guide
+# ===================================================================
+# * * * * * *
+# | | | | | |
+# | | | | | +-- Year              (range: 1900-3000)
+# | | | | +---- Day of the Week   (range: 1-7, 1 standing for Monday)
+# | | | +------ Month of the Year (range: 1-12)
+# | | +-------- Day of the Month  (range: 1-31)
+# | +---------- Hour              (range: 0-23)
+# +------------ Minute            (range: 0-59)
+# ===================================================================
+
+# ===================================================================
+# Staging Entry to refresh subscription billing dates
+# ===================================================================
+1 1 * * * * cd /var/www/MyMenu-Server/current && /usr/local/rvm/rubies/ruby-2.1.2/bin/rake RAILS_ENV=staging subscriptions:refresh >/dev/null 2>&1
+
+
+

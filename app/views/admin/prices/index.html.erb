@@ -1,0 +1,28 @@
+<h1>Pricing</h1>
+
+<br>
+
+<%= link_to 'New Pricing', new_admin_price_path %>
+
+<br>
+<br>
+
+<table class="table">
+  <tr>
+    <th>Plan Name</th>
+    <th>Service</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @prices.each do |price| %>
+  <tr>
+    <td><%= price.plan.try(:name) %></td>
+    <td><%= price.app_service.try(:name) %></td>
+    <td><%= link_to 'Show', admin_price_path(price) %></td>
+    <td><%= link_to 'Edit', edit_admin_price_path(price) %></td>
+    <td><%= link_to 'Destroy', admin_price_path(price), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>

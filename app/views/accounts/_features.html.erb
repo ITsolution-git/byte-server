@@ -1,0 +1,141 @@
+<div class="block-head clearfix header-menu-mgt">
+  <span class="icon-plus btn togglebtn" data-toggle="collapse" data-target="#advanced_form_toggle"></span>
+  <span class="wrap_title_form">
+    <span class="btn btn-link collapsu" id="build_menu_title">
+        Advanced App Features
+    </span>
+  </span>
+</div>
+<div id="advanced_form_toggle" class="collapse" style='padding: 0;'>
+  <%= render 'braintree_clients' %>
+</div>
+
+<style type="text/css">
+
+.location {
+margin-bottom: 10px;
+overflow: hidden;
+}
+#location_dialog form{
+  margin: 0;
+}
+#advanced_form_toggle {
+padding-left: 70px;
+margin-top: 40px;
+}
+#advanced_form_toggle input[type=email], #advanced_form_toggle input[type=password] {
+	margin-bottom: 15px;
+}
+#edit_feature{
+  display: none;
+}
+#location_dialog .modal-footer a {
+width: 200px;
+height: 32px;
+font-size: 16px!important;
+line-height: 32px;
+}
+#location_dialog .modal-footer {
+text-align: center;
+background: #969a9c;
+margin: 0!important;
+padding: 10px 0 !important;
+border: none;
+}
+.modal-header h2 {
+font-size: 18px!important;
+color: white;
+margin: 0;
+padding: 10px 20px;
+font-weight: normal;
+}
+.location-name {
+color: white;
+line-height: 27px;
+padding-left: 5px;
+font-size: 16px;
+}
+.modal {
+width: 680px!important;
+margin-left: -340px!important;
+}
+.modal-header {
+padding: 9px 15px;
+border: none!important;
+background: #456581;
+padding: 0;
+margin: 0;
+}
+#location_dialog,  #location_dialog div {
+border-radius: 0!important;
+}
+.location-list select {
+width: 100%;
+}
+#edit_feature.show{
+  display: block;
+}
+a.hide{
+  display: none
+}
+input#location_form_submit {
+width: 224px;
+height: 36px;
+}
+.modal-body {
+background: #1d2e3c;
+margin: 0!important;
+width: 100%;
+box-sizing: border-box;
+max-height: 300px;
+overflow: auto;
+}
+</style>
+<% content_for :scripts do %>
+  <script type="text/javascript">
+  		$(function(){
+
+        $(document).on('click', '#edit_feature', function(e){
+          e.preventDefault();
+         $(this).hide();
+          $('.btn-cancel, #feature_form_submit').css({'display': 'block'});
+          $('#feature_form_submit').addClass('open');
+          $('#email, #password').removeProp('disabled').removeAttr('disabled');
+          return false;
+        });
+
+          $(document).on('click', '#feature_form_submit', function(e){
+            e.preventDefault();
+            var can_post = true;
+
+            if($('#email').val() == '' || $('#password').val() == ''){
+
+                alert('Please input email and password');
+                can_post = false;
+              }
+            return false;
+          });
+
+        $(document).on('click', '#location_form_submit', function(e){
+            e.preventDefault();
+            var can_post = true;
+
+            $('#location_dialog select').each(function(){
+              console.log($(this).find('option:selected').val());
+              if($(this).find('option:selected').val() == ''){
+
+                alert('Please select location for all restaurants.');
+                can_post = false;
+                return false;
+              }
+            });
+            if(can_post){
+              $('#new_location').submit();
+            }
+
+
+          });
+
+  		});
+  </script>
+<% end %>

@@ -1,0 +1,3 @@
+$('#accounts_container').html("<%= j render("users") %>");
+$('#user_form_container').html("<%= j render("form") %>");
+$(".form_errors_container").html("<%= j render("layouts/form_success",:message=>"Account Successfully Deleted") %>");

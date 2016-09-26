@@ -1,0 +1,7 @@
+//load modal
+$("#modal_holder_prize_level").html("<%= j render partial: "layouts/delete_prize_level",locals: {
+    :heading => "Delete",
+    :level => @level,
+    :status_prize_id => @status_prize_id
+    } %>");
+$("#myModal").modal();

@@ -1,0 +1,45 @@
+var restaurant_id = $("#location_id").val();
+var owner_id = $("#location_owner_id").val();
+
+$('#upload_widget_opener').cloudinary_upload_widget({ cloud_name: "<%= Figaro.env.cloudinary_cloud_name %>", upload_preset: "<%= Figaro.env.cloudinary_upload_preset %>", multiple: 'true', thumbnails: '#image_list_container', folder: "owners/"+ owner_id +"/locations/"+ restaurant_id});
+//$('#upload_widget_opener').cloudinary_upload_widget({ cloud_name: "byte2", upload_preset: "byte_preset", multiple: 'true', thumbnails: '#image_list_container', folder: "owners/"+ owner_id +"/locations/"+ restaurant_id});
+
+$(document).on('cloudinarywidgetsuccess', function(e, data) {
+  var photos = []
+  var urls = []
+  var image_size = ["w_1024,h_768,c_fill", "w_800,h_600,c_fill", "c_fit,h_120,w_120"];
+  var image_format = [".webp", ".webp", ".png"];
+  $.each(data, function(index, image) {
+    var idArray= image.public_id.split("/");
+    var nameArray = idArray[4].split("_");
+    var photoName = "";
+    var i = 0;
+    while(i < nameArray.length - 1 && ((photoName.length + nameArray[i].length ) < 29)) { 
+        photoName += nameArray[i] + " ";
+        i++;
+    }
+    for (i = 0; i < image_size.length; i++) {
+        var url = "http://res.cloudinary.com/" + "<%= Figaro.env.cloudinary_cloud_name %>" + "/image/upload/" + image_size[i] + "/v" + image.version + "/" + image.public_id + image_format[i];
+        //var url = "http://res.cloudinary.com/" + "byte2" + "/image/upload/" + image_size[i] + "/v" + image.version + "/" + image.public_id + image_format[i];
+      urls.push(url);
+    };  
+    var photo = {
+      public_id: image.public_id,
+      format: image.format,
+      version: image.version,
+      width: image.width,
+      height: image.height,
+      resource_type: image.resource_type,
+      name: photoName
+    }
+    photos.push(photo);
+  });
+  $.ajax({
+    type : "PUT",
+    url : '/restaurants/' + restaurant_id + '/create_photos',
+    data: {
+      photos: photos,
+      urls: urls
+    }
+  });
+});

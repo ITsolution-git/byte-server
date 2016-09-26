@@ -1,0 +1,6 @@
+<h3>
+  Your Uploaded Files
+</h3>
+<% photos.reverse.each do |photo| %>
+  <%= render partial: 'image', locals: { photo: photo } %>
+<% end %>

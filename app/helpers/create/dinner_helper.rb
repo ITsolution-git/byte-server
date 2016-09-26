@@ -1,0 +1,2 @@
+module Create::DinnerHelper
+end

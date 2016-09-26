@@ -1,0 +1,20 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Name:</b>
+  <%= @page.name %>
+</p>
+
+<p>
+  <b>Title:</b>
+  <%= @page.title %>
+</p>
+
+<p>
+  <b>Body:</b>
+  <%= raw @page.body %>
+</p>
+
+
+<%= link_to 'Edit', edit_admin_page_path(@page), :class=>"btn btn-primary" %>
+<%= link_to 'Back', admin_pages_path, :class=>"btn btn-primary"  %>

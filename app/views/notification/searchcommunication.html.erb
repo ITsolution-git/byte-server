@@ -1,0 +1,92 @@
+<div class="bread-crum">
+  <%= link_to @restaurant.name, restaurants_path %>&nbsp;&nbsp;<small>>></small>&nbsp;&nbsp;<%= link_to 'Communications', communications_restaurant_notification_index_path(@restaurant) %>
+</div>
+<div class="searchHolder">
+	<%= form_tag searchcommunication_restaurant_notification_index_path() ,:class => "span12" do %>
+
+  <div class="row-fluid">
+    <div class="span5">
+      <%= text_field_tag :search , @search_params, :class=>"input-block-level",:placeholder=>"Search"%>
+    </div>
+    <%= submit_tag "Submit", :class=>"btnSearch", :title=>"Go", :value => '' %>
+  </div>
+<% end %>
+</div>
+
+ <%= link_to "Send a Message", {:controller => "notification", :action => "groupmessage", :restaurant => @restaurant.id, :alert=>'GM'}, :class=>"new-message btn btn-primary floatright"%>
+ <div class="clear"></div>
+ <div class='communicationWrapper top10'>
+ 	<table class="table table-striped table-hover">
+  <thead>
+      <tr class="success">
+        <th>
+    	   UserID
+        </th>
+        <th>
+          Message Type
+        </th>
+        <th>
+          Product Rating
+        </th>
+        <th>
+          Date
+        </th>
+        <th>
+          Time
+        </th>
+        <th>
+          Action
+        </th>
+      </tr>
+  </thead>
+  <tbody>
+   <% if !@notifications.blank? %>
+     <% count=0%>
+     <% @notifications.each do |notification|%>
+
+       <%  @user_find=User.find(:first,:conditions=>['id=? and username like ?',notification.from_user,'%'+params[:search]+'%']) %>
+        <%  @user=User.find(notification.from_user) %>
+         <%  if notification.alert_type =='Rating' || notification.alert_type =='Restaurant Rating'
+         	   item_comment = ItemComment.find(:first,:conditions => ['user_id = ? and build_menu_id = ?',notification.from_user,notification.build_menu_id])
+           	 value = item_comment.rating
+		   ratingGrade=""
+			if value == '' || value == -1 || value.nil?
+				ratingGrade=' '
+			else
+				score = ['A+','A','A-','B+','B','B-','C+','C','C-','D+','D','D-','F']
+				ratingGrade=score[item_comment.rating - 1]
+	    end
+	   end
+	    %>
+	    <tr>
+	    	<td><%= link_to  @user.username,usercommunications_restaurant_notification_path(@restaurant,notification)%></td>
+	    	<td><%= notification.alert_type%></td>
+	    	<td><% if notification.alert_type =='Rating' || notification.alert_type =='Restaurant Rating'  %><%= ratingGrade%><% end %></td>
+	    	<td><%= notification.created_at.strftime("%Y-%m-%d ")%></td>
+	    	<td><%= notification.created_at.strftime("%H:%M:%S") %></td>
+	    	<td><%= link_to image_tag('delete_icon.png'),{:controller=>'notification',:action=>'deletenotification',:id=>notification.id,:resturant=>@restaurant.id},:title=>"Delete",:class=>'',:remote=> false,:confirm => 'Are you sure you want to Delete?'%></td>
+	    </tr>
+     <% end %>
+
+  <% else %>
+    <tr>
+    	<td>
+    		<h5>No Result Found</h5>
+    	</td>
+    	<td></td>
+    	<td></td>
+    	<td></td>
+    	<td></td>
+    	<td></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+</div>
+
+<%= link_to "Send a Message" ,{:controller=>"notification",:action=>"groupmessage" ,:restaurant=>@restaurant.id ,:alert=>'GM'},:class=>"new-message btn btn-primary floatright"%>
+<div class="clear"></div>
+<%if !@notification.blank? %>
+  <div class="floatright"><%= paginate @notification %></div>
+<% end %>
+<div class="clear"></div>

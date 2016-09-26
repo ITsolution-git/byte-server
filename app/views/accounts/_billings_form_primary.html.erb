@@ -1,0 +1,150 @@
+<div class="row-fluid">
+  <div class="billing_form_errors_container">
+
+  </div>
+  <div class="span12">
+     <% @credit_cards = @customer.credit_cards.first %>
+     <div class="row-fluid top10">
+      <div class="span12">
+         <div class="span4 title-address top10">
+            <h6>Statement</h6>
+         </div>
+         <div class="span3 top10 select-monthly" id = "select-month">
+            <select class="multiselect" multiple="multiple">
+             <% dates.each do |date| %>
+               <option value="<%= date %>">
+                  <%= date %>
+                </option>
+             <% end %>
+            </select>
+         </div>
+         <div class="span1 top10">
+            <span class="reward-action-items" id="export-pdf"><%=image_tag("/assets/PDF.png")%></span>
+         </div>
+         <div class="span4 top10">
+            <span>Subscription ID:<font style="color:blue; text-decoration:underline;"><br><%=@credit_cards.token %></font></span>
+         </div>
+         <!-- <div class="span4 top10">
+            <span class="reward-action-items" id=""><%=image_tag("/assets/PDF_disable.png")%></span>
+         </div> -->
+      </div>
+      <div class="span12">
+         <div class="span4 title-address top10">
+            <h6>Credit Card</h6>
+         </div>
+         <div class="span8 top10 pading-left">
+           <input disabled="true" type="radio" name ="credit_card_type" value = 'Visa' <%=@credit_cards.card_type=="Visa"?"checked":""%>/>
+           <%= image_tag("/assets/Visa-40.png") %>
+           <input disabled="true" type="radio" name ="credit_card_type" value = 'MasterCard' <%=@credit_cards.card_type=="MasterCard"?"checked":""%>/>
+           <%= image_tag("/assets/Mastercard-40.png") %>
+            <input disabled="true" type="radio" name ="credit_card_type" value = 'American Express' <%=@credit_cards.card_type=="American Express"?"checked":""%>/>
+            <%= image_tag("/assets/Amex-40.png") %>
+            <input disabled="true" type="radio" name ="credit_card_type" value = 'Discover' <%=@credit_cards.card_type=="Discover"?"checked":""%>/>
+            <%= image_tag("/assets/Discover-40.png") %>
+         </div>
+      </div>
+      <div class="span12">
+         <div class="span4 title-address top10">
+            <h6>Name On Card</h6>
+         </div>
+         <div class="span8 top10 pad10">
+           <%=@credit_cards.cardholder_name%>
+         </div>
+      </div>
+      <div class="span12">
+         <div class="span4 title-address top10">
+            <h6>Credit Card Number</h6>
+         </div>
+         <div class="span8 top10 pad10">
+           XXXX XXXX XXXX <%=@credit_cards.last_4 %>
+         </div>
+      </div>
+      <div class="span12">
+         <div class="span4 title-address top10">
+            <h6>Expiration Date</h6>
+         </div>
+         <div class="span8 top10 pad10">
+           XX/<%=@credit_cards.expiration_year %>
+         </div>
+      </div>
+      <div class="span12">
+         <div class="span4 title-address">
+            <h6>Billing Address</h6>
+         </div>
+         <div class="span6 top10">
+           <%=@credit_cards.billing_address.street_address %>
+           <%=@credit_cards.billing_address.locality %>
+           <%=@credit_cards.billing_address.region %>
+           <%=@credit_cards.billing_address.postal_code %>
+         </div>
+      </div>
+    <!--   <div class="span12">
+         <div class="span4 title-address">
+            <h6>Billing City</h6>
+         </div>
+         <div class="span6 top10">
+         </div>
+      </div> -->
+      <div class="span12 billing">
+         <div class="span3">
+         </div>
+         <div class="span3">
+         </div>
+         <div class="span3">
+         </div>
+         <div class="span3">
+         </div>
+      </div>
+      <div class="row-fluid top10">
+        <div class="span8">
+        </div>
+        <div class="span4">
+         <%if current_user.active_braintree == true and current_user.user_billing.present? %>
+            <%= link_to 'Update', login_billing_accounts_path, disable_with: "Please wait...", :class => 'btn span12 btn-primary', :remote => true %>
+          <% elsif current_user.active_braintree == true %>
+            <%= link_to 'Update', create_login_billing_accounts_path, disable_with: "Please wait...", :class => 'btn span12 btn-primary', :remote => true %>
+          <% else %>
+           <%= link_to 'Update', '', :class => 'btn span12 btn-primary', :remote => true, :disabled => 'true' %>
+         <% end %>
+        </div>
+      </div>
+  </div>
+</div>
+<script type="text/javascript">
+  var BillingObj = {
+  };
+
+  account = new AccountForm();
+  $(document).on('click','#export-pdf', function(){
+    account.exportPdf(this);
+  });
+
+  $(document).on('focus','#customer_credit_cards_number', function() {
+     $('#error_credit_card').empty();
+  });
+  $(document).ready(function() {
+    $(".multiselect").multiselect({
+     buttonText: function(options, select) {
+        if (options.length == 0) {
+          return 'Monthly <b class="caret"></b>';
+        }
+        else if (options.length > 3) {
+          return options.length + ' selected <b class="caret"></b>';
+        }
+        else {
+          var selected = '';
+          // options.each(function() {
+            selected += $(options[0]).text();
+          // });
+          console.log(selected)
+          if (options.length == 1) {
+            return selected + '<b class="caret"></b>';
+          }
+          else{
+            return selected.substr(0, selected.length -2) + '... <b class="caret"></b>';
+          }
+        }
+      },
+    });
+  });
+  </script>

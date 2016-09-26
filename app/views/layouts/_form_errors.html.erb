@@ -1,0 +1,14 @@
+<% object.errors.each do |attr, msg| %>
+	<% if object.errors[attr].first == msg %>
+    <div class="alert alert-error">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+     
+      <%if msg.index('^').nil? %>
+         <%= object.errors.full_message(attr.to_sym, object.errors[attr.to_sym].first) %>
+        <%else %>
+         <%="#{msg[1,msg.length]}"  %> 
+      <%end %>
+     
+    </div>
+  <% end %>
+<% end %>

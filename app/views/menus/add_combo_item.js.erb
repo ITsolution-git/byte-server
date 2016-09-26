@@ -1,0 +1,27 @@
+// console.log("testthu:<%=@check_name == ""%>")
+<% if @check == true %>
+  <% if @item_id_check == ""  && @check_name == ""%>
+    $(".combo_item_form_errors_container_second").html("<%= j render("layouts/form_error_agreement",
+      :message => "Please select main dish to create combo.")%>").show().delay(3000).fadeOut();
+      $(".combo_item_form_errors_container").html("<%= j render("layouts/form_error_agreement",
+      :message => "Name cant be blank.")%>").show().delay(3000).fadeOut();
+  <% elsif @combo_item.errors.full_messages.any?%>
+    $(".combo_item_form_errors_container").html("<%= j render("layouts/form_errors",
+      :object => @combo_item) %>").show().delay(3000).fadeOut();
+  <% elsif @item_id_check == "" %>
+    $(".combo_item_form_errors_container").html("<%= j render("layouts/form_error_agreement",
+      :message => "Please select main dish to create combo.")%>").show().delay(3000).fadeOut();
+  <% else %>
+    <%
+    @combo_item = ComboItem.new
+    %>
+    $("#menus_container").html("<%= escape_javascript render('menus', restaurant_menus: @restaurant.menus, restaurant_copying_menus: @restaurant.copy_shared_menu_statuses) %>");
+    $(".combo_item_form_block_container .wrap_title_form").html("<%= j render partial: "menus/combo_item_title_form", locals: {combo_item: @combo_item} %>");
+    $(".combo_item_form_block_container #combo_item_form_toggle").html("<%= j render partial: "menus/combo_item_form_primary", locals: {combo_item: @combo_item} %>");
+    $('.combo_item_form_block_container #combo_item_form .edit-items-form').html("<%= j render partial: 'menus/combo_item_records', locals: {combo_item: @combo_item} %>");
+    $(".combo_item_form_errors_container").html("<%= j render("layouts/form_success",
+      :message=> "Combos Menu Item is created successfully") %>").show().delay(3000).fadeOut();
+  <% end %>
+<% else %>
+  $(".combo_item_form_errors_container_second").html("<%= j render("layouts/form_error_agreement", :message => "The restaurant you were looking for doesn't exist in current user.")%>").show().delay(3000).fadeOut();
+<% end %>

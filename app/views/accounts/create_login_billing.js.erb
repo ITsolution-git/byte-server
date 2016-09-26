@@ -1,0 +1,80 @@
+$('.billings_form_block_container #billings_form_toggle').html("<%= j render partial: "accounts/create_login_billing"%>");
+
+// var account = new AccountForm();
+// account.modelName = 'customer';
+// account.loadAllBillingCountriesFromWS('#customer_credit_cards_billing_address_country_name');
+//    Util.validate(account, {
+//     credit_cards_cardholder_name:[Validate.Presence],
+//     credit_cards_billing_address_extended_address:[Validate.Presence],
+//      // credit_cards_number:[
+//      //   Validate.Presence,
+//      //   Validate.Numericality
+//      //  ],
+//     //   // [
+//     //   //   Validate.Custom,
+//     //   //   {
+//     //   //     against: function(value,args) {
+//     //   //       console.log(card_type == 'Visa')
+//     //   //       return value == card_type
+//     //   //     },
+//     //   //     //args: {card_type: card_type},
+//     //   //     failureMessage: "sai"
+//     //   //   }
+//     //   // ]
+//     // ],
+//       credit_cards_billing_address_postal_code: [
+//       Validate.Numericality,
+//       [Validate.Length, {is: 5}]
+//     ],
+//   });
+
+
+// if (card_type == 'Visa') {
+//   Util.validate(account, {
+//     credit_cards_cardholder_name:[Validate.Presence],
+//     credit_cards_billing_address_extended_address:[Validate.Presence],
+//     credit_cards_number:[
+//       Validate.Presence,
+//       Validate.Numericality,
+//       [
+//         Validate.Custom,
+//         {
+//           against: function(value, args) {
+//             var regVisaCard = /^(?:4[0-9]{12}(?:[0-9]{3})?)$/;
+//             return value.match(regVisaCard);
+//           },
+//           failureMessage: "Visa card starting with 4, length 13 or 16 digits."
+//         }
+//       ]
+//     ],
+//     credit_cards_billing_address_postal_code: [
+//       Validate.Numericality,
+//       [Validate.Length, {is: 5}]
+//     ],
+//   });
+// }
+// else if (card_type == 'Mastercard'){
+//   Util.validate(account, {
+//     credit_cards_cardholder_name:[Validate.Presence],
+//     credit_cards_billing_address_extended_address:[Validate.Presence],
+//     credit_cards_number:[
+//       Validate.Presence,
+//       Validate.Numericality,
+//         [
+//           Validate.Custom,
+//           {
+//               against: function(value,args) {
+//                 var regMasterCard = /^(?:5[1-5][0-9]{14})$/;
+//                   console.log("vao")
+//                   return value.match(regMasterCard);
+//               },
+//               failureMessage: "MasterCard starting with 51 through 55, length 16 digits."
+//           }
+//         ]
+//     ],
+//     credit_cards_billing_address_postal_code: [
+//       Validate.Numericality,
+//       [Validate.Length, {is: 5}]
+//     ],
+//   });
+// }

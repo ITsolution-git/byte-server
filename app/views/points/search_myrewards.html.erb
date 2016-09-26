@@ -1,0 +1,115 @@
+  <div class="statusHolder">
+  <table class= "reward_status_table">
+  <tr>
+     <td  class = "reward_status_td">Total Points = <%=number_with_delimiter(@total_points.to_i, :delimiter => ',') %></td>
+     <td  class = "reward_status_td">Share Points = 0</td>
+     <td  class = "reward_status_td">Check-In Points = 0</td>
+    
+  </tr>
+  <tr>
+     <td  class = "reward_status_td">Rating Points = <%=number_with_delimiter(@total_rating_points.to_i, :delimiter => ',')%></td>
+     <td  class = "reward_status_td">Cust Sat Points = 0</td>
+     <td  class = "reward_status_td">Social Points = 0</td>
+  </tr>
+    </table>
+ </div>
+ <br />
+  <div class="searchHolder">
+    <%= form_tag search_myrewards_points_path() ,:class => "span12", :method => :get do %>
+    
+     <div class="row-fluid">
+      <div class="span5">
+        <%= text_field_tag :search, @search_text, :class=>"input-block-level",:placeholder=>"Search"%>
+      </div>
+
+     
+      <%= submit_tag "Submit" , :class=>"btnSearch", :title=>"Go", :value => '' %>
+       <% if @is_my_rewards_search_page %>
+          <%= link_to 'Show All',show_all_my_reward_points_path,:style => "margin-left :5px" %>
+      <% end %>
+      <div class="floatright">
+        <% if !@item_comments.blank? %>
+      <!-- <span class="reward-action-items"><%= link_to image_tag("/assets/Redeem-Pasword.png"),'#' %></span> -->
+          <span class="reward-action-items"><%= link_to image_tag("/assets/PDF.png"), search_my_reward_export_pdf_points_path(:search => params[:search]) %></span>
+          <span class="reward-action-items"><%= link_to image_tag("/assets/XLS.png"), search_my_reward_export_xls_points_path(:search => params[:search]) %></span>
+          <span class="reward-action-items"><%= link_to image_tag("/assets/CSV.png"),search_my_reward_export_csv_points_path(:search => params[:search]) %></span>
+        <% else %>
+          <span class="reward-action-items"><%= link_to image_tag("PDF_disable.png"),'#'  %></span>
+          <span class="reward-action-items"><%= link_to image_tag("XLS_disable.png"), '#' %></span>
+          <span class="reward-action-items"><%= link_to image_tag("CSV_disable.png"), '#' %></span>
+        <% end %> 
+      </div>
+    </div>
+  <% end %>
+      <div class="clear"></div>
+  </div>
+
+
+        <%= render :partial=>"search_body_data" %>
+  
+<!-- <div class="row">
+  <div class="span12" >
+    <div class="well">
+    
+      
+  
+       <div class='communicationWrapper'>
+      <table class="table table-striped table-hover">
+        <thead>
+            <tr class="success">
+          <th>
+                UserID
+          </th>
+              <th>
+                Point Type
+              </th>
+              <th>
+               Points
+              </th>
+              <th>
+                Date
+              </th>
+              <th>
+                Time
+              </th>
+              
+            </tr>
+        </thead>
+        <tbody>
+          
+         <% if !@userpoints.blank? %>
+           <% @userpoints.each  do |userpoints|%>
+              <% user = User.find(:first,:conditions=>['id=?',userpoints.user_id])%>
+              <tr>
+                <td><% if !user.username.blank? %><%= user.username%><% end %>hahah</td>
+                <td><%= userpoints.point_type%></td>
+                <td><%= userpoints.points%></td>
+                <td><%= userpoints.created_at.strftime("%Y-%m-%d ")%></td>
+              <td><%= userpoints.created_at.strftime("%l:%M %p") %></td>
+              </tr>
+           <% end %>
+         <% end %>
+                    
+      
+        </tbody>
+      </table>
+      </div>
+      
+    </div>
+  </div>
+</div> -->
+
+<div id="paginator">
+    <%= render :partial => "pagination" %>
+</div>
+<% content_for :scripts do %>
+  <script type="text/javascript">
+  (function() {
+    $(document).ready(function() {
+
+        $("#search").focus();
+       
+         });
+    })();
+  </script>
+<% end %>

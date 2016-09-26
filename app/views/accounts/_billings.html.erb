@@ -1,0 +1,17 @@
+<div class="block-head clearfix header-menu-mgt">
+  <span class="icon-plus btn togglebtn" data-toggle="collapse" data-target="#billings_form_toggle"></span>
+  <span class="wrap_title_form">
+    <span class="btn btn-link collapsu" id="build_menu_title">
+        Billings and Statements
+    </span>
+  </span>
+</div>
+<div id="billings_form_toggle" class="collapse">
+  <%= render :partial=>'billings_form_primary', locals: {customer: @customer, dates: @dates}%>
+</div>
+
+<% content_for :scripts do %>
+  <script type="text/javascript">
+
+  </script>
+<% end %>

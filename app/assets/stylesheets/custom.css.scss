@@ -1,0 +1,586 @@
+textarea, input[type="text"], input[type="password"], input[type="datetime"],
+input[type="datetime-local"], input[type="date"], input[type="month"],
+input[type="time"], input[type="week"], input[type="number"], input[type="email"],
+input[type="url"], input[type="search"], input[type="tel"], input[type="color"],
+.uneditable-input {
+  margin-bottom: 0;
+}
+
+.btn.dropdown-toggle {
+  color: #333 !important;
+}
+
+body {
+  padding: 0;
+  position: relative;
+  background: none;
+  font-size: 13px;
+  font-family: Helvetica;
+}
+
+table {
+  margin-bottom: 10px !important;
+}
+
+.aligncenter {
+  text-align: center !important;
+  margin-top: 20px !important;
+  margin-left: 20px !important;
+  margin-right: 20px !important;
+}
+
+.bootstrap-timepicker-widget.dropdown-menu {
+  top: 100% !important;
+}
+
+.alert {
+  margin: 10px 0 0 0;
+}
+
+p, span {
+  font-size: 13px;
+}
+
+button, label, input, textarea, a, select {
+  font-size: 13px !important;
+}
+
+form {
+  margin: 0 0 10px;
+}
+
+select {
+  margin: 0;
+}
+
+.span12 {
+  margin: 0 !important;
+}
+
+.row-fluid {
+  margin-bottom: 10px;
+}
+
+.btn-primary {
+  background-color: #751529;
+  background-image: none;
+
+  &:hover {
+    background: #470D19;
+  }
+
+  &:focus {
+    background: #470D19;
+  }
+}
+
+.btn-off-color {
+  background-color: #424242; // Dark color grey
+  background-image: none;
+
+  &:hover {
+    background: #2A2A2A; // Darker grey
+  }
+
+  &:focus {
+    background: #2A2A2A;
+  }
+}
+
+.navbar {
+  .nav {
+    margin: 0;
+  }
+}
+
+.navbar-inner {
+  border: none;
+  background: none;
+  background: white;
+  box-shadow: none;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+}
+
+.row {
+  margin-bottom: 10px;
+}
+
+.bootstrap-timepicker {
+  .timepicker {
+    width: 80%;
+  }
+}
+
+.floatright {
+  float: right !important;
+}
+
+.floatleft {
+  float: left !important;
+}
+
+.in.collapse {
+  overflow: visible;
+}
+
+.tooltip {
+  width: 100%;
+
+  .tooltip-inner {
+    .title {
+      text-align: center;
+    }
+
+    em {
+      display: block;
+      text-align:left !important;
+    }
+
+    .sub-title {
+      text-align:left !important;
+      float: left;
+      display: block;
+    }
+  }
+}
+
+.btn-group {
+  white-space: normal;
+}
+
+.edit-items-form,.edit-role {
+  .dropdown-toggle {
+    color: black !important;
+  }
+
+  .dropdown-menu {
+    min-width: 250px !important;
+    li {
+      .items-dropdown {
+        padding: 5px 10px;
+        .item-name {
+          margin-right: 10px;
+          display: block;
+          width: 70%;
+          float: left;
+        }
+        .delete-item-action {
+          float: right;
+        }
+      }
+    }
+  }
+}
+
+.dropdown-menu {
+  /*top: auto !important;
+  left: auto !important;*/
+}
+.contact {
+  padding-left: 35px !important;
+}
+.title{
+  padding-left: 20px !important;
+}
+.support-mymenu {
+  margin-top: 15px;
+  border: 3px solid #C0C0C0;
+  border-radius: 15px;
+}
+.package_link, .package_name {
+  #color: #0033CC;
+  #cursor: pointer;
+  text-align: right;
+}
+.btn-size{
+    width: 78px !important;
+    height: 30px;
+}
+.title-address {
+  text-align: right;
+}
+.left30 {
+  padding-left: 30px;
+}
+.left50{
+  padding-left: 186px;
+}
+.pad200{
+  padding-left: 200px;
+}
+.cancel {
+  margin-left: 30px;
+}
+.width-text {
+   #user_profile_attributes_mailing_country,
+   #user_profile_attributes_physical_country,
+   #customer_credit_cards_billing_address_country_name {
+     width :80px;
+   }
+   #customer_credit_cards_billing_address_postal_code{
+     margin-left: 10px;
+   }
+   .zip {
+    width :50px;
+   }
+
+}
+.term-color {
+  color: #0033CC;
+  cursor: pointer;
+  font-size: 10px;
+}
+.select-monthly select {
+  width :120px;
+}
+.btn-color{
+  color :#000000 !important;
+}
+.btn-fix{
+  position:absolute !important;
+}
+.pad10 {
+  padding-top: 10px;
+}
+.billing {
+  padding-left: 155px;
+}
+.width230 {
+  width :230px !important;
+}
+#error_credit_card{
+  color: red;
+}
+.assign_restaurant {
+  width: 100%;
+}
+
+.multiselect-container >
+li > a > label.radio,
+.multiselect-container >
+li > a >
+label.checkbox{
+  margin-left: -36px;
+}
+#cancel_service, #cancel_address{
+  width:100px;
+}
+
+.scrollable-menu {
+    height: auto;
+    max-height: 144px !important;
+    overflow-x: hidden;
+}
+.magin_left{
+  margin-left:10px;
+}
+.top_radio{
+  margin-top:8px;
+}
+.size_text{
+  width:90px;
+}
+.margin_text {
+  width:90px;
+  margin-left:64px;
+}
+#lastname{
+  span {
+    padding-left: 85px;
+    width: 102px;
+  }
+  #user_last_name {
+    margin-left: 85px;
+    width:125px;
+  }
+}
+#firstname {
+  #user_first_name {
+    width: 125px;
+  }
+  span {
+   width: 102px;
+  }
+}
+.width100 {
+  width: 100%;
+}
+#user_profile_attributes_physical_city,
+#user_profile_attributes_mailing_city {
+  width: 50px;
+}
+.margin_left16{
+  margin-left: 16px;
+}
+.modal-body > input[type="radio"] {
+  margin-bottom: 6px;
+}
+.word-wrap{
+  word-wrap: break-word;
+}
+.margin-right-menu {
+   float: right;
+  margin-right: 35px;
+}
+.margin-right-category {
+   float: right;
+  margin-right: 10px;
+}
+#image_account {
+  margin-top: 20px;
+}
+.sosial-media-info {
+  margin-left: -20px !important;
+  margin-top: 15px;
+  width: 174px !important;
+}
+.top5 {
+  margin-top: 5px;
+}
+
+.alertLogoSpan {
+  width: 31px !important;
+}
+
+/* IE 10+ */
+@media screen and (min-width:0\0) {
+  .icon-time {
+    background: url("/assets/ic_time.png") !important;
+  }
+  .icon-chevron-up:before {
+    content: url(/assets/arrow_up.png) !important;
+  }
+  .icon-chevron-down:before {
+    content: url(/assets/arrow_down.png) !important;
+  }
+
+
+  #check_all_user, #check_all_user_app, #check_all_customer_contact_message{
+      margin-left: -16px;
+  }
+}
+
+@-moz-document url-prefix() {
+  .icon-time {
+    background: url("/assets/ic_time.png") !important;
+  }
+  .icon-chevron-up:before {
+    content: url(/assets/arrow_up.png) !important;
+  }
+  .icon-chevron-down:before {
+    content: url(/assets/arrow_down.png) !important;
+  }
+
+}
+/*.font-placeholder::-webkit-input-placeholder { font-style: italic; }
+.font-placeholder::-moz-placeholder { font-style: italic; }
+.font-placeholder::-ms-input-placeholder { font-style: italic; }*/
+
+.display_none {
+  display: none;
+}
+
+#logo_login img {
+  margin-top: 30px;
+}
+
+.btn-color-primary {
+  background-image: linear-gradient(to bottom, #06526c, #06526c) !important;
+  font-weight: bold;
+}
+.delete_user_account {
+  background-image: linear-gradient(to bottom, #0D6D87, #06526C)
+}
+
+#myModalLabel_delete {
+  color: #FFFFFF;
+  margin-top: 4px;
+}
+
+#user_location_id {
+  margin-left: 5%;
+  text-align: center;
+  width: 89%;
+}
+
+#user_status {
+  margin-left: 5%;
+  text-align: center;
+  width: 89%;
+}
+
+.width_90{
+  width: 90%;
+}
+
+.btnSearchRestaurant{
+  width: 64px;
+  height: 30px;
+  color: white;
+  border-top-right-radius: 1em!important;
+  border-bottom-right-radius: 1em!important;
+  border: none !important;
+  margin-left: -8px;
+  background-color: #CCC;
+}
+.margin-0{
+  margin: 0!important;
+}
+
+.btnSearchRestaurant:hover {
+  background-color: #D7D7D7;
+}
+
+.playTutorialBtn
+{
+  margin-left: 10px;
+  margin-top: 4px;
+  width: 14px;
+}
+
+#cropBox {
+  position:absolute;
+  top:110px;
+  left:110px;
+  width:180px;
+  height:180px;
+  background:#fff;
+  opacity:0.5;
+  border-radius:50%;
+  background:white;
+  border: 2px solid black;
+}
+
+#logoContainer {
+  margin:auto;
+  width: 400px;
+  height: 400px;
+  position:relative;
+}
+
+.img-logo {
+  margin:auto;
+  position:absolute;
+  top:110px;
+  left:110px;
+  z-index:-1;
+}
+
+.manage_profiles .btn-profile {
+  background:#000;
+  width:120px;
+  border:none;
+  text-align:left;
+  color:white;
+  border-radius:2px;
+  font-weight:normal;
+}
+
+.manage_profiles .btn.dropdown-toggle {
+  color:white !important;
+  font-weight:normal !important;
+  width:145px;
+}
+
+.manage_profile .btn.dropdown-toggle .caret {
+  border-top: 4px solid #fff !important;
+}
+
+.manage_profiles .btn-profile:hover,
+.manage_profiles .btn-profile:active {
+  background:#111;
+  color:white;
+}
+
+.manage_profiles .profile_list {
+  list-style:none;
+  margin:0px;
+}
+.manage_profiles .profile_list li p {
+  margin-bottom:2px;
+}
+.manage_profiles .profile_list li p span{
+  color:blue;
+}
+.datetime-container input {
+  width:70%;
+}
+
+.create-profile-form .btn-profile {
+  width:auto;
+}
+
+.create-profile-form .js-example-basic-multiple {
+  width:90%;
+}
+
+.create-profile-form {
+  margin-bottom:50px;
+}
+
+.create-profile-form .fileUpload {
+  position: relative;
+  overflow: hidden;
+  background-color: black;
+}
+.create-profile-form .fileUpload input.upload {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  padding: 0;
+  font-size: 20px;
+  cursor: pointer;
+  opacity: 0;
+  filter: alpha(opacity=0);
+}
+
+.create-profile-form #map {
+  width:300px;
+  height:250px;
+  display:none;
+  position:absolute;
+  left:98%;
+  top:-150px;
+}
+
+.manage_contests .btn-create {
+  color: white;
+  background: black;
+  font-weight: normal;
+}
+
+.manage_contests .restaurant-list {
+  display:none;
+}
+
+.manage_contests .restaurant-list-wrapper {
+  max-height: 360px;
+  overflow-y: auto;
+  display:none;
+}
+
+.manage_contests .btn-delete {
+  color: white;
+  background: #aa0000;
+  font-weight: normal;
+}
+
+.manage_contests .btn-contest-pick {
+  color: white;
+  background: #aa0000;
+  font-weight:normal;
+}
+
+.manage_contests .btn-contest-approve {
+  color: white;
+  background: #00aa00;
+  font-weight:normal;
+}
+
+.manage_contests .btn-contest-delete {
+  color: white;
+  background: gray;
+  font-weight:normal;
+}

@@ -1,0 +1,4 @@
+<%
+	params[:search] = params[:params_search]
+%>
+$("#search_rewards_container").html("<%= j render partial: 'points/search_body_data' %>")

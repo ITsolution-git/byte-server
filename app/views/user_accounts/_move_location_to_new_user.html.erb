@@ -1,0 +1,21 @@
+<ul style="list-style-type: none;">
+  <%= form_for :user_move, :html=>{:id=>"new_user_with_location"} do |f| %>    
+    
+    <%= f.hidden_field :location_id, :value=> location.id%>
+    <%= f.hidden_field :user_id, :value => user_account.id%>
+    
+    <li><%= f.text_field :username, :placeholder=>"Enter Username", :class=>"width_90"%></li><br />
+    <li><%= f.text_field :email, :placeholder=>"Enter Email", :class=>"width_90"%></li><br />
+    <li><%= f.password_field :new_password, :placeholder=>"Enter new password", :class=>"width_90"%></li><br />
+    <li><%= f.password_field :confirm_password, :placeholder=>"Confirm new passoword", :class=>"width_90"%></li><br />
+    
+    <legend>Credit Card Info</legend>
+    <li><%= f.select(:credit_card_type, options_for_select(CARD_TYPES, ""), { :include_blank => "Select Credit Card Type"}, :class=>"width_90")  %></li><br>
+    <li><%= f.text_field :credit_card_holder_name, :placeholder => "Credit Card Holder Name", :class=>"width_90"%></li><br>
+    <li><%= f.text_field :credit_card_number, :placeholder => "Credit Card Number", :class=>"width_90"%></li><br>
+    <li><%= f.text_field :credit_card_expiration_date, :placeholder => "Expiration Date (MM/YY)", :class=>"width_90"%></li><br>
+    <li><%= f.text_field :credit_card_cvv, :placeholder=>"CVV", :class=>"width_90"%></li><br>      
+    
+  <% end %>
+</ul>  
+ 

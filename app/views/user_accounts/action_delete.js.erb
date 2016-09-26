@@ -1,0 +1,9 @@
+<% if @user_account.count == 1%>
+  <% flash[:notice] = "User account has been deleted successfully." %>
+<% else %>
+  <% flash[:notice] = "User accounts have been deleted successfully." %>
+<% end %>
+window.location.href="<%=search_user_accounts_path%>"
+// setTimeout(function(){
+//   $(".user_account_form_errors_container").html("<%= j render("layouts/form_success",:message=>"User account was deleted successfully!") %>");
+// }, 8000);

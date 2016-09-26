@@ -1,0 +1,23 @@
+// alert('<%= @count%>')
+  //alert('<%= @customer_name_exist_arr.count%>')
+ <% if @count != 0%>
+	 <% if @count == 1 && @count != @customer_name_exist_arr.count%>
+	  <% flash[:notice] = "A contact has been added to group '#{@group_name}'" %>
+	 <% elsif @count > 1 && @count != @customer_name_exist_arr.count%>
+	   <% @count =@count - @customer_name_exist_arr.count %>
+	   <% flash[:notice] = "#{@count} contacts has been added to group '#{@group_name}'" %>
+	 <% end %>
+ <% end %>
+
+ <% if @customer_name_exist_arr.count != 0 %>
+	 <% if @count == @customer_name_exist_arr.count && @count == 1%>
+	   <% flash[:alert] = "Contact already exist in the group '#{@group_name}'" %>
+	 <% else %>
+	   <% if @customer_name_exist_arr.count == @count %>
+	     <% flash[:alert] = "Contacts already exist in the group '#{@group_name}'" %>
+	    <% else %>
+	      <% flash[:alert] = "#{@customer_name_exist_arr.count} already exist in the group '#{@group_name}'" %>
+	    <% end %>
+	 <% end %>
+ <% end %>
+ window.location.href="<%=search_restaurant_contact_index_path(@restaurant)%>"

@@ -1,0 +1,27 @@
+<div class="photo-outer-container" id="uploaded_photo_<%= photo.id %>">
+
+  <div class="photo-inner-container photo-display">
+    <%= cl_image_tag photo.public_id, transformation: [
+       {x: (photo.crop_x if photo.crop_x), y: (photo.crop_y if photo.crop_y), width: (photo.crop_w if photo.crop_w), height: (photo.crop_h if photo.crop_h), crop: :crop},
+       { width: 200, height: 200, crop: 'fill' },
+       {color: "black", overlay: ("text:Arial_30:" + photo.name if !photo.name.nil?), x: 0,  y: ((!photo.name.nil? && photo.name.length < 15) ? -40 : -80) , gravity: "south", width: 200, crop: "fit" },
+       {angle: photo.angle}] %>
+
+  </div>
+
+  <div class="album-title" id="title-">
+    <span class="controls">
+      <span class="edit">
+        <%= link_to edit_photo_path(photo, restaurant_id: @restaurant.id), method: :get do %>
+          <i class="fa fa-pencil"></i>
+        <% end %>
+      </span>
+      <span class="delete">
+        <%= link_to delete_photo_restaurant_path(@restaurant.id, photo_id: photo.id), method: :get, remote: true, confirm: 'are you sure?', class: 'has-tip pull-right', title: 'delete image', data: {tooltip: '1', options: "disable-for-touch: true" } do %>
+          <i class="fa fa-trash-o"></i>
+        <% end %>
+      </span>
+    </span>
+  </div>
+
+</div>

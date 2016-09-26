@@ -1,0 +1,18 @@
+.order-body{
+  .item_name{
+    font-size: 16px;
+  }
+
+  .item_option_name, .comment-text{
+    padding-left: 25px;
+  }
+  .item-note{
+    td{
+      .comment-box{
+        border: 1px solid black;
+        width: 100%;
+        margin-bottom: 5px;
+      }
+    }
+  }
+}

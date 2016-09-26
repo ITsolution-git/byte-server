@@ -1,0 +1,12 @@
+$('#user_avatar_form .crop-btn').html('<a href="#" class="btn"></a><%=image_tag("btn_rotate.png", :id => @user_avatar.id, :class => 'rotate_info_image top10 ')%>');
+$('#user_avatar_form').find(".selectedfile").text('<%= @user_avatar.image.file.filename %>');
+$('#user_avatar_form').find('.img-item-preview').html('<%= image_tag(@user_avatar.image_url(:primary) + "?time=#{DateTime.now.second}", :id=>'image_info_image', :class => @user_avatar.id) if @user_avatar.image.file %>');
+$("#modal_holder_user_avatar_form").html("<%= j render partial: "layouts/modal_image_crop",locals: {
+  heading: "Preview",
+  form: "user_avatar_form"
+  } %>");
+var image = Util.resize_image(<%= @user_avatar.image.width %>, <%= @user_avatar.image.height %>);
+$('#user_avatar_form #user_avatar_rate').val(image['rate']);
+
+$('#myModal_image_user_avatar_form .modal-body p').html('<img width="' + image['width'] + '" height="' + image['height'] + '" width_image="' + image['width'] + '" height_image="' + image['height'] + '" src="<%= @user_avatar.image.url if @user_avatar.image.file %>" />');
+$('.crop-helper').html("<%= j render partial: 'shared/crop_helper', locals: {:model => 'user_avatar'} %>");

@@ -1,0 +1,161 @@
+@import "twitter/bootstrap/bootstrap";
+
+// Set the correct sprite paths
+@iconSpritePath: asset-path("twitter/bootstrap/glyphicons-halflings");
+@iconWhiteSpritePath: asset-path("twitter/bootstrap/glyphicons-halflings-white");
+
+// Set the Font Awesome (Font Awesome is default. You can disable by commenting below lines)
+@fontAwesomeEotPath: asset-url("fontawesome-webfont.eot");
+@fontAwesomeEotPath_iefix: asset-url("fontawesome-webfont.eot#iefix");
+@fontAwesomeWoffPath: asset-url("fontawesome-webfont.woff");
+@fontAwesomeTtfPath: asset-url("fontawesome-webfont.ttf");
+@fontAwesomeSvgPath: asset-url("fontawesome-webfont.svg#fontawesomeregular");
+
+// Font Awesome
+@import "fontawesome/font-awesome";
+
+
+// Glyphicons
+//@import "twitter/bootstrap/sprites.less";
+
+// Your custom LESS stylesheets goes here
+//
+// Since bootstrap was imported above you have access to its mixins which
+// you may use and inherit here
+//
+// If you'd like to override bootstrap's own variables, you can do so here as well
+// See http://twitter.github.com/bootstrap/customize.html#variables for their names and documentation
+//
+// Example:
+// @linkColor: #ff0000;
+@gridColumns:             12;
+@gridColumnWidth:         60px;
+@gridGutterWidth:         20px;
+@gridRowWidth:            (@gridColumns * @gridColumnWidth) + (@gridGutterWidth * (@gridColumns - 1));
+@navbarHeight: 50px;
+@navbarLinkColor: black;
+@navbarLinkColorActive: #333;
+@navbarLinkBackgroundActive:      darken(@navbarBackground, 10%);
+@navbarLinkColorHover: #000;
+@navbarLinkBackgroundHover: darken(@navbarBackground, 5%);
+@wellBackground: #fff;
+body {
+  padding-top: 10px;
+  background: url("/assets/body_bg.png");
+
+}
+
+.btn {
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+}
+
+.logo {
+  background: none;
+}
+
+.logo:hover {
+  border: none;
+}
+.custom > li > a:hover {
+  color: black;
+}
+a.btn:visited{
+  color: #fff;
+}
+.logo_holder{
+ min-height: 100px;
+}
+ul.custom-pills li a:hover{
+  background:#faa732;
+}
+.login-button-left{
+  margin-top:30px;
+  text-align: center;
+  padding-top:60px;
+  border-left: 1px dotted #ccc;
+  min-height: 170px;
+}
+.border{
+  border: 1px solid red;
+}
+.top10{
+  margin-top:10px;
+
+}
+.top20{
+  margin-top:20px;
+}
+.pad20{
+  padding-top:20px;
+}
+.pad40{
+  padding-top:40px;
+}
+.spacer{
+  float: left;
+  width: 1px;
+  background: #ccc;
+}
+textarea {
+  resize: none;
+}
+.setup_heading{
+  font-weight: normal;
+  color: #015F2E;
+}
+table#restaurant_account_listing tr td{
+  padding:3px;
+}
+form .clearfix:before, form .clearfix:after {
+  display: inline;
+}
+.navbar.main_nav{
+  margin-bottom:0px;
+}
+.dotted-bottom{
+  border-bottom:1px dotted #999;
+}
+.line-bottom{
+  border-bottom: 2px dotted #e1e1e1;
+}
+.block-child-head{
+  margin-left: 20px;
+  font-size:0.9em;
+}
+.block-child-content{
+  margin-left: 20px;
+  font-size:0.9em;
+}
+.right_item_row{
+  padding: 5px 10px;
+}
+.bg{
+  background: #cccccc;
+}
+a.img{}
+a.img:hover{
+  border: none;
+  background:none;
+}
+.dropdown-menu li > a:hover, .dropdown-menu li > a:focus{
+  background: none;
+  background-color:#CC274A;
+}
+.btn-info
+{
+  background-color: #9B364B;
+  background-image: none;
+
+  &:hover {
+    background: #470D19;
+  }
+
+  &:focus {
+    background: #470D19;
+  }
+}
+.btn-group.open .btn-primary.dropdown-toggle {
+ background-color: #470D19
+}

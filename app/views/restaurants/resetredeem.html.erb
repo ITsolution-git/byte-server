@@ -1,0 +1,36 @@
+<%= form_tag "resetcode" ,:class => "reset_redeem" do %>
+  <div class="row-fluid">
+		<div class="span12">
+			<div class="well">
+				<h5>Reset Redeemption Password</h5>
+				<% if params[:value]%>
+				<h6 style="color:red"><%= params[:value]%></h6>
+				<% end %>
+				<div class="row-fluid">
+					<div class="span4">
+						
+						<%= password_field_tag :old_password,"",:class=>"input-block-level",:placeholder=>"Enter Old Password"%>
+						
+					</div>
+				</div>
+				<div class="row-fluid">
+					<div class="span4">
+						<%= password_field_tag :new_password,"",:class=>"input-block-level",:placeholder=>"Enter New Password"%>
+					</div>
+				</div>
+				<div class="row-fluid">
+					<div class="span4">
+						<%= password_field_tag :confirm_password,"",:class=>"input-block-level",:placeholder=>"Enter Confirm Password"%>
+						<%= hidden_field_tag :location_id ,params[:id]%>
+					</div>
+				</div>
+				<div class="row-fluid">
+				    <div class="span5">
+				        <%= submit_tag "Submit" ,:class=>"btn btn-primary " %>
+				    </div>
+				</div>
+			</div>
+		</div>
+  </div>
+     
+<% end %>

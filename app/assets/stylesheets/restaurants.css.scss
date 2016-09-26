@@ -1,0 +1,59 @@
+// Place all the styles related to the registrations controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+.ui-autocomplete-loading {
+background: white url('ui-anim_basic_16x16.gif') right center no-repeat;
+}
+
+.buttonEmulation {
+	float: left;
+}
+
+.selectedfile{
+	word-wrap:break-word;
+	display:inline-block;
+	width:70%
+}
+
+.hidebutton{
+	width: 80% !important;
+}
+
+.restaurant_form_errors_container{
+  align:left;
+}
+
+.hideselect{
+	display:none
+}
+.group-span-filestyle {
+  width: 74% !important;;
+}
+.hidebootstrap-filestyle {
+  display :none;
+}
+
+#map img { 
+  max-width: none;
+}
+#map label { 
+  width: auto; display:inline; 
+} 
+
+/*--------- restaurant _form.html.erb*/
+.restaurant-image-container strong {
+position: relative;
+}
+
+.primary_cuisine{
+	width: 100%;
+}
+.secondary_cuisine{
+	width: 100%;
+}
+
+.delete_hour_operation{
+	float: right;
+	line-height: 30px;
+}
+/*--------- /restaurant _form.html.erb*/

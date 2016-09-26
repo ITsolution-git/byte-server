@@ -1,0 +1,28 @@
+$('#server_avatar_form .crop-btn').html('<a href="#" class="btn"></a><%=image_tag("btn_rotate.png", :id => @server_avatar.id, :class => 'rotate_server_image top10 ')%>');
+$('#server_avatar_form').find(".selectedfile").text('<%= @server_avatar.image.file.filename %>');
+$('#server_avatar_form').find('.img-item-preview').html('<%= image_tag(@server_avatar.image_url(:primary) + "?time=#{DateTime.now.second}", :id=>'image_server_image', :class => @server_avatar.id) if @server_avatar.image.file %>');
+
+var image_resize = Util.resize_image(<%= @server_avatar.image.width %>, <%= @server_avatar.image.height %>);
+var width = image_resize['width'];
+var height = image_resize['height'];
+if (width > height){
+$('#server_avatar_form').find('.img-item-preview #image_server_image').css({
+  'width': (parseInt(width)==0) ? "auto" : (parseInt(width)/2)+'px',
+  'height': parseInt(height)/3+'px'
+});
+} else {
+$('#server_avatar_form').find('.img-item-preview #image_server_image').css({
+  'width': (parseInt(width)==0) ? "auto" : (parseInt(width)/5)+'px',
+  'height': parseInt(height)/6.5+'px'
+});
+}
+
+$("#modal_holder_server_avatar_form").html("<%= j render partial: "layouts/modal_image_crop",locals: {
+  heading: "Preview",
+  form: "server_avatar_form"
+  } %>");
+var image = Util.resize_image(<%= @server_avatar.image.width %>, <%= @server_avatar.image.height %>);
+$('#server_avatar_form #server_avatar_rate').val(image['rate']);
+
+$('#myModal_image_server_avatar_form .modal-body p').html('<img width="' + image['width'] + '" height="' + image['height'] + '" width_image="' + image['width'] + '" height_image="' + image['height'] + '" src="<%= @server_avatar.image.url if @server_avatar.image.file %>" />');
+$('.crop-helper').html("<%= j render partial: 'shared/crop_helper', locals: {:model => 'server_avatar'} %>");

@@ -1,0 +1,270 @@
+<%
+  previous_country = ''
+  previous_state = ''
+  previous_city = ''
+  previous_billing_country = ''
+  previous_billing_state = ''
+  previous_billing_city = ''
+  previous_restaurant_country_code = params[:restaurant_country_code].blank? ? 'US' : params[:restaurant_country_code]
+%>
+<%
+  if !session["move_location_id"].blank?
+    @location = Location.find(session["move_location_id"])
+  end
+%>
+
+<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => {:autocomplete => "off"}) do |f| %>
+  <%= render 'shared/error_messages', :object => resource %>
+  <% if !@braintree_errors.nil? %>
+    <%= render 'shared/braintree_error_messages' %>
+  <% end %>
+  <%= f.hidden_field :app_service_id %>
+  <%= f.hidden_field :skip_zip_validation, value: 1 %>
+
+  <div class="row-fluid top10">
+    <div class="span12">
+      <%= f.text_field :username, :autofocus => true, :placeholder => "Username",:class=>"input-block-level" %>
+    </div>
+  </div>
+  <div class="row-fluid top10">
+    <div class="span12">
+      <%= f.text_field :email, :placeholder=>"Email",:class=>"input-block-level" %>
+    </div>
+  </div>
+  <div class="row-fluid top10">
+    <div class="span12">
+      <%= f.text_field :email_confirmation, :placeholder=>"Confirm Email",:class=>"input-block-level" %>
+    </div>
+  </div>
+  
+  <%if !session["move_location_id"].blank? %>
+    <div class="row-fluid top10">
+      <div class="span6">
+        <%= f.password_field :password, :placeholder=>"Password",:class=>"input-block-level" %>
+      </div>
+      <div class="span6">
+        <%= f.password_field :password_confirmation, :placeholder=>"Password Confirmation",:class=>"input-block-level" %>
+      </div>
+    </div>
+  <% end %>  
+  
+  <div class="row-fluid top10">
+    <div class="span6">
+      <%= f.text_field :first_name, :placeholder=>"First Name",:class=>"input-block-level" %>
+    </div>
+    <div class="span6">
+      <%= f.text_field :last_name, :autocomplete => :off, :placeholder=>"Last Name",:class=>"input-block-level" %>
+    </div>
+  </div>
+  <div class="row-fluid top10">
+    <div class="span12">
+      <%= f.text_field :phone, :placeholder => "Phone", :class=>"input-block-level" %>
+    </div>
+  </div>
+  <!-- <div class="row-fluid top10">
+    <div class="span12">
+      <%= f.password_field :password,:placeholder=>"Password",:class=>"input-block-level" %>
+    </div>
+  </div>
+  <div class="row-fluid top10">
+    <div class="span12">
+      <%= f.password_field :password_confirmation,:placeholder=>"Confirm Password",:class=>"input-block-level" %>
+    </div>
+  </div> -->
+  
+  <div style="display: <%= session["move_location_id"].blank? ? 'block' : 'none' %>;">
+    <legend>Location Info</legend>
+    <%= f.fields_for :restaurants do |restaurant| %>
+
+      <div class="row-fluid top10">
+        <div class="span12">
+          <%= restaurant.text_field :name, :placeholder=>"Restaurant Name",:class=>"input-block-level", :value=>"#{@location.try(:name)}" %>
+        </div>
+      </div>
+      <div class="row-fluid top10">
+        <div class="span12">
+          <%= restaurant.text_field :chain_name, :placeholder=>"Restaurant Chain",:class=>"input-block-level", :value=>"#{@location.try(:chain_name)}" %>
+        </div>
+      </div>
+
+      <div class="row-fluid top10">
+        <div class="span12">
+          <%= restaurant.text_field :address, :placeholder=>"Restaurant Address",:class=>"input-block-level", :value=>"#{@location.try(:address)}" %>
+        </div>
+      </div>
+
+      <div class="row-fluid top10">
+        <div class="span4">
+          <%# restaurant_country = @location.blank? ? restaurant.object.country : @location.try(:country) %>
+          <%= restaurant.select(:country, options_from_collection_for_select(Country.where(name: 'United States'), 'id', 'name'), {:prompt=>"Select Country"}, :class => "span12") %>
+          <%= hidden_field_tag :restaurant_country_code, previous_restaurant_country_code %>
+          <% previous_country = restaurant.object.country %>
+        </div>
+        <div class="span3">
+          <%= restaurant.select(:state, options_from_collection_for_select(State.all, 'name', 'name'), {:prompt=>"Select State"}, :class => "span12") %>
+          <% previous_state = restaurant.object.state %>
+        </div>
+        <div class="span3">
+          <%= restaurant.text_field :city, :placeholder=>"City", :class=>"input-block-level", :value=>"#{@location.try(:city)}" %>
+          <% previous_city = restaurant.object.city %>
+        </div>
+        <div class="span2">
+          <%= restaurant.text_field :zip, :placeholder=>"Zip",:class=>"input-block-level", :maxlength => 5, :value=>"#{@location.try(:zip)}" %>
+        </div>
+      </div>
+
+      <!-- add field primary and seconddary Cuisine type categories -->
+      <div class="row-fluid top10">
+        <div class="span6">
+          <!-- <p>Primary Food Type (required)</p>-->
+           <%= restaurant.select :primary_cuisine, options_from_collection_for_select(CuisineType.order('name'), 'name', 'name'), { :include_blank => "Primary Food Type", :selected=> @location.try(:primary_cuisine)}, :class => 'primary_cuisine' %>
+           <span class="primary_cuisine_error hide" style="color: red;">Can't be empty!</span>
+        </div>
+        <div class="span6">
+          <!--<p>Secondary Food Type (optional)</p>-->
+          <%= restaurant.select :secondary_cuisine, options_from_collection_for_select(CuisineType.order('name'), 'name', 'name'), { :include_blank => "Secondary Food Type", :selected=> @location.try(:secondary_cuisine)}, :class => 'secondary_cuisine' %>
+        </div>
+      </div>
+      <!-- end code -->
+
+    <% end %>
+  </div>
+  
+  <legend>Credit Card Info</legend>
+  <div class="row-fluid top10">
+    <div class="span12">
+      <%= f.select(:credit_card_type, options_for_select(CARD_TYPES, f.object.credit_card_type), { :include_blank => "Select Credit Card Type"}, :class => "span12 input-block-level")  %>
+    </div>
+  </div>
+  
+   <div class="row-fluid top10">
+    <div class="span12">
+      <%= f.text_field :credit_card_holder_name, :placeholder => "Credit Card Holder Name", :class=>"input-block-level" %>
+    </div>
+  </div>
+  
+  <div class="row-fluid top10">
+    <div class="span12">
+      <%= f.text_field :credit_card_number, :placeholder => "Credit Card Number", :class=>"input-block-level" %>
+    </div>
+  </div>
+
+  <div class="row-fluid top10">
+
+    <div class="span12">
+      <%= f.text_field :credit_card_expiration_date, :placeholder => "Expiration Date (MM/YY)", :class=>"input-block-level" %>
+    </div>
+  </div>
+
+  <div class="row-fluid top10">
+    <div class="span12">
+      <%= f.text_field :credit_card_cvv, :placeholder=>"CVV",:class=>"input-block-level" %>
+    </div>
+  </div>
+
+  <legend>Billing Address</legend>
+  <div class="row-fluid top10">
+    <div class="span12">
+      <%= f.check_box :autofill %> Check if it’s the same as the Restaurant address
+    </div>
+  </div>
+
+  <div id="billing_address_wrapper">
+    <div class="row-fluid top10">
+      <div class="span12">
+        <%= f.text_field :billing_address, :placeholder=>"Address",:class=>"input-block-level" %>
+      </div>
+    </div>
+
+    <div class="row-fluid top10">
+      <div class="span4">
+        <%= f.select(:billing_country, options_for_select(COUNTRIES,f.object.billing_country), {:prompt=>"Select Country"}, :class => "span12") %>
+        <%= f.hidden_field :billing_country_code %>
+        <% previous_billing_country = f.object.billing_country %>
+      </div>
+      <div class="span3">
+        <%= f.select(:state, options_from_collection_for_select(State.all, 'name', 'name'), {:prompt=>"Select State"}, :class => "span12") %>
+       <% previous_billing_state = f.object.billing_state %>
+      </div>
+       <div class="span3">
+      <%= f.text_field :billing_city, :placeholder=>"City",:class=>"input-block-level" %>
+        <% previous_billing_city = f.object.city %>
+      </div>
+
+      <div class="span2">
+        <%= f.text_field :billing_zip, :placeholder=>"Zip",:class=>"input-block-level",:maxlength => 5 %>
+      </div>
+    </div>
+  </div>
+
+  <div class="row-fluid top10">
+    <div class="span12">
+      <%= f.check_box :agree %> <a href="http://thebyteapp.com/terms-agreement/" class="term-condition" target="_blank">Terms & Conditions Agreement</a><br />
+      <a href="http://mymenu.co/privacy/" class="online-policy" target="_blank">Online Privacy Policy</a>
+    </div>
+  </div>
+
+  <div class="row-fluid top10" style="margin-top:20px;">
+    <div class="span12">
+      <%= f.submit "Sign Up", :class=> "btn btn-primary", :id=>'submit_form_register'%>
+      <%= link_to "Cancel", :back, :class=> "btn",:style => "color: #333333" %>
+    </div>
+  </div>
+<% end %>
+<%= javascript_include_tag "registration_form" %>
+<% content_for :scripts do %>
+  <script type="text/javascript">
+    (function() {
+      $(document).ready(function() {
+
+        //Function sort List of country,state,city
+          function predicatBy(prop){
+               return function(a,b){
+                  if( a[prop] > b[prop]){
+                      return 1;
+                  }else if( a[prop] < b[prop] ){
+                      return -1;
+                  }
+                  return 0;
+               }
+           }
+
+        //load list of cities
+
+      //load country of billing address
+
+      //load list of state restaurant
+
+
+
+    //load list of city
+
+
+    //Enter behaviour like tab
+    $('body').on('keydown', 'input, select,a', function(e) {
+          var self = $(this)
+            , form = self.parents('form:eq(0)')
+            , focusable
+            , next
+            ;
+
+          if (e.keyCode == 13) {
+              focusable = form.find('input,a,select,button').filter(':visible');
+              next = focusable.eq(focusable.index(this)+1);
+              if (next.length) {
+                  next.focus();
+              } else {
+                  // form.submit();
+              }
+              return false;
+          }
+    });
+         if($(".alert-error").length!=0){
+
+         $(".alert-error").delay(3000).fadeOut();
+
+          }
+      });
+    })();
+  </script>
+<% end %>

@@ -1,0 +1,31 @@
+<%
+  is_equal= @result.instance_of?Braintree::ErrorResult
+%>
+<% if is_equal %>
+  <%
+    @error_result = []
+    @result.errors.each do |error|
+      @error_result << error.message
+    end
+  %>
+  $('.billings_form_block_container #billings_form_toggle').html("<%= j render partial: "accounts/edit_billing_form_primary", locals:{customer: @customer, dates: @dates}%>");
+  $(".billing_form_errors_container").html("<%= j render("layouts/form_warning", :message => "Credit card number is invalid")%>").show().delay(3000).fadeOut();
+  account = new AccountForm();
+  account.modelName = 'customer'
+  account.loadAllBillingCountriesFromWS('#customer_credit_cards_billing_address_country_name');
+  Util.validate(account, {
+    credit_cards_cardholder_name:[Validate.Presence],
+    credit_cards_billing_address_extended_address:[Validate.Presence],
+    credit_cards_number:[
+     [Validate.Presence],
+     [Validate.Numericality]
+     ],
+    credit_cards_billing_address_postal_code: [
+         [Validate.Numericality],
+         [Validate.Length, {is: 5}]
+       ],
+  });
+<% else %>
+  $('.billings_form_block_container #billings_form_toggle').html("<%= j render partial: "accounts/billings_form_primary", locals:{customer: @customer, dates: @dates}%>");
+  $(".billing_form_errors_container").html("<%= j render("layouts/form_success", :message => "Account is updated successfully.") %>").show().delay(3000).fadeOut();
+<% end %>

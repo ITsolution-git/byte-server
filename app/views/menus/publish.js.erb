@@ -1,0 +1,39 @@
+$('#menus_container').html("<%= escape_javascript render('menus', restaurant_menus: @restaurant.menus, restaurant_copying_menus: @restaurant.copy_shared_menu_statuses) %>");
+//load modal
+$("#modal_holder").html("<%= j render partial: "layouts/modal_message",locals: {
+    heading:"#{@menu.name} Published",
+    body:"#{@menu.name} has been published."
+    } %>");
+$("#myModal").modal();
+$('.menu_form_block_container .wrap_title_form').html("<%= j render :partial => 'menus/menu_title_form' %>");
+$('.menu_form_block_container #menu_form_toggle').html("<%= j render :partial => 'menus/menu_form_primary' %>");
+<%
+  category = Category.new
+  item = Item.new
+  item.item_photos.build
+  item_image = ItemImage.new
+  @server = Server.new
+  @server_avatar = ServerAvatar.new
+  @menu_build =  BuildMenu.new
+  combo_item = ComboItem.new
+  item_option = ItemOption.new
+%>
+
+$('.build_menu_block_container #build_menu_toggle').html("<%= j render 'menus/build_menu_form_primary' %>");
+
+$(".server_form_block_container .wrap_title_form").html("<%= j render partial: 'menus/server_title_form' %>");
+$(".server_form_block_container #server_form_toggle").html("<%= j render partial: "menus/server_form_primary" %>");
+
+$(".category_form_block_container .wrap_title_form").html("<%= j render partial: 'menus/category_title_form', locals: {category: category} %>");
+$(".category_form_block_container #category_form_toggle").html("<%= j render partial: "menus/category_form_primary",locals: {:category => category} %>");
+
+$(".item_form_block_container .wrap_title_form").html("<%= j render partial: "menus/item_title_form",locals: {:item => item, :item_image => item_image} %>");
+$(".item_form_block_container #item_form_toggle").html("<%= j render partial: "menus/item_form_primary",locals: {:item => item, :item_image => item_image} %>");
+
+$(".combo_item_form_block_container .wrap_title_form").html("<%= j render partial: 'combo_item_title_form', locals: {combo_item: combo_item} %>");
+$(".combo_item_form_block_container #combo_item_form_toggle").html("<%= j render partial: 'combo_item_form_primary', locals: {combo_item: combo_item} %>");
+
+$('.menu_option_form_block_container .wrap_title_form').html("<%= j render partial: 'menus/menu_option_title_form', locals: {item_option: item_option} %>");
+$('.menu_option_form_block_container #menu_option_toggle').html("<%= j render :partial=> 'menus/menu_option_form_primary' ,locals:{:item_option=>item_option} %>");
+
+

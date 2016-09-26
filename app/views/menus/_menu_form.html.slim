@@ -1,0 +1,8 @@
+.block-head.clearfix
+  span class="#{load_toogle_icon(@menu)}" data-toggle='collapse' data-target='#menu_form_toggle'
+  span.wrap_title_form= render 'menus/menu_title_form'
+  = link_to '', '#', class: 'icon-question-sign btn floatright', id: 'menu_tooltip', title: load_content_of_file('/public/tooltip/menu.html'), 'data-toggle' => 'tooltip', 'data-placement' => 'right', 'data-html' => 'true', rel: 'tooltip', style: 'color: #333;'
+#menu_form_toggle class="collapse #{toogle_state(@menu)}" = render 'menus/menu_form_primary'
+
+javascript:
+  $('#server_tooltip').tooltip();

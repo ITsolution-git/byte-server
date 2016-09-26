@@ -1,0 +1,7 @@
+$('#accounts_container').html("<%= j render("users") %>");
+<% if @update_account.errors.full_messages.any? %>
+$(".form_errors_container").html("<%= j render("layouts/form_errors",:object=>@update_account) %>");
+<% else %>
+$('#user_form_container').html("<%= j render("form") %>");
+$(".form_errors_container").html("<%= j render("layouts/form_success",:message=>"Account Successfully Updated") %>");
+<% end %>

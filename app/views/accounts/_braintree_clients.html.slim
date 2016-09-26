@@ -1,0 +1,19 @@
+table.table.table-striped.table-hover.locations-table
+  thead
+    tr
+      td Restaurant
+      td Location
+      td Braintree ID
+      td Service Fee
+      td
+      td
+  tbody
+    - current_user.restaurants.each do |location|
+      tr data-update-path= "#{location_merchants_path}" data-location-id="#{location.id}"
+        == render partial: 'accounts/braintree_merchant_modal', locals: {location_id: location.id}
+        td= location.name
+        td= "#{location.address}, #{location.city}, #{location.state}"
+        td= text_field_tag :client_id, location.customer_id, style: 'width: 118px'
+        td= "#{location.service_fee_type=='fixed'? '$'+location.fee.to_s : location.fee.to_s+'%'}"
+        td= button_tag 'Save', class: 'save-btn'
+        td= button_tag 'Create', class: 'create-btn', data: {toggle: 'modal', target: "#create_braintree_merchant_#{location.id}"}

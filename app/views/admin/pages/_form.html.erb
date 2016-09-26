@@ -1,0 +1,30 @@
+<%= form_for([:admin,@page]) do |f| %>
+  <% if @page.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@page.errors.count, "error") %> prohibited this admin_page from being saved:</h2>
+
+      <ul>
+      <% @page.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %>
+    <%= f.text_field :name if f.object.new_record? %>
+    <%= raw "<h3>#{@page.name}</h3>"  unless @page.new_record? %>
+  </div>
+  <div class="field">
+    <%= f.label :title %><br />
+    <%= f.text_field :title,:class=>"span10" %>
+  </div>
+  <div class="field">
+    <%= f.label :body %><br />
+    <%= f.cktext_area :body,:class=>"span10" %>
+  </div>
+  <div class="actions">
+    <%= f.submit "Submit", :class=>"btn btn-primary"  %>
+  </div>
+<% end %>

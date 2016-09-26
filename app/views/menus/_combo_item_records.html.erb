@@ -1,0 +1,26 @@
+<% if !@combo_item_array.empty? %>
+  <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+    <% if combo_item.new_record? %>
+      Edit Combos
+    <% else %>
+      <%= combo_item.name %>
+    <% end %>
+
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu">
+    <%
+      @combo_item_array.each do |array|
+    %>
+    <li id="<%= array.id%>">
+      <div class="items-dropdown">
+        <span class="item-name"><%= link_to array.name, edit_combo_item_path(array), remote: true, :class => 'btn_link_edit_combo_item' %></span>
+        <%= link_to image_tag('delete_icon.png'), combo_item_path(array), method: :delete, :class => 'delete-item-action',
+            :title => "Delete", :"data-toggle" => "tooltip", :rel => "tooltip",
+            :remote => true, :confirm => 'Are you sure to delete this Combo?' %>
+        <div class="clear"></div>
+      </div>
+    </li>
+     <% end %>
+  </ul>
+<% end %>

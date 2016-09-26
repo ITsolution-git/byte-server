@@ -1,0 +1,26 @@
+table.table.table-striped.table-hover.byte-main-table style='margin: 15px 0'
+  thead
+    tr
+      td style='height: 10px'
+      td
+  tbody
+    tr
+      td BYTE MAIN PACKAGE
+      td= button_tag "#{current_user.has_byte? ? 'Unsubscribe' : 'Subscribe'}", class: 'save-btn unsubscribe-byte-btn'
+
+#byte-main-package.modal.hide.fade tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true'
+  .modal-body style='background: #fff'
+    .head style='background-color: #000; font-size: 30px; color: #fff; padding: 17px 0; text-align: center' Warning
+    .body style='background: gray'
+      - if current_user.has_byte?
+        p style='font-size: 18px; text-align: center; padding: 10px; color: black'
+          | Unsubscribing from this package will stop this service.
+          | If you are unsubscribing from the main package your account will be suspended.
+      - else
+        p style='font-size: 18px; text-align: center; padding: 10px; color: black'
+          | Subscribing to this package will reenable this service
+      p style='font-size: 18px; text-align: center; padding: 10px; color: black'
+        | For more information email support@mybyteappcom
+  .modal-footer data-byte-path="#{byte_package_subscriptions_path}"
+    button.btn.btn-success.submit-btn data-dismiss='modal' aria-hidden='true' Proceed
+    button.btn data-dismiss='modal' aria-hidden='true' Cancel

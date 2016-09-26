@@ -1,0 +1,70 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Name:</b>
+  <%= @location.name %>
+</p>
+
+
+<p>
+  <b>Address:</b>
+  <%= @location.address %>
+</p>
+<p>
+  <b>Description:</b>
+  <%= @location.description %>
+</p>
+<p>
+  <b>Latitude:</b>
+  <%= @location.lat %>
+</p>
+<p>
+  <b>longitude:</b>
+  <%= @location.long %>
+</p>
+<p>
+  <b>Rating:</b>
+  <%= @location.rating %>
+</p>
+<b>City:</b>
+<%= @location.city %>
+</p>
+<p>
+  <b>State:</b>
+  <%= @location.state %>
+</p>
+<p>
+  <b>Country:</b>
+  <%= @location.country %>
+</p>
+<% unless @location.yelp_id.nil? %>
+    <p>
+      <b>Yelp id:</b>
+      <%= @location.yelp_id %>
+    </p>
+    <p>
+      <b>Yelp rating:</b>
+      <%= @location.yelp_rating %>
+    </p>
+    <p>
+      <b>Yelp name:</b>
+      <%= @location.yelp_name %>
+    </p>
+    <p>
+      <b>Yelp total reviews:</b>
+      <%= @location.yelp_review_count %>
+    </p>
+<% end %>
+<p>
+  <b>Logo:</b>
+  <%= image_tag @location.logo.url if @location.logo.file %>
+</p>
+<p>
+  <b>Images</b><br/>
+
+  <% @location.location_images.each do |i| %>
+      <%= link_to image_tag(i.image),"#" if i.image.file %>   <br/>
+  <% end %>
+</p>
+<%= link_to 'Edit', edit_admin_location_path(@location) %> |
+<%= link_to 'Back', admin_locations_path %>

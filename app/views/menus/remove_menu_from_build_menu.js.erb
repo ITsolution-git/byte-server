@@ -1,0 +1,16 @@
+$("#modal_holder").html("<%= j render partial: "layouts/modal_message",locals: {
+    heading:"#{@menu.name} Removed",
+    body:"#{@menu.name} has been removed from Menu built."
+    } %>");
+$("#myModal").modal();
+$("#menus_container").html("<%= escape_javascript render('menus', restaurant_menus: @restaurant.menus, restaurant_copying_menus: @restaurant.copy_shared_menu_statuses) %>");
+<%
+  combo_item = ComboItem.new
+  @menu_build = BuildMenu.new
+  @combo_item_array = ComboItem.joins(:menu).where('menus.location_id = ?
+    AND menus.publish_status != ?', @restaurant.id, PUBLISH_STATUS)\
+    .sort_by!{ |m| m.name.downcase }
+%>
+$(".build_menu_block_container #build_menu_toggle").html("<%= j render "menus/build_menu_form_primary" %>");
+$(".combo_item_form_block_container .wrap_title_form").html("<%= j render partial: 'combo_item_title_form', locals: {combo_item: combo_item} %>");
+$(".combo_item_form_block_container #combo_item_form_toggle").html("<%= j render partial: 'combo_item_form_primary', locals: {combo_item: combo_item} %>");

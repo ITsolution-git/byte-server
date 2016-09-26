@@ -1,0 +1,31 @@
+<%
+  is_equal = @old_app_service_id.to_s == @new_app_service_id.to_s
+%>
+//console.log("<%=@new_app_service_id%>")
+//console.log("<%=@locations_count%>")
+<% unless is_equal %>
+  <% if !@check%>
+    $('.package_form_block_container #package_form_toggle').html("<%= j render partial: "accounts/edit_package_form_primary", locals: {user: current_user, locations: @locations}%>");
+    $(".package_form_errors_container").html("<%= j render("layouts/form_error_agreement", :message => "T&C Agreement must be selected to be saved.") %>").show().delay(3000).fadeOut();
+    
+  <% else %>
+    <%if @new_app_service_id.to_i > @old_app_service_id.to_i && @new_app_service_id.to_i != 2\
+        || @new_app_service_id.to_i == 2 && @locations_count.to_i == 1 \
+        || @new_app_service_id.to_i == 1 && @locations_count.to_i == 1%>
+      $('.package_form_block_container #package_form_toggle').html("<%= j render partial: "accounts/package_form_primary"%>");
+      $(".package_form_errors_container").html("<%= j render("layouts/form_success", :message => "BYTE Package is updated successfully.") %>").show().delay(3000).fadeOut();
+    <% else %>
+     <%  current_user.app_service_id = @new_app_service_id %>
+      $('.package_form_block_container #package_form_toggle').html("<%= j render partial: "accounts/edit_package_form_primary", locals: {user: current_user, locations: @locations}%>");
+      <% if @new_app_service_id.to_i == 2 && @old_app_service_id.to_i == 1%>
+        $('#myModalUpdatePackageOther').modal('show')
+      <% else%>
+        $('#myModalUpdatePackage').modal('show')
+      <% end %>
+    <% end %>
+
+  <% end %>
+<% else %>
+    $('.package_form_block_container #package_form_toggle').html("<%= j render partial: "accounts/edit_package_form_primary", locals: {user: current_user, locations: @locations}%>");
+    $(".package_form_errors_container").html("<%= j render("layouts/form_warning", :message => "There are no changes on this screen to be saved. Please make any changes to update.") %>").show().delay(3000).fadeOut();
+<% end %>

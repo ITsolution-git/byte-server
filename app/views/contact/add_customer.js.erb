@@ -1,0 +1,12 @@
+  //load modal
+<% if @customer_id.nil? || @customer_id == ""%>
+	alert('Please select at least a contact to add group.')
+<% else %>
+$("#modal_holder_contact_app").html("<%= j render partial: "layouts/add_customer",locals: {
+    :heading => "",
+    :group => @group,
+    :customer_id_lst => @customer_id_lst,
+    :mycontact => @mycontact
+    } %>");
+$("#myModal").modal();
+<% end %>

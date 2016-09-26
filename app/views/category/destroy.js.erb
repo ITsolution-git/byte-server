@@ -1,0 +1,15 @@
+<% @menus_category.each do |menu| %>
+	$(".menus_container  #menu_<%=menu.id%>_category_<%=@category.id%>").remove();
+<% end %>
+	$(".menus_container  #Category_<%=@category.id%>").remove();
+<%
+  category = Category.new
+  combo_item = ComboItem.new
+%>
+$(".category_form_block_container .wrap_title_form").html("<%= j render partial: 'menus/category_title_form', locals: {category: category} %>");
+$(".category_form_block_container #category_form_toggle").html("<%= j render partial: "menus/category_form_primary",locals: {:category => category} %>");
+$('.build_menu_block_container #build_menu_toggle').html("<%= j render :partial=>"menus/build_menu_form_primary" %>");
+$(".category_form_errors_container").html("<%= j render("layouts/form_success", :message => "Category is deleted successfully.") %>").show().delay(3000).fadeOut();
+
+$(".combo_item_form_block_container .wrap_title_form").html("<%= j render partial: "menus/combo_item_title_form", locals: {combo_item: combo_item} %>");
+$(".combo_item_form_block_container #combo_item_form_toggle").html("<%= j render partial: "menus/combo_item_form_primary", locals: {combo_item: combo_item} %>");

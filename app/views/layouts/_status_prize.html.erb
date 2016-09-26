@@ -1,0 +1,13 @@
+<div id="myModal" class="modal hide fade bottom0 modal-rating-receipt" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-body">
+    <div class="row-fluid">
+      <div class="span12">
+       <p style="font-size: 14px;">If you change to another Status, your current Status information will be reset.</p>
+      </div>
+    </div>
+    <div class="pull-right">
+        <%= link_to 'OK', action_status_prize_points_path(@restaurant,:status_prize_id => @status_prize_id), {method: :get,:remote => true, 'data-dismiss' =>  "modal", 'aria-hidden' => 'true', :class => 'btn btn-primary'} %>
+         <button class="btn btn-success" data-dismiss="modal" aria-hidden="true">Cancel</button>
+       </div>
+  </div>
+</div>

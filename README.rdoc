@@ -1,0 +1,118 @@
+Deploy BYTE App on nginx with Passenger
+
+A. The First Time to deploy
+1. Step One: Install Ruby with RVM
+- Before you do anything else, you should manually update all packages on your system via terminal by running:
+      sudo apt-get update
+- Install curl if you don't have it on your system:
+  sudo apt-get install curl
+- Install RVM:
+  \curl -L https://get.rvm.io | bash -s stable
+- After RVM is done installing, load RVM. You may first need to exit out of your shell session and start up a new one:
+  source ~/.rvm/scripts/rvm
+- RVM has some of its own dependencies that need to be installed. To automatically install them:
+  rvm requirements
+2. Step Two: Install NodeJS
+  sudo apt-get install nodejs
+3. Step Three: Install Ruby
+- Install Ruby using RVM:
+  rvm install ruby
+- Set default version:
+  rvm use ruby –default
+4. Step Four: Install RubyGems
+  rvm rubygems current
+5. Step Five: Install Rails
+  gem install rails -v 3.2.11
+6. Step Six: Install Passenger
+Passenger is an effective way to deploy Rails App on nginx or apache. We used nginx for BYTE app:
+  gem install passenger
+7. Step Seven: Install nginx and start it
+  rvmsudo passenger-install-nginx-module
+  sudo service nginx start
+8. Step Eight: Clone BYTE App from github using ssh
+  git init
+  git remote add origin master git@github.com:MyMenu/MyMenu-Server.git
+          git clone -b master git@github.com:MyMenu/MyMenu-Server.git
+
+9. Step Nine: Connect nginx to BYTE App
+- Open up the nginx config file:
+  sudo vi /opt/nginx/conf/nginx.conf
+- Set the root to the public directory of BYTE project (see the attached file: server_name.png):
+  server {
+          listen       3000;
+          server_name  localhost;
+          root /root/MyMenu-Server/public;
+          passenger_enabled on;
+        }
+
+
+Beside, you can add some optional configurations to nginx.conf such as:
+          client_max_body_size 10m;
+          rails_app_spawner_idle_time 0;
+        passenger_max_request_queue_size 5000;
+          passenger_max_requests 2000;
+          passenger_min_instances 5;
+  rails_env development; (default option is production)
+- Restart nginx to apply above configuration
+  sudo service nginx restart
+10. Step Ten: Install MySQL
+- Install MySQL
+  sudo apt-get install mysql-server mysql-client
+- Set default stored engine to MYISAM
+   + access to mysql config file:
+  vi /etc/mysql/my.cnf
+   + Set stored engine by adding the following commands to my.cnf file, under [mysqld]
+  innodb=OFF
+  default-storage-engine=MyISAM
+  ft_min_word_len=1
+
+
+11. Step Eleven: Execute imported libs and migrate database
+  bundle install
+  ""sed -i 's/#begin_devise/=begin/g' config/routes.rb""
+  ""sed -i 's/#end_devise/=end/g' config/routes.rb""
+  bundle exec rake db:migrate
+  ""sed -i 's/=begin/#begin_devise/g' config/routes.rb""
+  ""sed -i 's/=end/#end_devise/g' config/routes.rb""
+  bundle exec rake -D time
+12. Step Twelve: Import data
+The default data of the BYTE App is typed in seed.rb file and cities.sql file. Before you import it, you should create “fulltext” for some fields in locations table, items table, item_keys table, item_type table and cities table. This work helps to improve performance of search feature.
+- On MySQL : run the commands below:
+  ALTER TABLE cities ADD FULLTEXT ft_index_city_name (name)
+  ALTER TABLE items ADD FULLTEXT ft_index_item(name, description, ingredients)
+  ALTER TABLE item_keys ADD FULLTEXT ft_index_item_keys(name, description)
+  ALTER TABLE item_types ADD FULLTEXT ft_index_item_types(name)
+  ALTER TABLE locations ADD FULLTEXT ft_index_locations(name, city, state, country)
+- On terminal:
+  bundle exec rake db:seed
+  mysql -u “username” -p“pass” mymenu_db < ~/MyMenu-Server/db/cities.sql
+  chmod 777 -R db
+  service nginx restart
+
+B. Build and Re-Build App
+You can build and re-build BYTE App from anywhere by connecting to BYTE server via ssh.
+We used fabric to deploy. It is a tool with the ability to execute commands on a remote server. You can refer to this link:
+  http://flask.pocoo.org/docs/patterns/fabric/
+
+If you need to build or re-build server, you should open the “fabfile.py” and step by step doing:
+- Copy fabfile.py to BYTE project
+- Choose server what you want to build and assign its name to ENV variable.
+  Ex:  ENV = 'test_server'
+
+
+
+- Select options you want to execute in deploy function.
+  Ex:
+  def deploy():
+        with cd(PROJECT_PATH):
+            get_newest_code()
+            run('bundle exec rake db:migrate')
+            run('bundle exec rake -D time')
+            run('bundle exec rake db:seed')
+            restart_server()
+- Open terminal and run the command:
+  fab deploy
+
+Beside, we wrote some functions support for deployment in that file. You can see the attached file for details.
+
+

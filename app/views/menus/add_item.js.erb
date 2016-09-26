@@ -1,0 +1,26 @@
+<% if @check == true %>
+  <% if @item.errors.full_messages.any? %>
+    <% if remotipart_submitted? %>
+      $(".item_form_errors_container").html("<%= j "#{render('layouts/form_errors', :object=>@item)}" %>").show().delay(3000).fadeOut();
+    <% else %>
+      $(".item_form_errors_container").html("<%= j render("layouts/form_errors",:object=>@item) %>").show().delay(3000).fadeOut();
+    <% end %>
+  <% else %>
+    $("#menus_container").html("<%= escape_javascript render('menus', restaurant_menus: @restaurant.menus, restaurant_copying_menus: @restaurant.copy_shared_menu_statuses) %>");
+    <% if remotipart_submitted? %>
+      $(".build_menu_block_container #build_menu_toggle").html("<%= j "#{render 'build_menu_form_primary'}" %>");
+    <% else %>
+      $(".build_menu_block_container #build_menu_toggle").html("<%= j render "build_menu_form_primary" %>");
+    <% end %>
+    <%
+      item = Item.new
+      item_image = item.item_photos.build
+    %>
+    $(".item_form_block_container .wrap_title_form").html("<%= j render partial: "menus/item_title_form",locals: {:item => item, :item_image => item_image} %>");
+    $(".item_form_block_container #item_form_toggle").html("<%= j render partial: "menus/item_form_primary",locals: {:item => item, :item_image => item_image} %>");
+    $(".item_form_errors_container").html("<%= j render("layouts/form_success",:message=>"Menu Item is created successfully.") %>").show().delay(3000).fadeOut();
+    $('.item_form_block_container #menu_item_form .edit-items-form').html("<%= j render partial: 'menus/item_records', locals: {item: item} %>");
+  <% end %>
+<% else %>
+  $(".item_form_errors_container").html("<%= j render("layouts/form_error_agreement", :message => "The restaurant you were looking for doesn't exist in current user.")%>").show().delay(3000).fadeOut();
+<% end %>

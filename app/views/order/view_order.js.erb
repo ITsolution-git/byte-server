@@ -1,0 +1,7 @@
+<% unless @order.nil?%>
+$("#vieworder_dialog .modal-body").html('');
+$("#vieworder_dialog .modal-body").load('<%=view_order_order_index_path(:order_id => @order.id, :format => 'html') %> #view_order', function(){
+	$("#vieworder_dialog").modal();
+});
+
+<% end %>

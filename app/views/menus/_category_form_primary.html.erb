@@ -1,0 +1,62 @@
+<%
+  url = category.new_record? ? add_category_restaurant_menus_path(@restaurant) : category_path(category)
+  submit_val = category.new_record? ? "Add Category" : "Update Category"
+%>
+<div class="row-fluid">
+  <div class="category_form_errors_container">
+
+  </div>
+  <div class="span12">
+    <%= form_for category, :url=>url,:html=>{:id=>"category_form"},:remote=>true do |f| %>
+      <div class="row-fluid top20">
+        <div class="span8">
+          <%= f.text_field :name,:placeholder=>"Category Name", :tabindex => 11 %>
+        </div>
+        <div class="span4">
+          <%= f.submit :value=>submit_val, :id => 'category_form_submit', :class=>"btn btn-primary span12", disable_with: "Please wait...", :tabindex => 14 %>
+        </div>
+      </div>
+      <div class="row-fluid">
+        <div class="span8">
+          <%= f.text_field :redemption_value, :placeholder => "Redemption Value", :tabindex => 13 %>
+        </div>
+        <% if not category.new_record? %>
+          <div class="span4">
+            <%= link_to(submit_tag('Cancel', :type => 'button', :class => 'btn span12 btn-cancel'), cancel_category_restaurant_menus_path(@restaurant), :remote => true) %>
+          </div>
+        <% end %>
+      </div>
+      <%= f.hidden_field :location_id , :value => @restaurant.id %>
+    <% end %>
+      <div class="row-fluid">
+        <div class="span12 edit-items-form btn-group category-edit">
+          <%= render partial: 'menus/category_records', locals: {:category => category} %>
+        </div>
+      </div>
+  </div>
+</div>
+<script type="text/javascript">
+  var categoryform = Util.validate(Menu.category, {
+    name: [
+      Validate.Presence,
+      [Validate.Length, {maximum: 30}],
+    ],
+    redemption_value: [
+      [Validate.Numericality, {onlyInteger: true}]
+    ]
+  });
+  $('#category_form_submit').click(function() {
+    for (var element in categoryform) {
+      // important check that this is objects own property
+      // not from prototype prop inherited
+      if(categoryform.hasOwnProperty(element)){
+        if (categoryform[element].validationFailed) {
+          //return false;
+        }
+        else if (categoryform[element].validationFailed == undefined) {
+          $('#category_form').find("input[name='category[name]']").trigger("onblur");
+        }
+      }
+    }
+  });
+</script>

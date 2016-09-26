@@ -1,0 +1,2 @@
+$(".item_key_form_block_container .wrap_title_form").html("<%= j render partial: "menus/item_key_title_form", locals: {:item_key => @itemKey} %>");
+$(".item_key_form_block_container #itemkey_toggle").html("<%= j render partial: "menus/item_key_form_primary", locals: {item_key: @itemKey,item_key_image:@item_key_image} %>");

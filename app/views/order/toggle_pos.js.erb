@@ -1,0 +1,14 @@
+<% unless @order.nil?%>
+	<% if @accepted == true %>
+	  <% flash[:notice] = "POS status has been updated successfully." %>
+	  window.location.reload();
+	<% else %>
+	$("#confirmation_dialog .modal-body").html('<p>Are you sure you want to change to [RED/GREEN] status?</p>');
+	
+	$("#confirmation_dialog .modal-footer").html('<a data-method="get" data-remote="true" href="<%= toggle_pos_order_index_path(:order_id => @order.id, :accept => true) %>" class="btn btn-primary">Yes</a> <a href="#" class="btn btn-danger" data-dismiss="modal" aria-hidden="true">No</a>');
+	
+	$("#confirmation_dialog").modal('show');
+	<% end %>
+<% else %>
+alert("You cannot change this order!");
+<% end %>

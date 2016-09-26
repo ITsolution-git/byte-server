@@ -1,0 +1,44 @@
+.photo-outer-container {
+  display: inline-block;
+  vertical-align: top;
+  position: relative;
+  margin: 0 0px 20px 0;
+  min-height: 170px;
+  padding: 10px;
+}
+
+.photo-modal-outer-container {
+  display: inline-block;
+  vertical-align: top;
+  position: relative;
+  margin: 0 0px 20px 0;
+  min-height: 170px;
+  padding: 0px;
+}
+
+
+.photo-inner-container {
+  max-width: 440px;
+  max-height: 440px;
+  vertical-align: middle;
+  text-align: center;
+  position: relative;
+  margin: 0 auto;
+}
+
+.photo-display {
+  position: relative
+}
+
+a.remove-photo-btn {
+  display: none;
+}
+
+.photo-display:hover .remove-photo-btn {
+  position: absolute;
+  bottom: 3px;
+  right: 55px;
+  background-image: url("././delete_icon.png");
+  background-repeat: no-repeat;
+  display: block;
+}

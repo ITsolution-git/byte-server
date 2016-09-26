@@ -1,0 +1,60 @@
+<% @location = Location.find(params[:restaurant])%>
+<div class="bread-crum">
+  <%= link_to @location.name, restaurants_path %>&nbsp;&nbsp;<small>>></small>&nbsp;&nbsp;
+  <%= link_to 'Communications', communications_restaurant_notification_index_path(@location) %>&nbsp;&nbsp;<small>>></small>&nbsp;&nbsp;
+  <%= link_to 'Reply Back', '#' %>
+</div>
+
+<%= form_for @notification , :url=>{:controller=>'notification', :action=>"add"} ,:html=>{:class => "sendMessage"} do |f|%>
+  <h5><%= f.label :To%> <%= params[:useremail]%></h5>
+  <input type="hidden" value="<%= params[:useremail]%>" name="user_emails" id="user_emails" class="input-block-level" placeholder="Enter User Emails or Username"/>
+  <input id="notifications_alert_type" value = "Rating Reward" style = "display: none"/>
+  
+  <h4><%= f.label :Body %></h4>
+  <div class="row-fluid">
+    <div class="span12">
+      <% if @prizes.present? %>
+         <select name="notifications[point_prize]" id = 'prize_point'>
+           <option value="0">--Select Prize--</option>
+ 
+           <% # Output the Prize options in their StatusPrize groups (e.g. Bronze, Gold, etc) %>
+           <% previous_optgroup_name = nil %>
+           <% @prizes.each do |prize| %>
+             <% current_optgroup_name = prize.status_prize.name %>
+             <% if current_optgroup_name != previous_optgroup_name %>
+               <optgroup label="<%= current_optgroup_name %>" style="font-weight: bold; font-style: normal;">
+             <% end %>
+ 
+             <option id="<%= prize.id %>" style="font-weight: normal;" value="<%= prize.id %>"><%= prize.name %></option>
+ 
+             <%= '</optgroup>' if current_optgroup_name != previous_optgroup_name %>
+ 
+             <% previous_optgroup_name = current_optgroup_name %>
+           <% end %>
+         </select>
+     <% end %>
+    	<!-- <%= f.text_area :message,:placeholder=>"Type Your Comments here",:class=>"input-block-level ckeditor text_message", :id=>"ckeditor",:rows=>4 %> -->
+    	<%= text_area_tag :message, "",:class => "input-block-level redactor_mm text_message",:id=>"ckeditor", :rows => 100, :cols => 100 %>
+    </div>
+  </div>
+  <span class=" messageSpan"></span>
+  <%= hidden_field_tag :points, 0 %>
+
+  <% if params[:item_id] %>
+    <%= f.hidden_field :alert_type,:value=>' '%>
+    <%= f.hidden_field :item_id ,:value=>params[:item_id] %>
+  <% else %>
+    <%= f.hidden_field :alert_type,:value=>'Restaurant Rating'%>
+  <% end %>
+
+  <%= f.hidden_field :from_user, :value => @current_user.id %>
+  <%= hidden_field_tag :to_user, params[:useremail] %>
+  <%= f.hidden_field :location_id, :value => @location.id %>
+
+  <div class="row-fluid">
+    <div class="span5">
+      <%= f.submit "Submit" ,:class=>"btn btn-primary messageButton" %>
+    </div>
+  </div>
+<% end %>
+

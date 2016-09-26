@@ -1,0 +1,129 @@
+<% 
+  my_date = @menu.publish_start_date 
+  if my_date.nil?
+    my_date = Time.now.utc
+  end
+  repeat_time = Time.now.utc
+  if not @menu.repeat_time.nil?
+    time_arr = @menu.repeat_time.split(':')
+    repeat_time = repeat_time.change(:hour => time_arr[0], :min => time_arr[1])
+  end
+  repeat_time_to = Time.now.utc
+  if not @menu.repeat_time_to.nil?
+    time_arr = @menu.repeat_time_to.split(':')
+    repeat_time_to = repeat_time_to.change(:hour => time_arr[0], :min => time_arr[1])
+  end
+  repeat_on = @menu.repeat_on.to_s
+%>
+<div id="myModal" class="modal hide fade bottom0" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel"><%= heading.to_s %></h3>
+  </div>
+	<%= form_tag menu_calendar_date_menus_path(), :id => :menu_calendar, :remote=>true do %>
+	<div class="modal-body">
+    <div class="row-fluid">
+      <div class="span12">
+        <div class="menu_calendar_message"></div>
+        <div id="menu_calendar_toggle" class="span12">
+          <div class="btn btn-link collapsu title-publish-calendar span12"><strong>Set Menu Publish Dates & Time:</strong></div>
+          <div class="span12">
+            
+            <%= hidden_field_tag :menu_id, menu_id %>
+            <div class="date-publish">
+              <%= select_datetime(my_date, order: [:month, :day, :hour, :minute], prompt: {hour: 'Hour', minute: 'Minute'}, ampm: true, datetime_separator: '') %>
+            </div>
+            <br />
+            <strong>Repeat:</strong>
+            <div class="dateDropDown">
+               <%= check_box_tag 'repeat_on[]', '1', if not repeat_on.empty? and repeat_on.include?('1') then true else false end %>Mon &nbsp; &nbsp;
+               <%= check_box_tag 'repeat_on[]', '2', if not repeat_on.empty? and repeat_on.include?('2') then true else false end %>Tue &nbsp; &nbsp;
+               <%= check_box_tag 'repeat_on[]', '3', if not repeat_on.empty? and repeat_on.include?('3') then true else false end %>Wed &nbsp; &nbsp;
+               <%= check_box_tag 'repeat_on[]', '4', if not repeat_on.empty? and repeat_on.include?('4') then true else false end %>Thu &nbsp; &nbsp;
+               <%= check_box_tag 'repeat_on[]', '5', if not repeat_on.empty? and repeat_on.include?('5') then true else false end %>Fri &nbsp; &nbsp;
+               <%= check_box_tag 'repeat_on[]', '6', if not repeat_on.empty? and repeat_on.include?('6') then true else false end %>Sat &nbsp; &nbsp;
+               <%= check_box_tag 'repeat_on[]', '0', if not repeat_on.empty? and repeat_on.include?('0') then true else false end %>Sun &nbsp; &nbsp;
+            </div>
+            <div class="time-repeat">
+              <div class="span6 time-repeat-from">
+                <strong>From:</strong>
+                <%= select_hour(repeat_time, ampm: true, field_name: "repeat_hour_from") %>:
+                <%= select_minute(repeat_time, ampm: true, field_name: "repeat_minute_from") %>
+              </div>
+              <div class="span6 time-repeat-to">
+                <strong>To:</strong>
+                <%= select_hour(repeat_time_to, ampm: true, field_name: "repeat_hour_to") %>:
+                <%= select_minute(repeat_time_to, ampm: true, field_name: "repeat_minute_to") %>
+              </div>
+            </div>
+            <input type="hidden" name="tz" id="tz" />
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+	</div>
+	<div class="modal-footer">
+    <%= submit_tag "Save", :class=>"btn btn-primary", :id => "submit_menu_calendar" %>
+    <button class="btn btn-success" data-dismiss="modal" aria-hidden="true">Close</button>
+    <% end %> 
+  </div>
+</div>
+<script type="text/javascript">
+var publishCalendar = (function() {
+  'use strict';
+
+  var publishCalendar = {
+    init: function() {
+      var myDate = Date.parse("<%= my_date.strftime('%Y-%m-%d %H:%M') %> GMT");
+      var repeatTime = Date.parse("<%= repeat_time.strftime('%Y-%m-%d %H:%M') %> GMT");
+      var repeatTimeTo = Date.parse("<%= repeat_time_to.strftime('%Y-%m-%d %H:%M') %> GMT");
+
+      $('#date_year').val(myDate.getFullYear());
+      $('#date_month').val(myDate.getMonth() + 1);
+      $('#date_day').val(myDate.getDate());
+      $('#date_hour').val(myDate.getHours() < 10 ? ("0" + myDate.getHours()) : myDate.getHours());
+      $('#date_minute').val(myDate.getMinutes() < 10 ? ("0" + myDate.getMinutes()) : myDate.getMinutes());
+
+      $('#date_repeat_hour_from').val(repeatTime.getHours() < 10 ? ("0" + repeatTime.getHours()) : repeatTime.getHours());
+      $('#date_repeat_minute_from').val(repeatTime.getMinutes() < 10 ? ("0" + repeatTime.getMinutes()) : repeatTime.getMinutes());
+
+      $('#date_repeat_hour_to').val(repeatTimeTo.getHours() < 10 ? ("0" + repeatTimeTo.getHours()) : repeatTimeTo.getHours());
+      $('#date_repeat_minute_to').val(repeatTimeTo.getMinutes() < 10 ? ("0" + repeatTimeTo.getMinutes()) : repeatTimeTo.getMinutes());
+
+      this.filterDateByMonthAndYear(myDate.getMonth() + 1, (new Date()).getFullYear());
+    },
+
+    filterDateByMonthAndYear: function(month, year) {
+      switch (month) {
+        case 4:
+        case 6:
+        case 9:
+        case 11:
+          $('#date_day').find("option[value='31']").remove();
+          break;
+        case 2:
+          if (!((year % 4 == 0 && year % 100) || year % 400 == 0)) {
+            $('#date_day').find("option[value='29']").remove();
+          }
+          $('#date_day').find("option[value='30']").remove();
+          $('#date_day').find("option[value='31']").remove();
+          break;
+        default:
+          break;
+      }
+    }
+
+  };
+
+  return publishCalendar;
+
+}());
+
+$(document).ready(function() {
+  publishCalendar.init();
+  $('#tz').val(jstz.determine().name());
+});
+</script>
+

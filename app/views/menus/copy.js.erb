@@ -1,0 +1,17 @@
+<% if @menu_clone.errors.full_messages.any? %>
+  alert("Cannot copy menu. The new menu's name can't be greater than 30 characters.");
+<% else %>
+  $(".menu_form_errors_container").html("<%= j render("layouts/form_success", :message => "Created Menu.") %>").show().delay(3000).fadeOut();
+  $(".row.top20.server_item").remove();
+  $('#menu_form')[0].reset();
+  $("#menus_container").html("<%= escape_javascript render('menus', restaurant_menus: @restaurant.menus, restaurant_copying_menus: @restaurant.copy_shared_menu_statuses) %>");
+  $(".build_menu_block_container #build_menu_toggle").html("<%= j render "build_menu_form_primary" %>");
+  <%
+    @menu = Server.new
+    combo_item = ComboItem.new
+  %>
+  $('.menu_form_block_container #menu_form .edit-items-form').html("<%= j render 'menus/menu_records' %>");
+  $(".combo_item_form_block_container .wrap_title_form").html("<%= j render partial: 'combo_item_title_form', locals: {combo_item: combo_item} %>");
+  $(".combo_item_form_block_container #combo_item_form_toggle").html("<%= j render partial: 'combo_item_form_primary', locals: {combo_item: combo_item} %>");
+  try{$(".instructions").html("");}catch(err){}
+<% end %>

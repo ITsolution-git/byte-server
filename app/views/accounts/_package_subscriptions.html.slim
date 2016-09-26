@@ -1,0 +1,56 @@
+.byte-default= render 'byte_default_package'
+- if packages.present?
+  .packages Available Packages
+  table.table.table-striped.table-hover.subscriptions-table data-subscriptions-path="#{subscriptions_path}"
+    thead
+      tr
+        td Package
+        td Billing
+        td Price
+        td
+    tbody
+      - packages.each do |package|
+        tr
+          td= package[:name]
+          td= package[:billing_frequency]
+          td= package[:price]
+          td data-plan-id="#{package[:id]}" data-plan-name="#{package[:name]}"= button_tag 'Subscribe', class: 'save-btn subscription-btn'
+- if subscriptions.present?
+  .subscriptions Active Subscriptions
+  table.table.table-striped.table-hover.active-subsciptions-table
+    thead
+      tr
+        td Plan
+        td Due date
+        td Status
+        td Location
+        td
+    tbody
+      - subscriptions.each do |subscription|
+        tr
+          td= subscription[:plan]
+          td= subscription[:due]
+          td= subscription[:status]
+          td= Subscription.where(subscription_id: subscription[:id]).first.location.name
+          td data-unsubscribe-path="#{subscription_path(subscription[:id])}"= button_tag 'Unsubscribe', class: 'save-btn unsubscribe-btn'
+- unless packages.present? || subscriptions.present?
+  | No Packages or Subscriptions are present
+
+#locations.modal.hide.fade tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true'
+  .modal-body style='background: #fff'
+    | Select locations
+    table.table.table-striped.table-hover.locations-table
+      thead
+        tr
+          td Add Package
+          td Restaurant Name
+          td Restaurant ID
+      tbody
+        - current_user.restaurants.each do |location|
+          tr
+            td= check_box_tag "#{location.name}", location.id
+            td= location.name
+            td= "#{location.address}, #{location.city}, #{location.state}"
+  .modal-footer
+    button.btn.btn-success.submit-btn data-dismiss='modal' aria-hidden='true' Save
+    button.btn data-dismiss='modal' aria-hidden='true' Cancel

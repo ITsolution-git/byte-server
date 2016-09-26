@@ -1,0 +1,28 @@
+// Place all the styles related to the registrations controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+.ui-autocomplete-loading {
+background: white url('ui-anim_basic_16x16.gif') right center no-repeat;
+}
+
+
+.buttonEmulation {
+	float: left;
+}
+
+.selectedfile{
+	word-wrap:break-word;
+	display:inline-block;
+	width:70%
+}
+
+.hidebutton{
+	width: 80% !important;
+
+}
+
+input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+    vertical-align: bottom;
+}
