@@ -21,7 +21,7 @@ class SharePrize < ActiveRecord::Base
   #############################
   ###  CALLBACKS
   #############################
-  after_create :init
+  before_save :init
   after_create :send_push_notification_to_recipient
 
 
@@ -39,7 +39,7 @@ class SharePrize < ActiveRecord::Base
   #############################
 
   def generate_token
-    token = loop do
+    self.token = loop do
       random_token = SecureRandom.urlsafe_base64
       break random_token unless Server.where(token: random_token).exists?
     end
@@ -114,7 +114,7 @@ class SharePrize < ActiveRecord::Base
               notification.received = 1
               notification.points = sp.redeem_value
               notification.save
-              
+
               # The following line dosent actually write to the db.
               # sp.update_attributes(:is_refunded => 1)
 
