@@ -15,7 +15,11 @@ class ApplicationController < ActionController::Base
   #############################
   before_filter :set_cache_buster
   before_bugsnag_notify :add_user_info_to_bugsnag
+  before_filter :deny_xframe_options
 
+  def deny_xframe_options
+    response.headers['X-Frame-Options'] = 'DENY'
+  end
 
   def not_found
     respond_to do |format|
