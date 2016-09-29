@@ -7,6 +7,7 @@ class ApplicationController < ActionController::Base
   ###  GENERAL CONFIG
   #############################
   protect_from_forgery
+  force_ssl if: :ssl_configured?
   layout :layout_by_resource
 
 
@@ -16,6 +17,10 @@ class ApplicationController < ActionController::Base
   before_filter :set_cache_buster
   before_bugsnag_notify :add_user_info_to_bugsnag
   before_filter :deny_xframe_options
+
+  def ssl_configured?
+    !Rails.env.development?
+  end
 
   def deny_xframe_options
     response.headers['X-Frame-Options'] = 'DENY'
