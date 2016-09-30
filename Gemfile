@@ -80,6 +80,8 @@ gem 'twitter'
 gem 'test-unit'
 gem 'wicked'
 gem 'groupdate'
+gem 'activerecord-mysql-adapter'
+gem 'rails_12factor'
 
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'
