@@ -58,6 +58,8 @@ GEM
       activerecord (>= 3.2.9)
       activesupport (>= 3.2.9)
       mysql (>= 2.9.0)
+    activerecord-mysql2-adapter (0.0.3)
+      mysql2
     activeresource (3.2.19)
       activemodel (= 3.2.19)
       activesupport (= 3.2.19)
@@ -603,6 +605,7 @@ PLATFORMS
 DEPENDENCIES
   active_model_serializers!
   activerecord-mysql-adapter
+  activerecord-mysql2-adapter
   acts_as_strip
   amoeba
   awesome_print

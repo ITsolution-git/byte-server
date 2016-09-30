@@ -83,6 +83,7 @@ gem 'wicked'
 gem 'groupdate'
 gem 'rails_12factor'
 gem 'activerecord-mysql-adapter'
+gem 'activerecord-mysql2-adapter'
 
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'
