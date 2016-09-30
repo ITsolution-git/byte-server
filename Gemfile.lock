@@ -54,10 +54,6 @@ GEM
       activesupport (= 3.2.19)
       arel (~> 3.0.2)
       tzinfo (~> 0.3.29)
-    activerecord-mysql-adapter (0.0.1)
-      activerecord (>= 3.2.9)
-      activesupport (>= 3.2.9)
-      mysql (>= 2.9.0)
     activeresource (3.2.19)
       activemodel (= 3.2.19)
       activesupport (= 3.2.19)
@@ -363,7 +359,6 @@ GEM
     multi_json (1.11.2)
     multi_xml (0.5.5)
     multipart-post (2.0.0)
-    mysql (2.9.1)
     mysql2 (0.3.20)
     naught (1.0.0)
     nested_form (0.3.2)
@@ -602,7 +597,6 @@ PLATFORMS
 
 DEPENDENCIES
   active_model_serializers!
-  activerecord-mysql-adapter
   acts_as_strip
   amoeba
   awesome_print
