@@ -685,3 +685,9 @@ DEPENDENCIES
   vidibus-routing_error
   wicked
   word-count-validator (~> 1.0.0)
+
+RUBY VERSION
+   ruby 2.1.2p95
+
+BUNDLED WITH
+   1.13.1
