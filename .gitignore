@@ -34,7 +34,7 @@ public/development/
 .ruby-gemset
 
 # Ignore application configuration
-/config/application.yml
+# /config/application.yml
 
 # Bundler state
 /.bundle
