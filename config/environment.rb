@@ -5,8 +5,8 @@ require File.expand_path('../application', __FILE__)
     :address        => 'email-smtp.us-east-1.amazonaws.com',
     :port           => 587,
     :authentication => :login,
-    :user_name      => 'AKIAIH72T4V6UDZRCK3A',
-    :password       => 'AjdEH4BNWD//7CfbsCdLIz3I/FGT0qRIRDvU5Kkv0fp7',
+    :user_name      => Figaro.env.ses_username,
+    :password       => Figaro.env.ses_password,
     :domain         => 'mybyteapp.com',
     :enable_starttls_auto => true
   }
