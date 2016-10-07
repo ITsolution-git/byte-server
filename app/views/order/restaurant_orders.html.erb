@@ -9,6 +9,7 @@
         <div class="span12">
           <div class="span3">
             <select style="width: 140px;" name="date_filter" id="date_filter">
+              <option value="today">Today</option>
               <option value="alldate">All days</option>
               <option value="period" <% if params[:from] and params[:to] %>selected<% end %>>Choose a period</option>
             </select>
@@ -461,9 +462,11 @@
       $("#date_filter").on("change", function(){
         if($(this).val() == "period"){
           $("#order_by_daterange").show();
-        }
-        else{
-          window.location.href = '<%= url_for :controller => 'order', :action => 'my_orders' %>';
+        } else if ( $("#date_filter").val() == "alldate" ) {
+          window.location.href = '<%= url_for :controller => 'order', :action => 'restaurant_orders', :params => { "all" => true } %>';
+          $("#order_by_daterange").hide();
+        } else{
+          window.location.href = '<%= url_for :controller => 'order', :action => 'restaurant_orders' %>';
           $("#order_by_daterange").hide();
         }
       });
