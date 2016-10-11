@@ -118,10 +118,14 @@ class UserStepsController < ApplicationController
     @customer = BraintreeRails::Customer.new(customer_info)
     if @customer.save
       @credit_card = @customer.credit_cards.build(credit_card_info)
-
-      unless @credit_card.save
+      begin
+        unless @credit_card.save
+          BraintreeRails::Customer.delete(@customer.id)
+          @braintree_errors = @credit_card.errors.full_messages
+        end
+      rescue
         BraintreeRails::Customer.delete(@customer.id)
-        @braintree_errors = @credit_card.errors.full_messages
+        @braintree_errors = ["Credit Card Verification Failed, Please Enter Correct Information"]
       end
       @resource.customer_id = @customer.id
     else
