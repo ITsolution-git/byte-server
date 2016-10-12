@@ -28,6 +28,14 @@ GIT
       activesupport (>= 3.0, < 5)
       braintree (>= 2.28.0, < 3)
 
+GIT
+  remote: https://irfanfadilah@bitbucket.org/irfanfadilah/parse-ruby-client.git
+  revision: 66ea5392cb5c6fcdcc9209bb4ecd8766c9e819ef
+  specs:
+    parse-ruby-client (0.3.0)
+      faraday
+      faraday_middleware
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -376,9 +384,6 @@ GEM
       multi_xml (~> 0.5)
       rack (~> 1.2)
     orm_adapter (0.5.0)
-    parse-ruby-client (0.3.0)
-      faraday
-      faraday_middleware
     pdf-reader (1.3.3)
       Ascii85 (~> 1.0.0)
       afm (~> 0.2.0)
@@ -644,7 +649,7 @@ DEPENDENCIES
   nested_form
   newrelic_rpm
   oauth2
-  parse-ruby-client (~> 0.3.0)
+  parse-ruby-client!
   piet
   png_quantizator
   prawn (= 0.13.1)
