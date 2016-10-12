@@ -961,19 +961,21 @@ class OrderController < ApplicationController
           @orders = Order.joins(:user).joins(:location).where("is_paid=1 AND location_id=? AND orders.is_cancel=0 AND users.is_register=0", @restaurant.first.id)
         end
       else
-        if params[:from] and to
+        @orders = if params[:from] and to
           Time.zone = "America/Chicago"
-          @orders = Order.joins(:user).joins(:location).where("is_paid=1 AND location_id=? AND orders.is_cancel=0 AND users.is_register=0 AND orders.created_at BETWEEN ? AND ?  AND locations.owner_id=?", @restaurant.first.id, Time.zone.parse("#{params[:from]} 00:00:00").in_time_zone('UTC'), Time.zone.parse("#{params[:to]} 23:59:59").in_time_zone('UTC'), @user.id)
+          Order.joins(:user).joins(:location).where("is_paid=1 AND location_id=? AND orders.is_cancel=0 AND users.is_register=0 AND orders.created_at BETWEEN ? AND ?  AND locations.owner_id=?", @restaurant.first.id, Time.zone.parse("#{params[:from]} 00:00:00").in_time_zone('UTC'), Time.zone.parse("#{params[:to]} 23:59:59").in_time_zone('UTC'), @user.id)
         elsif params[:keyword] and params[:keyword] != ''
           if params[:keyword].match(/^\d+[,.]\d+/)
             price = params[:keyword].split('.', 2).first
-            @orders = Order.joins(:user).joins(:location).where("is_paid=1 AND location_id=? AND users.is_register=0 AND orders.is_cancel=0 AND orders.total_price >= ? AND orders.total_price < ? AND locations.owner_id=? ", @restaurant.first.id, price.to_i, price.to_i + 1, @user.id)
+            Order.joins(:user).joins(:location).where("is_paid=1 AND location_id=? AND users.is_register=0 AND orders.is_cancel=0 AND orders.total_price >= ? AND orders.total_price < ? AND locations.owner_id=? ", @restaurant.first.id, price.to_i, price.to_i + 1, @user.id)
           else
             keyword = params[:keyword].gsub(/[^a-zA-Z0-9\-\.\s]/,"")
-            @orders = Order.joins(:user).joins(:location).where("is_paid=1 AND location_id=? AND orders.is_cancel=0 AND users.is_register=0 AND (users.username LIKE ? OR CAST(orders.total_price AS CHAR) LIKE ? OR users.phone LIKE ? OR orders.payment_type LIKE ? OR orders.phone LIKE ?)  AND locations.owner_id=?", @restaurant.first.id, '%' + keyword + '%', keyword.split(',', 2).first + '%', '%' + keyword + '%','%' + keyword + '%', '%' + keyword + '%', @user.id)
+            Order.joins(:user).joins(:location).where("is_paid=1 AND location_id=? AND orders.is_cancel=0 AND users.is_register=0 AND (users.username LIKE ? OR CAST(orders.total_price AS CHAR) LIKE ? OR users.phone LIKE ? OR orders.payment_type LIKE ? OR orders.phone LIKE ?)  AND locations.owner_id=?", @restaurant.first.id, '%' + keyword + '%', keyword.split(',', 2).first + '%', '%' + keyword + '%','%' + keyword + '%', '%' + keyword + '%', @user.id)
           end
+        elsif params[:all].eql? "true"
+          Order.joins(:user).joins(:location).where("is_paid = 1 AND location_id=? AND orders.is_cancel=0 AND users.is_register=0 AND locations.owner_id=?", @restaurant.first.id, @user.id)
         else
-          @orders = Order.joins(:user).joins(:location).where("is_paid = 1 AND location_id=? AND orders.is_cancel=0 AND users.is_register=0 AND locations.owner_id=?", @restaurant.first.id, @user.id)
+          Order.joins(:user).joins(:location).where("is_paid = 1 AND location_id=? AND orders.is_cancel=0 AND users.is_register=0 AND locations.owner_id=? AND orders.created_at >= ?", @restaurant.first.id, @user.id, Time.zone.now.beginning_of_day)
         end
       end
       @total_price = @orders.sum :total_price
