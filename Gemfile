@@ -1,23 +1,21 @@
 source 'https://rubygems.org'
 
 ruby '2.1.2'
-
 gem 'rails', '3.2.19'
 
 gem 'fastimage'
 gem 'active_model_serializers', github: 'rails-api/active_model_serializers', branch: '0-9-stable'
-
 gem 'newrelic_rpm'
-gem "font-awesome-rails"
+gem 'font-awesome-rails'
 gem 'awesome_print'
-gem "figaro"
-gem "nested_form"
+gem 'figaro'
+gem 'nested_form'
 gem 'fog'
 gem 'acts_as_strip'
-gem 'axlsx' , '2.0.1'
+gem 'axlsx', '2.0.1'
 gem 'bootstrap-datepicker-rails', '>= 0.6.21'
 gem 'bootstrap-timepicker-rails'
-gem 'braintree-rails', :git => "https://github.com/lyang/braintree-rails.git", :branch => 'master'
+gem 'braintree-rails', :git => 'https://github.com/lyang/braintree-rails.git', :branch => 'master'
 gem 'bugsnag'
 gem 'cancan'
 gem 'capistrano', '~> 3.2.0'
@@ -26,7 +24,7 @@ gem 'capistrano-rails', '~> 1.1'
 gem 'capistrano-rvm'
 gem 'carrierwave'
 gem 'copy_carrierwave_file'
-gem 'devise', "2.2.3"
+gem 'devise', '2.2.3'
 gem 'execjs'
 gem 'friendly_id', '~> 4.0.9'
 gem 'geocoder', '~> 1.2.7'
@@ -43,10 +41,10 @@ gem 'masked_input-rails'
 gem 'mini_magick'
 gem 'mysql2'
 gem 'oauth2'
-gem 'parse-ruby-client', '~> 0.3.0'
+gem 'parse-ruby-client', git: 'https://bitbucket.org/irfanfadilah/parse-ruby-client.git'
 gem 'piet'
 gem 'png_quantizator'
-gem 'prawn' , '0.13.1'
+gem 'prawn', '0.13.1'
 gem 'pushmeup'
 gem 'rabl'
 gem 'rake', '~> 10.3.2'
@@ -54,8 +52,7 @@ gem 'rb-readline'
 gem 'redactor-rails'
 gem 'remotipart', '~> 1.2'
 gem 'rmagick', :require => 'rmagick'
-#gem 'rmagick', require: false
-gem 'rufus-scheduler' ,'~>2.0.24'
+gem 'rufus-scheduler', '~> 2.0.24'
 gem 'similar_text', '~> 0.0.4'
 gem 'therubyracer'
 gem 'twitter-bootstrap-rails'
@@ -82,7 +79,7 @@ gem 'wicked'
 gem 'groupdate'
 
 group :assets do
-  gem 'sass-rails',   '~> 3.2.3'
+  gem 'sass-rails', '~> 3.2.3'
   gem 'uglifier', '>= 1.0.3'
   gem 'quiet_assets'
 end
@@ -91,7 +88,7 @@ group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'brakeman', :require => false
-  gem "letter_opener"
+  gem 'letter_opener'
   gem 'meta_request'
   gem 'pry'
   gem 'pry-byebug'
