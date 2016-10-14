@@ -9,15 +9,15 @@ class PointsController < ApplicationController
   load_and_authorize_resource :class => "UserPoint"
 
   #  WEB SERVICE POINT ------------------------------------------------------------------------
-  
+
   # GET /points/mypoint
   def mypoint
     begin
       if params[:chain_name]
         #Get dinner status
         sql = "
-          SELECT 
-            l.id, 
+          SELECT
+            l.id,
             sum( CASE WHEN u.is_give = 1 THEN u.points ELSE u.points*(-1) END) as total
           FROM locations l
           JOIN user_points u ON l.id = u.location_id AND u.status=1
@@ -135,7 +135,7 @@ class PointsController < ApplicationController
     location_id  = @parsed_json["location_id"] if @parsed_json["location_id"]
     message      = @parsed_json["message"] if @parsed_json["message"]
     alert_type   = @parsed_json["alert_type"] if @parsed_json["alert_type"]
-    
+
     if alert_type.blank?
       return render :status => 412, :json=>{:status=>:failed, :error=>"alert_type param is required"}
     end
@@ -534,7 +534,7 @@ class PointsController < ApplicationController
         end
       end
     end
-    
+
     @item_comments.reject! {|item_comment| item_comment.send(hide_status) == 1 }
     unless @reward_rating_notifications.empty?
       @reward_rating_notifications.each do |reward_rating|
@@ -582,7 +582,7 @@ class PointsController < ApplicationController
     # Add all the info into one points_ledger_info array.
     @points_ledger_info = []
     @item_comments.each do |i|
-      if i.present? 
+      if i.present?
         @points_ledger_info << i
       end
     end

@@ -63,6 +63,7 @@ class Location < ActiveRecord::Base
   has_many :user_points, :dependent => :destroy
   has_many :subscriptions
   has_many :social_shares
+  has_many :rewards
 
   #############################
   ###  CALLBACKS

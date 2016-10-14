@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20151201131659) do
+ActiveRecord::Schema.define(:version => 20161013082501) do
 
   create_table "app_services", :force => true do |t|
     t.string   "name"
@@ -33,7 +33,6 @@ ActiveRecord::Schema.define(:version => 20151201131659) do
   end
 
   add_index "build_menus", ["item_id"], :name => "index_build_menus_on_item_id"
-  add_index "build_menus", ["item_id"], :name => "item_id"
   add_index "build_menus", ["menu_id"], :name => "menu_id"
 
   create_table "categories", :force => true do |t|
@@ -118,6 +117,39 @@ ActiveRecord::Schema.define(:version => 20151201131659) do
     t.text     "description"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+  end
+
+  create_table "contest_actions", :force => true do |t|
+    t.integer  "contest_id"
+    t.integer  "user_id"
+    t.integer  "location_id"
+    t.integer  "item_id"
+    t.string   "item_name",   :limit => 200
+    t.string   "photo_url"
+    t.string   "status",      :limit => 45
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "facebook"
+    t.boolean  "twitter"
+    t.boolean  "instagram"
+    t.string   "grade",       :limit => 45
+    t.text     "comment"
+  end
+
+  create_table "contests", :force => true do |t|
+    t.string   "name",         :limit => 50
+    t.string   "url"
+    t.string   "contact_name", :limit => 100
+    t.string   "contact",      :limit => 50
+    t.text     "description"
+    t.string   "publish_date", :limit => 30
+    t.string   "start_date",   :limit => 30
+    t.string   "end_date",     :limit => 30
+    t.string   "location",     :limit => 50
+    t.text     "restaurants"
+    t.string   "status",       :limit => 30
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "copy_shared_menu_statuses", :force => true do |t|
@@ -289,8 +321,6 @@ ActiveRecord::Schema.define(:version => 20151201131659) do
   end
 
   add_index "item_comments", ["build_menu_id"], :name => "index_item_comments_on_build_menu_id"
-  add_index "item_comments", ["rating"], :name => "rating"
-  add_index "item_comments", ["user_id"], :name => "user_id"
 
   create_table "item_favourites", :force => true do |t|
     t.integer  "user_id"
@@ -342,8 +372,10 @@ ActiveRecord::Schema.define(:version => 20151201131659) do
     t.datetime "updated_at",  :null => false
     t.string   "token"
     t.integer  "image_id"
+    t.boolean  "is_global"
   end
 
+  add_index "item_keys", ["is_global"], :name => "index_item_keys_on_is_global"
   add_index "item_keys", ["name", "description"], :name => "ft_index_item_key"
 
   create_table "item_nexttimes", :force => true do |t|
@@ -472,6 +504,12 @@ ActiveRecord::Schema.define(:version => 20151201131659) do
     t.datetime "updated_at",     :null => false
   end
 
+  create_table "location_type", :force => true do |t|
+    t.string   "Location Type"
+    t.datetime "Created_At",    :null => false
+    t.datetime "Updated_At",    :null => false
+  end
+
   create_table "location_visiteds", :force => true do |t|
     t.integer  "location_id"
     t.integer  "user_id"
@@ -483,9 +521,9 @@ ActiveRecord::Schema.define(:version => 20151201131659) do
   create_table "locations", :force => true do |t|
     t.string   "name"
     t.string   "address"
-    t.decimal  "lat",                                  :precision => 15, :scale => 6
-    t.decimal  "long",                                 :precision => 15, :scale => 6
-    t.decimal  "rating",                               :precision => 3,  :scale => 1
+    t.decimal  "lat",                                     :precision => 15, :scale => 6
+    t.decimal  "long",                                    :precision => 15, :scale => 6
+    t.decimal  "rating",                                  :precision => 3,  :scale => 1
     t.string   "city"
     t.string   "state"
     t.string   "country"
@@ -494,13 +532,13 @@ ActiveRecord::Schema.define(:version => 20151201131659) do
     t.string   "phone"
     t.string   "url"
     t.integer  "owner_id"
-    t.float    "tax",                                                                 :default => 0.0
-    t.string   "bio",                 :limit => 10000
+    t.float    "tax",                                                                    :default => 0.0
+    t.string   "bio",                    :limit => 10000
     t.integer  "global"
     t.string   "time_from"
     t.string   "time_to"
-    t.datetime "created_at",                                                                            :null => false
-    t.datetime "updated_at",                                                                            :null => false
+    t.datetime "created_at",                                                                                  :null => false
+    t.datetime "updated_at",                                                                                  :null => false
     t.string   "chain_name"
     t.string   "token"
     t.string   "timezone"
@@ -509,7 +547,7 @@ ActiveRecord::Schema.define(:version => 20151201131659) do
     t.integer  "created_by"
     t.integer  "last_updated_by"
     t.integer  "info_id"
-    t.boolean  "active",                                                              :default => true
+    t.boolean  "active",                                                                 :default => true
     t.string   "twiter_url"
     t.string   "facebook_url"
     t.string   "google_url"
@@ -523,8 +561,12 @@ ActiveRecord::Schema.define(:version => 20151201131659) do
     t.string   "levelup_location_id"
     t.text     "customer_id"
     t.integer  "logo_id"
-    t.integer  "copied_menus_cnt",                                                    :default => 0
+    t.integer  "copied_menus_cnt",                                                       :default => 0
     t.string   "logo_url"
+    t.string   "service_fee_type",       :limit => 45,                                   :default => "fixed"
+    t.float    "fee",                                                                    :default => 0.0
+    t.boolean  "weekly_progress_report",                                                 :default => false
+    t.string   "weekly_progress_email"
   end
 
   add_index "locations", ["chain_name"], :name => "chain_name"
@@ -599,6 +641,9 @@ ActiveRecord::Schema.define(:version => 20151201131659) do
     t.integer  "location_comment_id"
   end
 
+  add_index "notifications", ["alert_type"], :name => "alert_type"
+  add_index "notifications", ["location_id"], :name => "location_id"
+
   create_table "numbers", :id => false, :force => true do |t|
     t.integer "number", :limit => 8
   end
@@ -655,29 +700,33 @@ ActiveRecord::Schema.define(:version => 20151201131659) do
   create_table "orders", :force => true do |t|
     t.integer  "user_id"
     t.float    "total_tip"
-    t.integer  "is_paid",        :default => 0
+    t.integer  "is_paid",                      :default => 0
     t.integer  "location_id"
     t.float    "tax"
     t.integer  "receipt_no"
-    t.datetime "created_at",                        :null => false
-    t.datetime "updated_at",                        :null => false
+    t.datetime "created_at",                                      :null => false
+    t.datetime "updated_at",                                      :null => false
     t.integer  "server_id"
     t.datetime "paid_date"
-    t.integer  "is_cancel",      :default => 0
-    t.integer  "status",         :default => 0
-    t.float    "total_tax",      :default => 0.0
-    t.float    "total_price",    :default => 0.0
-    t.float    "sub_price",      :default => 0.0
-    t.integer  "read",           :default => 0
+    t.integer  "is_cancel",                    :default => 0
+    t.integer  "status",                       :default => 0
+    t.float    "total_tax",                    :default => 0.0
+    t.float    "total_price",                  :default => 0.0
+    t.float    "sub_price",                    :default => 0.0
+    t.integer  "read",                         :default => 0
     t.string   "timezone"
     t.string   "qrcode_levelup"
     t.float    "tip_percent"
     t.string   "payment_type"
-    t.boolean  "pos",            :default => false
-    t.integer  "receipt_day_id", :default => 1
+    t.boolean  "pos",                          :default => false
+    t.integer  "receipt_day_id",               :default => 1
     t.datetime "pickup_time"
+    t.string   "phone",          :limit => 45
+    t.integer  "ticket"
     t.string   "order_id"
-    t.boolean  "is_refunded",    :default => false
+    t.boolean  "is_refunded",                  :default => false
+    t.string   "orderscol",      :limit => 45
+    t.float    "fee",                          :default => 0.0
   end
 
   create_table "packages", :force => true do |t|
@@ -820,6 +869,23 @@ ActiveRecord::Schema.define(:version => 20151201131659) do
 
   add_index "redactor_assets", ["assetable_type", "assetable_id"], :name => "idx_redactor_assetable"
   add_index "redactor_assets", ["assetable_type", "type", "assetable_id"], :name => "idx_redactor_assetable_type"
+
+  create_table "rewards", :force => true do |t|
+    t.string   "name"
+    t.string   "photo"
+    t.string   "share_link"
+    t.datetime "available_from"
+    t.datetime "expired_until"
+    t.string   "timezone"
+    t.text     "description"
+    t.integer  "quantity"
+    t.integer  "stats"
+    t.integer  "location_id"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
+  add_index "rewards", ["location_id"], :name => "index_rewards_on_location_id"
 
   create_table "search_profiles", :force => true do |t|
     t.string   "name"
@@ -990,6 +1056,14 @@ ActiveRecord::Schema.define(:version => 20151201131659) do
     t.datetime "updated_at", :null => false
   end
 
+  create_table "user_billings", :force => true do |t|
+    t.string   "billing_email"
+    t.string   "billing_password"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "user_id"
+  end
+
   create_table "user_contacts", :force => true do |t|
     t.integer  "user_id"
     t.integer  "location_owner_id"
@@ -1024,6 +1098,23 @@ ActiveRecord::Schema.define(:version => 20151201131659) do
     t.integer  "is_sent_notification"
     t.datetime "created_at",           :null => false
     t.datetime "updated_at",           :null => false
+  end
+
+  create_table "user_profiles", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "name",           :limit => 50
+    t.string   "image"
+    t.string   "show_type",      :limit => 20
+    t.string   "publish_date",   :limit => 30
+    t.string   "unpublish_date", :limit => 30
+    t.string   "zipcode",        :limit => 10
+    t.string   "radius",         :limit => 10
+    t.text     "tags"
+    t.string   "latitude",       :limit => 50
+    t.string   "longitude",      :limit => 50
+    t.integer  "order_num"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "user_recent_searches", :force => true do |t|

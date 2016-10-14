@@ -648,7 +648,10 @@ end
        end
     end
 
+    # Rewards 3.0
+    resources :rewards
   end
+
   resources :tutorial_videos, :only=>[:edit, :update]
   resources :menu_items,:only=>[:edit,:destroy,:update] do
     collection do

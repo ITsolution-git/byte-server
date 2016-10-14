@@ -11,11 +11,12 @@
   <div class="row-fluid">
     <div class="span5" style="margin-left: 700px;">
       <% if @restaurant.present? && @restaurant.name.present? %>
+        <div class="span2"><%= link_to "Loyalty", prize_points_path(@restaurant, :status_prize_id => 0) %></div>
         <div class="icon-reward span2">
           <%= link_to image_tag("social_prize.png"), socical_points_path(restaurant_id: @restaurant.id) %>
         </div>
         <div class="icon-reward span2">
-          <%= link_to image_tag("prize_image.png"), prize_points_path(@restaurant, :status_prize_id => 0) %>
+          <%= link_to image_tag("prize_image.png"), restaurant_rewards_path(@restaurant) %>
         </div>
         <div class="icon-reward span2">
           <%= link_to image_tag("points_prize.png"), rewards_restaurant_points_path(@restaurant) %>
@@ -28,9 +29,9 @@
 <div class="row" style="margin-top: -32px;">
   <div class="span12" >
     <%= form_for :social_point, url: socical_point_points_path, remote: true do |f| %>
-      
+
       <%= f.hidden_field :location_id %>
-      
+
       <div class="span12">
         <div class="padding-image-social top10 span6">
           <%= image_tag("/assets/FB-active.jpg", class: 'image') %>
