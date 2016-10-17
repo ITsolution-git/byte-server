@@ -24,7 +24,9 @@
 <hr>
 
 <div class="span7" style="position:relative;">
-  <%= link_to "Create Reward", new_restaurant_reward_path, :class => "btn btn-inverse btn-big" %>
+  <h4>Edit Reward</h4>
+  <hr>
+  <%= render "form", reward: @reward %>
 </div>
 <div class="span4">
   <%= render "listing", res: @restaurant, rewards: @rewards %>

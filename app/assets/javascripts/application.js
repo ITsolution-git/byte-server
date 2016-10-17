@@ -51,6 +51,8 @@
   = require gmaps/google
   = require markerclusterer
   = require audio
+  = require jquery.datetimepicker.full.min
+
 
   = require_tree './app'
 */

@@ -24,8 +24,10 @@
 <hr>
 
 <div class="span7" style="position:relative;">
+  <h4>Create Reward</h4>
+  <hr>
   <%= render "form", reward: @reward %>
 </div>
 <div class="span4">
-  <%= render "listing", rewards: @rewards %>
+  <%= render "listing", res: @restaurant, rewards: @rewards %>
 </div>

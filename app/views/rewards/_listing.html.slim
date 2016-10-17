@@ -1,0 +1,18 @@
+h4 Rewards
+hr
+- if rewards.present?
+  - rewards.each do |reward|
+    .reward-item style="height:100px;" id="reward-#{reward.id}"
+      .reward-photo style="float:left;"
+        = image_tag reward.photo.thumb, style: "height:75px;width:75px;"
+      .reward-description style="float:right;"
+        p style="width:200px; height:18px; overflow:hidden;"
+          strong = reward.name
+        p
+          | Expiration Date:&nbsp;
+          = reward.expired_until.strftime("%d/%m/%Y | %H:%M") rescue "-"
+        ul.list-inline
+          li = link_to "View/Edit", edit_restaurant_reward_path(res, reward)
+          li = link_to "Delete", restaurant_reward_path(res, reward), data: {:confirm => 'Are you sure?'}, :method => :delete, remote: true
+- else
+  p No Rewards to Display

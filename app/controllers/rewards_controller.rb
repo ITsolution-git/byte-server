@@ -1,6 +1,6 @@
 class RewardsController < ApplicationController
-  before_filter :set_restaurant
-  before_filter :set_rewards
+  before_filter :authenticate_user!, :set_restaurant, :set_rewards, :populate_timezones
+  before_filter :adjust_timezone, only: [:create, :update]
 
   # GET /rewards
   # GET /rewards.json
@@ -41,7 +41,7 @@ class RewardsController < ApplicationController
   # POST /rewards
   # POST /rewards.json
   def create
-    @reward = Reward.new(params[:reward])
+    @reward = @restaurant.rewards.build(params[:reward])
 
     respond_to do |format|
       if @reward.save
@@ -61,7 +61,7 @@ class RewardsController < ApplicationController
 
     respond_to do |format|
       if @reward.update_attributes(params[:reward])
-        format.html { redirect_to @reward, notice: 'Reward was successfully updated.' }
+        format.html { redirect_to restaurant_rewards_path(@restaurant), notice: 'Reward was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
@@ -77,7 +77,8 @@ class RewardsController < ApplicationController
     @reward.destroy
 
     respond_to do |format|
-      format.html { redirect_to rewards_url }
+      format.js
+      format.html { redirect_to restaurant_rewards_path(@restaurant) }
       format.json { head :no_content }
     end
   end
@@ -88,6 +89,23 @@ class RewardsController < ApplicationController
   end
 
   def set_rewards
-    @rewards = Reward.all
+    @rewards = Reward.where(location_id: @restaurant.id)
+  end
+
+  def populate_timezones
+    @timezones = [
+      ["Default (UTC)", "UTC"],
+      ["Pacific", "Pacific Time (US & Canada)"],
+      ["Mountain", "Mountain Time (US & Canada)"],
+      ["Central", "Central Time (US & Canada)"],
+      ["Eastern", "Eastern Time (US & Canada)"]
+    ]
+  end
+
+  def adjust_timezone
+    if params[:reward][:available_from].present? and params[:reward][:expired_until].present?
+      params[:reward][:available_from] += " #{params[:reward][:timezone]}"
+      params[:reward][:expired_until] += " #{params[:reward][:timezone]}"
+    end
   end
 end

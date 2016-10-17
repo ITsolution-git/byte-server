@@ -1,0 +1,80 @@
+<% if reward.errors.any? %>
+  <div id="error_explanation">
+    <h2><%= "#{pluralize(reward.errors.count, "error")} prohibited this reward from being saved:" %></h2>
+    <ul>
+      <% reward.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<div>
+  <%= form_for reward, url: restaurant_rewards_path, html: { multipart: true } do |f| %>
+    <div class="row-fluid">
+      <div class="span6">
+        <%= f.label :name %>
+        <%= f.text_field :name %>
+      </div>
+      <div class="span6">
+        <%= f.label :share_link %>
+        <%= f.text_field :share_link %>
+      </div>
+    </div>
+    <div class="row-fluid">
+      <div class="span4">
+        <%= image_tag reward.photo, style: "height:150px; weight:150px;", id: "reward-photo" %>
+      </div>
+      <div class="span8">
+        <%= f.label :photo %>
+        <%= f.file_field :photo, id: "reward-photo-field" %>
+        <%= f.hidden_field :photo_cache %>
+      </div>
+    </div>
+    <div class="row-fluid">
+      <div class="span6">
+        <%= f.label :available_from %>
+        <%= f.text_field :available_from, value: reward.available_from.try(:strftime, "%Y/%m/%d %H:%M"), class: "datetimepicker" %>
+      </div>
+      <div class="span6">
+        <%= f.label :expired_until %>
+        <%= f.text_field :expired_until, value: reward.expired_until.try(:strftime, "%Y/%m/%d %H:%M"), class: "datetimepicker" %>
+      </div>
+    </div>
+    <div class="row-fluid">
+      <div class="span6">
+        <%= f.label :timezone %>
+        <%= f.select :timezone, options_for_select(@timezones, reward.timezone) %>
+      </div>
+      <div class="span6">
+        <%= f.label :quantity %>
+        <%= f.number_field :quantity, min: 0, value: 0 %>
+        <div class="help-block">* Set to 0 for Unlimited Prizes</div>
+      </div>
+    </div>
+    <div class="row-fluid">
+      <div class="span12">
+        <%= f.label :description %>
+        <%= f.text_area :description, rows: 6, maxlength: 140 %>
+        <div class="help-block">* Max. 140 Characters</div>
+      </div>
+    </div>
+    <%= f.submit %>
+  <% end %>
+</div>
+
+<script>
+  $("#reward-photo-field").change(function(){
+    if (this.files && this.files[0]) {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        $("#reward-photo").attr("src", e.target.result);
+      }
+      reader.readAsDataURL(this.files[0]);
+    }
+  });
+
+  $(".datetimepicker").datetimepicker({
+    minDate: 0
+  });
+</script>
