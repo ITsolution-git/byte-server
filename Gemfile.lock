@@ -434,11 +434,6 @@ GEM
       activesupport (= 3.2.19)
       bundler (~> 1.0)
       railties (= 3.2.19)
-    rails_12factor (0.0.3)
-      rails_serve_static_assets
-      rails_stdout_logging
-    rails_serve_static_assets (0.0.5)
-    rails_stdout_logging (0.0.5)
     railties (3.2.19)
       actionpack (= 3.2.19)
       activesupport (= 3.2.19)
@@ -661,7 +656,6 @@ DEPENDENCIES
   quiet_assets
   rabl
   rails (= 3.2.19)
-  rails_12factor
   rake (~> 10.3.2)
   rb-readline
   redactor-rails
