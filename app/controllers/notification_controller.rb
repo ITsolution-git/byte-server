@@ -118,14 +118,17 @@ class NotificationController < ApplicationController
     end
     #end contact user
 
-    # Get an array of this Location's Prizes
-    @prizes = []
-    status_prize_ids = StatusPrize.where(location_id: @restaurant.id).pluck(:id)
-    unless status_prize_ids.empty?
-      @prizes = Prize.joins(:status_prize).
-        where('status_prize_id IN (?)', status_prize_ids).where(is_delete: false).
-        order('status_prizes.name')
-    end
+    # Get an array of this Location's Prizes (OLD CODES BEFORE REWARD 3.0)
+    # @prizes = []
+    # status_prize_ids = StatusPrize.where(location_id: @restaurant.id).pluck(:id)
+    # unless status_prize_ids.empty?
+    #   @prizes = Prize.joins(:status_prize).
+    #     where('status_prize_id IN (?)', status_prize_ids).where(is_delete: false).
+    #     order('status_prizes.name')
+    # end
+
+    # NEW CODE FOR REWARD 3.0
+    @prizes = @restaurant.rewards
   end #end of groupmessage
 
   # POST /notification/addgroup  (Receives posts from the groupmessage action)

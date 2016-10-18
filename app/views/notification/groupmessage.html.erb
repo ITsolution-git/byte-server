@@ -68,30 +68,28 @@
   <%= f.label 'Body:' %>
   <div class="row-fluid">
     <div class="span12">
-      <!-- <select id="prize_point"></select> -->
-
-      <% # If applicable, output a dropdown with the Prize options %>
       <% if @prizes.present? %>
-        <select name="notifications[point_prize]" id = 'prize_point'>
-          <option value="0">--Select Prize--</option>
-
-          <% # Output the Prize options in their StatusPrize groups (e.g. Bronze, Gold, etc) %>
-          <% previous_optgroup_name = nil %>
-          <% @prizes.each do |prize| %>
-            <% current_optgroup_name = prize.status_prize.name %>
-            <% if current_optgroup_name != previous_optgroup_name %>
-              <optgroup label="<%= current_optgroup_name %>" style="font-weight: bold; font-style: normal;">
+        <% if false %>
+          <!-- THIS IS OLD CODES BEFORE REWARD 3.0 -->
+          <select name="notifications[point_prize]" id = 'prize_point'>
+            <option value="0">--Select Prize--</option>
+            <% previous_optgroup_name = nil %>
+            <% @prizes.each do |prize| %>
+              <% current_optgroup_name = prize.status_prize.name %>
+              <% if current_optgroup_name != previous_optgroup_name %>
+                <optgroup label="<%= current_optgroup_name %>" style="font-weight: bold; font-style: normal;">
+              <% end %>
+              <option id="<%= prize.id %>" style="font-weight: normal;" value="<%= prize.id %>"><%= prize.name %></option>
+              <%= '</optgroup>' if current_optgroup_name != previous_optgroup_name %>
+              <% previous_optgroup_name = current_optgroup_name %>
             <% end %>
-
-            <option id="<%= prize.id %>" style="font-weight: normal;" value="<%= prize.id %>"><%= prize.name %></option>
-
-            <%= '</optgroup>' if current_optgroup_name != previous_optgroup_name %>
-
-            <% previous_optgroup_name = current_optgroup_name %>
-          <% end %>
+          <% else %>
+            <!-- THIS IS NEW CODE FOR REWARD 3.0 -->
+            <%= f.select :point_prize, options_from_collection_for_select(@prizes, "id", "name"), { :prompt => "--- Select Reward ---" }, id: "prize_point" %>
+          <% end%>
         </select>
       <% end %>
-			
+
 			<style>
 				.redactor-toolbar {
 					z-index:0 !important;
