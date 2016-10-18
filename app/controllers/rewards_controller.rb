@@ -107,5 +107,8 @@ class RewardsController < ApplicationController
       params[:reward][:available_from] += " #{params[:reward][:timezone]}"
       params[:reward][:expired_until] += " #{params[:reward][:timezone]}"
     end
+    if params[:reward][:share_link].present?
+      params[:reward][:share_link] = params[:reward][:share_link].parameterize
+    end
   end
 end
