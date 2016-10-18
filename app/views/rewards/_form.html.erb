@@ -1,8 +1,8 @@
-<% if reward.errors.any? %>
+<% if @reward.errors.any? %>
   <div id="error_explanation">
-    <h2><%= "#{pluralize(reward.errors.count, "error")} prohibited this reward from being saved:" %></h2>
+    <h2><%= "#{pluralize(@reward.errors.count, "error")} prohibited this reward from being saved:" %></h2>
     <ul>
-      <% reward.errors.full_messages.each do |message| %>
+      <% @reward.errors.full_messages.each do |message| %>
         <li><%= message %></li>
       <% end %>
     </ul>
@@ -10,7 +10,7 @@
 <% end %>
 
 <div>
-  <%= form_for reward, url: restaurant_rewards_path, html: { multipart: true } do |f| %>
+  <%= form_for @reward, url: (@reward.persisted? ? restaurant_reward_path : restaurant_rewards_path), html: { multipart: true } do |f| %>
     <div class="row-fluid">
       <div class="span6">
         <%= f.label :name %>
@@ -23,7 +23,7 @@
     </div>
     <div class="row-fluid">
       <div class="span4">
-        <%= image_tag reward.photo, style: "height:150px; weight:150px;", id: "reward-photo" %>
+        <%= image_tag @reward.photo, style: "height:150px; weight:150px;", id: "reward-photo" %>
       </div>
       <div class="span8">
         <%= f.label :photo %>
@@ -34,17 +34,17 @@
     <div class="row-fluid">
       <div class="span6">
         <%= f.label :available_from %>
-        <%= f.text_field :available_from, value: reward.available_from.try(:strftime, "%Y/%m/%d %H:%M"), class: "datetimepicker" %>
+        <%= f.text_field :available_from, value: @reward.available_from.try(:strftime, "%Y/%m/%d %H:%M"), class: "datetimepicker" %>
       </div>
       <div class="span6">
         <%= f.label :expired_until %>
-        <%= f.text_field :expired_until, value: reward.expired_until.try(:strftime, "%Y/%m/%d %H:%M"), class: "datetimepicker" %>
+        <%= f.text_field :expired_until, value: @reward.expired_until.try(:strftime, "%Y/%m/%d %H:%M"), class: "datetimepicker" %>
       </div>
     </div>
     <div class="row-fluid">
       <div class="span6">
         <%= f.label :timezone %>
-        <%= f.select :timezone, options_for_select(@timezones, reward.timezone) %>
+        <%= f.select :timezone, options_for_select(@timezones, @reward.timezone) %>
       </div>
       <div class="span6">
         <%= f.label :quantity %>
