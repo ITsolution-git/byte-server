@@ -11,7 +11,7 @@
 </div>
 <input type="hidden" value="<%= @restaurant.id %>" id="restaurant_id_field"/>
 
-<%= form_for @notification,:url=>{:action=>"addgroup"} ,:html=>{:class => "sendMessage"} do |f|%>
+<%= form_for @notification, :url=>{:action=>"addgroup"} ,:html=>{:class => "sendMessage"} do |f|%>
   <% if params[:myorders] %>
     <input type="hidden" value="true" name="myorders" id="myorders"/>
   <% end %>

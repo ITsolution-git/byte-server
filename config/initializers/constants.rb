@@ -53,7 +53,8 @@ PUSH_NOTIFICATION_TYPES = [ # These are the types of notifications that can be s
   'friend_request', # Friend requests (implemented)
   'points_received', # Points received by user (implemented)
   'order_submitted',
-  'order_completed'
+  'order_completed',
+  'reward_received'
 ]
 
 # Points values

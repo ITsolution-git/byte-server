@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20161013082501) do
+ActiveRecord::Schema.define(:version => 20161019064419) do
 
   create_table "app_services", :force => true do |t|
     t.string   "name"
@@ -1124,6 +1124,21 @@ ActiveRecord::Schema.define(:version => 20161013082501) do
     t.datetime "created_at",                  :null => false
     t.datetime "updated_at",                  :null => false
   end
+
+  create_table "user_rewards", :force => true do |t|
+    t.boolean  "is_reedemed", :default => false
+    t.integer  "reward_id"
+    t.integer  "sender_id"
+    t.integer  "receiver_id"
+    t.integer  "location_id"
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
+  end
+
+  add_index "user_rewards", ["location_id"], :name => "index_user_rewards_on_location_id"
+  add_index "user_rewards", ["receiver_id"], :name => "index_user_rewards_on_receiver_id"
+  add_index "user_rewards", ["reward_id"], :name => "index_user_rewards_on_reward_id"
+  add_index "user_rewards", ["sender_id"], :name => "index_user_rewards_on_sender_id"
 
   create_table "users", :force => true do |t|
     t.string   "first_name"

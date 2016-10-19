@@ -947,15 +947,24 @@ class NotificationController < ApplicationController
     end
 
     def add_prize_user(prize_id, sending_user_id, receiving_user_id, location_id)
+      # Old Codes Before 3.0
       # TODO: This should probably be a UserPrize.
-      SharePrize.create({
-        :prize_id => prize_id,
-        :from_user => sending_user_id,
-        :to_user  => receiving_user_id,
-        :location_id => location_id,
-        :status      => 1,
-        :from_share  => 'restaurants'
-      })
+      # SharePrize.create({
+      #   :prize_id => prize_id,
+      #   :from_user => sending_user_id,
+      #   :to_user  => receiving_user_id,
+      #   :location_id => location_id,
+      #   :status      => 1,
+      #   :from_share  => 'restaurants'
+      # })
+
+      # Reward 3.0
+      UserReward.create(
+        reward_id: prize_id,
+        sender_id: sending_user_id,
+        receiver_id: receiving_user_id,
+        location_id: location_id
+      )
       CustomersLocations.add_contact(Array([receiving_user_id]), location_id)
     end
 
