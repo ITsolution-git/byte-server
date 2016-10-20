@@ -11,6 +11,8 @@ class Reward < ActiveRecord::Base
   mount_uploader :photo, RewardUploader
 
   def is_valid?
-    (Time.current > available_from) and (Time.current < expired_until)
+    time_valid = (Time.current > available_from) and (Time.current < expired_until)
+    quota_valid = stats.eql? 0 ? true : (quantity >= stats)
+    time_valid and quota_valid
   end
 end
