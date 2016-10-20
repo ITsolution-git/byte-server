@@ -103,10 +103,12 @@ class RewardsController < ApplicationController
   end
 
   def adjust_timezone
-    if params[:reward][:available_from].present? and params[:reward][:expired_until].present?
-      params[:reward][:available_from] += " #{params[:reward][:timezone]}"
-      params[:reward][:expired_until] += " #{params[:reward][:timezone]}"
-    end
+    # if params[:reward][:available_from].present? and params[:reward][:expired_until].present?
+    #   available = params[:reward][:available_from] += " #{params[:reward][:timezone]}"
+    #   expired = params[:reward][:expired_until] += " #{params[:reward][:timezone]}"
+    #   params[:reward][:available_from] = available.to_datetime
+    #   params[:reward][:expired_until] = expired.to_datetime
+    # end
     if params[:reward][:share_link].present?
       params[:reward][:share_link] = params[:reward][:share_link].parameterize
     end

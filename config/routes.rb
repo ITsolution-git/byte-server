@@ -54,6 +54,11 @@ Imenu::Application.routes.draw do
         post ':item_id', to: 'item_ratings#create', as: :item_ratings
       end
       resources :prizes, only: [:index]
+      resources :rewards, only: [:index] do
+        collection do
+          post 'redeem'
+        end
+      end
     end
   end
   ###
