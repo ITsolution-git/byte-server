@@ -1,8 +1,8 @@
 class PushNotification < ActiveRecord::Base
   # A PushNotification uses the Parse API to send a standard
-  # push notification message to the mobile devices of all 
-  # subscribers of a given "channel."  
-  # Byte's channels correspond to specific application resources, 
+  # push notification message to the mobile devices of all
+  # subscribers of a given "channel."
+  # Byte's channels correspond to specific application resources,
   # such as restaurant locations, menu items, and users.
 
 
@@ -32,7 +32,7 @@ class PushNotification < ActiveRecord::Base
   ###  INSTANCE METHODS
   #############################
   def dispatch
-    # You can use this method with something like: 
+    # You can use this method with something like:
     # Item.push_notifications.create(message: 'Great new price!').dispatch
     # but the more common way is the dispatch_message_to_resource_subscribers
     # class method (see below).
@@ -73,14 +73,14 @@ class PushNotification < ActiveRecord::Base
   #############################
 
   def self.dispatch_message_to_resource_subscribers(notification_type, message, resource, additional_data_hash = {})
-    # You can use this method with something like: 
+    # You can use this method with something like:
     # PushNotification.dispatch_message_to_resource_subscribers('fav_item_on_special', 'Great new price!', item)
 
     return false unless self.resource_is_valid?(resource)
 
     resource.push_notifications.create({
-      notification_type: notification_type, 
-      message: message, 
+      notification_type: notification_type,
+      message: message,
       additional_data: additional_data_hash
     }).dispatch
   end
