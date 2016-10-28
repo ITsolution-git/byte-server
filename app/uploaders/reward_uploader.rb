@@ -21,9 +21,9 @@ class RewardUploader < CarrierWave::Uploader::Base
   # Provide a default URL as a default if there hasn't been a file uploaded:
   def default_url
     if version_name.eql? "thumb"
-      "http://placehold.it/75x75"
+      "https://dummyimage.com/75x75/808080/ffffff.png&text=image"
     else
-      "http://placehold.it/150x150"
+      "https://dummyimage.com/150x150/808080/ffffff.png&text=image"
     end
   end
 
