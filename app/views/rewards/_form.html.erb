@@ -27,6 +27,7 @@
       </div>
       <div class="span8">
         <%= f.label :photo %>
+        <div class="help-block">* Image will be resized to 400x400</div>
         <%= f.file_field :photo, id: "reward-photo-field" %>
         <%= f.hidden_field :photo_cache %>
       </div>
@@ -48,18 +49,35 @@
       </div>
       <div class="span6">
         <%= f.label :quantity %>
-        <%= f.number_field :quantity, min: 0, value: 0 %>
+        <%= f.number_field :quantity, min: 0, value: (@reward.persisted? ? @reward.quantity : 0) %>
         <div class="help-block">* Set to 0 for Unlimited Prizes</div>
       </div>
     </div>
     <div class="row-fluid">
-      <div class="span12">
+      <div class="span6">
         <%= f.label :description %>
         <%= f.text_area :description, rows: 6, maxlength: 140 %>
         <div class="help-block">* Max. 140 Characters</div>
       </div>
+      <div class="span6">
+        <% if @reward.persisted? %>
+          <%= f.label "Prize Stats" %>
+          <table class="table">
+            <tr>
+              <td>Redeemed:</td>
+              <td><%= @reward.stats %></td>
+            </tr>
+            <tr>
+              <td>UnRedeemed:</td>
+              <td><%= unredeemed(@reward.quantity) %></td>
+            </tr>
+          </table>
+        <% end %>
+      </div>
     </div>
-    <%= f.submit %>
+    <div class="text-center">
+      <%= f.submit nil, class: "btn btn-primary" %>
+    </div>
   <% end %>
 </div>
 
@@ -69,7 +87,7 @@
       var reader = new FileReader();
       reader.onload = function(e) {
         $("#reward-photo").attr("src", e.target.result);
-      }
+      };
       reader.readAsDataURL(this.files[0]);
     }
   });

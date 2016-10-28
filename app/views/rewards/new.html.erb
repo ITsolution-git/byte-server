@@ -12,7 +12,7 @@
   <div class="row-fluid">
     <div class="span5" style="margin-left: 700px;">
       <% if @restaurant.present? %>
-        <div class="span2"><%= link_to "Loyalty", prize_points_path(@restaurant, :status_prize_id => 0) %></div>
+        <div class="span2"><%= link_to image_tag("loyalty.png"), prize_points_path(@restaurant, :status_prize_id => 0) %></div>
         <div class="span2"><%= link_to image_tag("social_prize.png"), socical_points_path(restaurant_id: @restaurant.id) %></div>
         <div class="icon-reward span2"><%= link_to image_tag("prize_image.png"), restaurant_rewards_path(@restaurant) %></div>
         <div class="icon-reward span2"><%= link_to image_tag("points_prize.png"), rewards_restaurant_points_path(@restaurant) %></div>
