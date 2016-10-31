@@ -1,0 +1,42 @@
+h1 Listing rewards
+
+table
+  thead
+    tr
+      th Name
+      th Photo
+      th Share link
+      th Available from
+      th Expired until
+      th Timezone
+      th Default timezone
+      th Description
+      th Quantity
+      th Stats
+      th Weekly Reward Email
+      th Location
+      th
+      th
+      th
+
+  tbody
+    - @rewards.each do |reward|
+      tr
+        td = reward.name
+        td = reward.photo
+        td = reward.share_link
+        td = reward.available_from
+        td = reward.expired_until
+        td = reward.timezone
+        td = reward.description
+        td = reward.quantity
+        td = reward.weekly_reward_email
+        td = reward.stats
+        td = reward.location
+        td = link_to 'Show', reward
+        td = link_to 'Edit', edit_reward_path(reward)
+        td = link_to 'Destroy', reward, data: {:confirm => 'Are you sure?'}, :method => :delete
+
+br
+
+/ = link_to 'New Reward', new_reward_path
