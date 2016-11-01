@@ -1,5 +1,7 @@
 class RewardReport
   include Sidekiq::Worker
+  sidekiq_options retry: false
+
 
   def perform(location_id)
     restaurant = Location.find(location_id)
