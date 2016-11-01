@@ -77,6 +77,8 @@ gem 'twitter'
 gem 'test-unit'
 gem 'wicked'
 gem 'groupdate'
+gem 'whenever', require: false
+gem 'sidekiq'
 
 group :assets do
   gem 'sass-rails', '~> 3.2.3'

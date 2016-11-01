@@ -25,4 +25,8 @@ class Reward < ActiveRecord::Base
     end
     time_valid and quota_valid
   end
+
+  def get_redeemed_per_week
+    self.user_rewards.where("is_reedemed = true AND (updated_at BETWEEN ? AND ?)", 6.days.ago, Time.now).count
+  end
 end

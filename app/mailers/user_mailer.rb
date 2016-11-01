@@ -227,4 +227,12 @@ class UserMailer < ActionMailer::Base
     @year = year
     mail(to: email, content_type: "text/html", subject: "Weekly Progress Report")
   end
+
+  def send_email_weekly_prize_report(emails, restaurant, rewards)
+    @restaurant = restaurant
+    @rewards = rewards
+    @total_redemeed = restaurant.get_total_redeemed
+    @total_redemeed_per_week = restaurant.get_total_redemeed_per_week
+    mail(to: emails, content_type: "text/html", subject: "Weekly Prize Report")
+  end
 end

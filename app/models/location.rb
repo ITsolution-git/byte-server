@@ -1166,6 +1166,12 @@ class Location < ActiveRecord::Base
     return self.find_by_sql(sql).first
   end
 
+  def self.sending_weekly_reward_report
+    self.find_in_batches(start: 0, batch_size: 1000) do |restaurants|
+      restaurants.each { |restaurant| RewardReport.perform_async(restaurant.id) }
+    end
+  end
+
   def get_next_prize_location(location_id,points,user_id)
     results = []
     current_prizes = Prize.get_unlocked_prizes_by_location(location_id, points, user_id)
@@ -1453,4 +1459,13 @@ class Location < ActiveRecord::Base
   def use_primary_cuisine?
     skip_primary_cuisine_validation.to_i != 1
   end
+
+  def get_total_redeemed
+    self.rewards.map{|reward| reward.stats}.sum
+  end
+
+  def get_total_redemeed_per_week
+    self.rewards.map{|reward| reward.get_redeemed_per_week }.sum
+  end
+
 end
