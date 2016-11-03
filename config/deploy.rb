@@ -89,6 +89,7 @@ end
 # after :deploy, 'figaro:finalize'
 # after :deploy, 'redis:restart'
 after :deploy, 'deploy:finished'
+after :deploy, 'sidekiq:restart'
 
 namespace :deploy do
 

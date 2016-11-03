@@ -132,6 +132,9 @@ GEM
     capistrano-rvm (0.1.2)
       capistrano (~> 3.0)
       sshkit (~> 1.2)
+    capistrano-sidekiq (0.5.4)
+      capistrano
+      sidekiq (>= 3.4)
     carrierwave (0.10.0)
       activemodel (>= 3.2.0)
       activesupport (>= 3.2.0)
@@ -624,10 +627,12 @@ DEPENDENCIES
   capistrano-rails (~> 1.1)
   capistrano-resque (~> 0.2.2)
   capistrano-rvm
+  capistrano-sidekiq
   carrierwave
   cloudinary
   coffee-rails (~> 3.2.1)
   copy_carrierwave_file
+  daemons
   decent_exposure
   devise (= 2.2.3)
   execjs

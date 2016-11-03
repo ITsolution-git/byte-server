@@ -77,6 +77,7 @@ gem 'twitter'
 gem 'test-unit'
 gem 'wicked'
 gem 'groupdate'
+gem 'daemons'
 gem 'whenever', require: false
 gem 'sidekiq'
 
@@ -103,4 +104,5 @@ group :development do
   gem 'spring-commands-rspec'
   gem 'thin'
   gem 'foreman'
+  gem 'capistrano-sidekiq', require: false
 end
