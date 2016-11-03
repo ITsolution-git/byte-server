@@ -29,4 +29,14 @@ class Reward < ActiveRecord::Base
   def get_redeemed_per_week
     self.user_rewards.where("is_reedemed = true AND (updated_at BETWEEN ? AND ?)", 6.days.ago, Time.now).count
   end
+
+  def get_total_redemeed_past_week
+    self.user_rewards.where("is_reedemed = true AND (updated_at < ?)", 5.days.ago).count
+  end
+
+  def self.sending_weekly_reward_report
+    self.find_in_batches(start: 0, batch_size: 1000) do |rewards|
+      rewards.each { |reward| RewardReport.perform_async(reward.id) }
+    end
+  end
 end

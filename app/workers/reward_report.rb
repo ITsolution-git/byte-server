@@ -3,10 +3,8 @@ class RewardReport
   sidekiq_options retry: false
 
 
-  def perform(location_id)
-    restaurant = Location.find(location_id)
-    rewards = restaurant.rewards
-    emails = rewards.map{ |r| r.weekly_reward_email }.join(",").split(",").uniq
-    UserMailer.send_email_weekly_prize_report(emails, restaurant, rewards).deliver if emails.present?
+  def perform(reward_id)
+    reward = Reward.find(reward_id)
+    UserMailer.send_email_weekly_prize_report(reward).deliver if reward.weekly_reward_email.present?
   end
 end

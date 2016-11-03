@@ -685,25 +685,12 @@
                 <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%; min-width:100%;" width="100%" class="mcnTextContentContainer">
                     <tbody>
                       <tr>
-
                         <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;">
-
-                            <div style="text-align: left;"><span style="font-family:comic sans ms,marker felt-thin,arial,sans-serif"><%= Time.now.strftime("%B %d, %Y") %></span></div>
-
-                        </td>
-                      </tr><tr>
-
-                        <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;">
-
-                            <div style="text-align: left;"><span style="font-family:comic sans ms,marker felt-thin,arial,sans-serif"><%= @restaurant.name %></span></div>
-
-                        </td>
-                      </tr><tr>
-
-                        <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;">
-
-                            <div style="text-align: left;"><span style="font-family:comic sans ms,marker felt-thin,arial,sans-serif"><%= @restaurant.address %></span></div>
-
+                          <div style="text-align: left;">
+                            <span style="font-family:comic sans ms,marker felt-thin,arial,sans-serif;margin-right: 15px;"><%= Time.now.strftime("%m/%d/%y") %></span>
+                            <span style="font-family:comic sans ms,marker felt-thin,arial,sans-serif;"><%= @restaurant.name %> - </span>
+                            <span style="font-family:comic sans ms,marker felt-thin,arial,sans-serif"><%= @restaurant.address %></span>
+                          </div>
                         </td>
                       </tr>
                     </tbody>
@@ -716,12 +703,21 @@
                 <td valign="top" id="templateUpperColumns">
                   <table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnTextBlock" style="min-width:100%;">
                     <tbody class="mcnTextBlockOuter">
-                      <tr style="color: #fff; background: #cf1313;">
+                      <tr style="color: #fff; background: #222;text-align: center;">
                         <td valign="top" class="mcnTextBlockInner" style="padding-top:9px;">
                           <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%; min-width:100%;" width="100%" class="mcnTextContentContainer">
                             <tbody>
                               <tr>
-                                <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;">Prize Name</td>
+                                <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:15px; padding-bottom:9px; padding-left:18px;">Expiration Date</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </td>
+                        <td valign="top" class="mcnTextBlockInner" style="padding-top:9px;width: 170px;">
+                          <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%; min-width:100%;" width="100%" class="mcnTextContentContainer">
+                            <tbody>
+                              <tr>
+                                <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:15px; padding-bottom:9px; padding-left:15px;">Prize Name</td>
                               </tr>
                             </tbody>
                           </table>
@@ -730,17 +726,17 @@
                           <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%; min-width:100%;" width="100%" class="mcnTextContentContainer">
                             <tbody>
                               <tr>
-                                <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;">Weekly #Redeemed</td>
+                                <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:15px; padding-bottom:9px; padding-left:15px;">Uplocked Prizes</td>
                               </tr>
                             </tbody>
                           </table>
                         </td>
 
-                        <td valign="top" class="mcnTextBlockInner" style="padding-top:9px;">
+                        <td valign="top" class="mcnTextBlockInner" style="padding-top:9px;width: 100px;">
                           <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%; min-width:100%;" width="100%" class="mcnTextContentContainer">
                             <tbody>
                               <tr>
-                                <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;">Total #Redeemed</td>
+                                <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:15px; padding-bottom:9px; padding-left:15px;">Past Week Redeemed</td>
                               </tr>
                             </tbody>
                           </table>
@@ -749,58 +745,18 @@
                           <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%; min-width:100%;" width="100%" class="mcnTextContentContainer">
                             <tbody>
                               <tr>
-                                <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;">Expiration Date</td>
+                                <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:15px; padding-bottom:9px; padding-left:15px;">Total Redeemed</td>
                               </tr>
                             </tbody>
                           </table>
                         </td>
                       </tr>
-                      <% @rewards.each do |reward| %>
-                        <tr>
-                          <td valign="top" class="mcnTextBlockInner" style="padding-top:9px;">
-                            <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%; min-width:100%;" width="100%" class="mcnTextContentContainer">
-                              <tbody>
-                                <tr>
-                                  <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;"><%= reward.name %></td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          </td>
-                          <td valign="top" class="mcnTextBlockInner" style="padding-top:9px;">
-                            <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%; min-width:100%;" width="100%" class="mcnTextContentContainer">
-                              <tbody>
-                                <tr>
-                                  <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;"><%= reward.get_redeemed_per_week %></td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          </td>
-                          <td valign="top" class="mcnTextBlockInner" style="padding-top:9px;">
-                            <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%; min-width:100%;" width="100%" class="mcnTextContentContainer">
-                              <tbody>
-                                <tr>
-                                  <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;"><%= reward.stats %></td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          </td>
-                          <td valign="top" class="mcnTextBlockInner" style="padding-top:9px;">
-                            <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%; min-width:100%;" width="100%" class="mcnTextContentContainer">
-                              <tbody>
-                                <tr>
-                                  <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;"><%= reward.expired_until.strftime("%m.%d.%y") %></td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          </td>
-                        </tr>
-                      <% end %>
-                      <tr style="color: #fff; background: #cf1313;">
+                      <tr style="text-align: center;">
                         <td valign="top" class="mcnTextBlockInner" style="padding-top:9px;">
                           <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%; min-width:100%;" width="100%" class="mcnTextContentContainer">
                             <tbody>
                               <tr>
-                                <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;">Total</td>
+                                <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:15px; padding-bottom:9px; padding-left:18px;"><%= @reward.expired_until.strftime("%m.%d.%y") %></td>
                               </tr>
                             </tbody>
                           </table>
@@ -809,7 +765,72 @@
                           <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%; min-width:100%;" width="100%" class="mcnTextContentContainer">
                             <tbody>
                               <tr>
-                                <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;"><%= @total_redemeed_per_week %></td>
+                                <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:15px; padding-bottom:9px; padding-left:15px;"><%= @reward.name %></td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </td>
+                        <td valign="top" class="mcnTextBlockInner" style="padding-top:9px;">
+                          <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%; min-width:100%;" width="100%" class="mcnTextContentContainer">
+                            <tbody>
+                              <tr>
+                                <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:15px; padding-bottom:9px; padding-left:15px;"><%= @unlocked_prizes %></td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </td>
+                        <td valign="top" class="mcnTextBlockInner" style="padding-top:9px;width: 90px;">
+                          <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%; min-width:100%;" width="100%" class="mcnTextContentContainer">
+                            <tbody>
+                              <tr>
+                                <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:15px; padding-bottom:9px; padding-left:15px;"><%= @total_redemeed_past_week %></td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </td>
+                        <td valign="top" class="mcnTextBlockInner" style="padding-top:9px;">
+                          <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%; min-width:100%;" width="100%" class="mcnTextContentContainer">
+                            <tbody>
+                              <tr>
+                                <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:15px; padding-bottom:9px; padding-left:15px;"><%= @total_redemeed %></td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </td>
+                      </tr>
+                      <tr style="color: #fff; background: #222;text-align: center;">
+                        <td valign="top" class="mcnTextBlockInner" style="padding-top:9px;">
+                          <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%; min-width:100%;" width="100%" class="mcnTextContentContainer">
+                            <tbody>
+                              <tr>
+                                <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;"></td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </td>
+                        <td valign="top" class="mcnTextBlockInner" style="padding-top:9px;">
+                          <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%; min-width:100%;" width="100%" class="mcnTextContentContainer">
+                            <tbody>
+                              <tr>
+                                <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:15px; padding-bottom:9px; padding-left:15px;">Total</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </td>
+                        <td valign="top" class="mcnTextBlockInner" style="padding-top:9px;">
+                          <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%; min-width:100%;" width="100%" class="mcnTextContentContainer">
+                            <tbody>
+                              <tr>
+                                <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:15px; padding-bottom:9px; padding-left:15px;"><%= @unlocked_prizes %></td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </td>
+                        <td valign="top" class="mcnTextBlockInner" style="padding-top:9px;">
+                          <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%; min-width:100%;" width="100%" class="mcnTextContentContainer">
+                            <tbody>
+                              <tr>
+                                <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:15px; padding-bottom:9px; padding-left:15px;width: 90px;"><%= @total_redemeed_past_week %></td>
                               </tr>
                             </tbody>
                           </table>
@@ -819,16 +840,7 @@
                           <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%; min-width:100%;" width="100%" class="mcnTextContentContainer">
                             <tbody>
                               <tr>
-                                <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;"><%= @total_redemeed %></td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </td>
-                        <td valign="top" class="mcnTextBlockInner" style="padding-top:9px;">
-                          <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%; min-width:100%;" width="100%" class="mcnTextContentContainer">
-                            <tbody>
-                              <tr>
-                                <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;"></td>
+                                <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:15px; padding-bottom:9px; padding-left:15px;"><%= @total_redemeed %></td>
                               </tr>
                             </tbody>
                           </table>
@@ -848,9 +860,7 @@
                             <tbody>
                               <tr>
                                 <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;">
-                                Please contact us if you <br/>
-                                have issue or questions <br/>
-                                about this report. <br/><br/>
+                                Please contact us if you have questions about this report. <br/><br/>
 
                                 Thanks <br/>
                                 BYTE TEAM <br/>

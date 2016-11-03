@@ -1166,12 +1166,6 @@ class Location < ActiveRecord::Base
     return self.find_by_sql(sql).first
   end
 
-  def self.sending_weekly_reward_report
-    self.find_in_batches(start: 0, batch_size: 1000) do |restaurants|
-      restaurants.each { |restaurant| RewardReport.perform_async(restaurant.id) }
-    end
-  end
-
   def get_next_prize_location(location_id,points,user_id)
     results = []
     current_prizes = Prize.get_unlocked_prizes_by_location(location_id, points, user_id)

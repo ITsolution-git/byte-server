@@ -19,5 +19,5 @@
 
 # Learn more: http://github.com/javan/whenever
 every :friday, at: "12:01am" do
-  runner 'Location.sending_weekly_reward_report'
+  runner 'Reward.sending_weekly_reward_report'
 end

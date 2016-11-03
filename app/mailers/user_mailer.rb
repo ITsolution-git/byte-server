@@ -228,11 +228,13 @@ class UserMailer < ActionMailer::Base
     mail(to: email, content_type: "text/html", subject: "Weekly Progress Report")
   end
 
-  def send_email_weekly_prize_report(emails, restaurant, rewards)
-    @restaurant = restaurant
-    @rewards = rewards
-    @total_redemeed = restaurant.get_total_redeemed
-    @total_redemeed_per_week = restaurant.get_total_redemeed_per_week
+  def send_email_weekly_prize_report(reward)
+    @restaurant = reward.location
+    emails = reward.weekly_reward_email.split(",")
+    @reward = reward
+    @unlocked_prizes = @reward.quantity.zero? ? "Unlimited Prizes" : @reward.quantity
+    @total_redemeed = @reward.stats
+    @total_redemeed_past_week = @reward.get_total_redemeed_past_week
     mail(to: emails, content_type: "text/html", subject: "Weekly Prize Report")
   end
 end
