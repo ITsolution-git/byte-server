@@ -21,3 +21,7 @@
 every :friday, at: "12:01am" do
   runner 'Reward.sending_weekly_reward_report'
 end
+
+every :friday, at: "12:30am" do
+  runner 'Location.sending_weekly_progress_report'
+end

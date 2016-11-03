@@ -1454,12 +1454,10 @@ class Location < ActiveRecord::Base
     skip_primary_cuisine_validation.to_i != 1
   end
 
-  def get_total_redeemed
-    self.rewards.map{|reward| reward.stats}.sum
-  end
-
-  def get_total_redemeed_per_week
-    self.rewards.map{|reward| reward.get_redeemed_per_week }.sum
+  def self.sending_weekly_progress_report
+    self.where(weekly_progress_report: 1).find_in_batches do |locations|
+      locations.each { |location| LocationReport.perform_async(location.id) }
+    end
   end
 
 end
