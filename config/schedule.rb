@@ -18,10 +18,10 @@
 # end
 
 # Learn more: http://github.com/javan/whenever
-every :friday, at: "12:01am" do
+every :saturday, at: "12:01am" do
   runner 'Reward.sending_weekly_reward_report'
 end
 
-every :friday, at: "1:30am" do
+every :saturday, at: "1:30am" do
   runner 'Location.sending_weekly_progress_report'
 end
