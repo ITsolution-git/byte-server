@@ -1453,4 +1453,11 @@ class Location < ActiveRecord::Base
   def use_primary_cuisine?
     skip_primary_cuisine_validation.to_i != 1
   end
+
+  def self.sending_weekly_progress_report
+    self.where(weekly_progress_report: 1).find_in_batches do |locations|
+      locations.each { |location| LocationReport.perform_async(location.id) }
+    end
+  end
+
 end

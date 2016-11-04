@@ -1,0 +1,42 @@
+= form_for reward, url: restaurant_rewards_path do |f|
+  - if reward.errors.any?
+    #error_explanation
+      h2 = "#{pluralize(reward.errors.count, "error")} prohibited this reward from being saved:"
+      ul
+        - reward.errors.full_messages.each do |message|
+          li = message
+
+  .field
+    = f.label :name
+    = f.text_field :name
+  .field
+    = f.label :photo
+    = f.file_field :photo
+  .field
+    = f.label :share_link
+    = f.text_field :share_link
+  .field
+    = f.label :available_from
+    = f.datetime_select :available_from
+  .field
+    = f.label :expired_until
+    = f.datetime_select :expired_until
+  .field
+    = f.label :timezone
+    = f.text_field :timezone
+  .field
+    = f.label :description
+    = f.text_area :description
+  .field
+    = f.label :quantity
+    = f.number_field :quantity
+  .field
+    = f.label :stats
+    = f.number_field :stats
+  .field
+    = f.label :unredeemed_stats
+    = f.number_field :unredeemed_stats
+  .field
+    = f.label :weekly_reward_email
+    = f.number_field :weekly_reward_email
+  .actions = f.submit

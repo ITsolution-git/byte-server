@@ -132,11 +132,15 @@ GEM
     capistrano-rvm (0.1.2)
       capistrano (~> 3.0)
       sshkit (~> 1.2)
+    capistrano-sidekiq (0.5.4)
+      capistrano
+      sidekiq (>= 3.4)
     carrierwave (0.10.0)
       activemodel (>= 3.2.0)
       activesupport (>= 3.2.0)
       json (>= 1.7)
       mime-types (>= 1.16)
+    chronic (0.10.2)
     cloudinary (1.1.0)
       aws_cf_signer
       rest-client
@@ -151,6 +155,8 @@ GEM
     colorize (0.7.7)
     columnize (0.9.0)
     commonjs (0.2.7)
+    concurrent-ruby (1.0.2)
+    connection_pool (2.2.0)
     copy_carrierwave_file (1.1.0)
       carrierwave (~> 0.9)
     daemons (1.2.3)
@@ -509,6 +515,11 @@ GEM
     sexp_processor (4.6.0)
     shoulda-matchers (2.8.0)
       activesupport (>= 3.0.0)
+    sidekiq (4.2.3)
+      concurrent-ruby (~> 1.0)
+      connection_pool (~> 2.2, >= 2.2.0)
+      rack-protection (>= 1.5.0)
+      redis (~> 3.2, >= 3.2.1)
     similar_text (0.0.4)
     simple_oauth (0.3.1)
     sinatra (1.4.6)
@@ -588,6 +599,8 @@ GEM
     vidibus-routing_error (0.2.2)
     warden (1.2.3)
       rack (>= 1.0)
+    whenever (0.9.7)
+      chronic (>= 0.6.3)
     wicked (1.2.1)
       railties (>= 3.0.7)
     word-count-validator (1.0.0)
@@ -614,10 +627,12 @@ DEPENDENCIES
   capistrano-rails (~> 1.1)
   capistrano-resque (~> 0.2.2)
   capistrano-rvm
+  capistrano-sidekiq
   carrierwave
   cloudinary
   coffee-rails (~> 3.2.1)
   copy_carrierwave_file
+  daemons
   decent_exposure
   devise (= 2.2.3)
   execjs
@@ -675,6 +690,7 @@ DEPENDENCIES
   rufus-scheduler (~> 2.0.24)
   sass-rails (~> 3.2.3)
   shoulda-matchers
+  sidekiq
   similar_text (~> 0.0.4)
   slim-rails
   spring
@@ -688,11 +704,6 @@ DEPENDENCIES
   underscore-rails
   unicorn
   vidibus-routing_error
+  whenever
   wicked
   word-count-validator (~> 1.0.0)
-
-RUBY VERSION
-   ruby 2.1.2p95
-
-BUNDLED WITH
-   1.13.1

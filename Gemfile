@@ -77,6 +77,9 @@ gem 'twitter'
 gem 'test-unit'
 gem 'wicked'
 gem 'groupdate'
+gem 'daemons'
+gem 'whenever', require: false
+gem 'sidekiq'
 
 group :assets do
   gem 'sass-rails', '~> 3.2.3'
@@ -101,4 +104,5 @@ group :development do
   gem 'spring-commands-rspec'
   gem 'thin'
   gem 'foreman'
+  gem 'capistrano-sidekiq', require: false
 end

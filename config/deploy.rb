@@ -1,5 +1,6 @@
 # config valid only for Capistrano 3.1
 require 'bugsnag/capistrano'
+require "whenever/capistrano"
 
 lock '3.2.1'
 
@@ -42,6 +43,8 @@ set :keep_releases, 1
 
 # BugSnag Integration
 set :bugsnag_api_key, 'e19c64acabbba4e1ceaad7f45ea3e9f8'
+
+set :whenever_command, "bundle exec whenever"
 
 namespace :figaro do
   desc "SCP transfer figaro configuration to the shared folder"
@@ -89,6 +92,7 @@ end
 # after :deploy, 'figaro:finalize'
 # after :deploy, 'redis:restart'
 after :deploy, 'deploy:finished'
+after :deploy, 'sidekiq:restart'
 
 namespace :deploy do
 
