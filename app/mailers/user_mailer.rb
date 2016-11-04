@@ -232,7 +232,7 @@ class UserMailer < ActionMailer::Base
     @restaurant = reward.location
     emails = reward.weekly_reward_email.split(",")
     @reward = reward
-    @unlocked_prizes = @reward.user_rewards.where(is_redeemed: false).count
+    @unlocked_prizes = @reward.user_rewards.where(is_reedemed: false).count
     @total_redemeed = @reward.stats
     @total_redemeed_past_week = @reward.get_total_redemeed_past_week
     mail(to: emails, content_type: "text/html", subject: "Weekly Prize Report")
