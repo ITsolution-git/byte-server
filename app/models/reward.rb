@@ -1,6 +1,6 @@
 class Reward < ActiveRecord::Base
   belongs_to :location
-  has_many :user_rewards
+  has_many :user_rewards, dependent: :destroy
   has_many :senders, class_name: "User", foreign_key: "sender_id", through: :user_rewards
   has_many :receivers, class_name: "User", foreign_key: "receiver_id", through: :user_rewards
 

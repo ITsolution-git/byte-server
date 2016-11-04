@@ -141,7 +141,7 @@ class User < ActiveRecord::Base
   has_many :user_contacts
   has_many :user_recent_searches, :dependent => :destroy
   has_many :subscriptions
-  has_many :user_rewards, foreign_key: "receiver_id"
+  has_many :user_rewards, foreign_key: "receiver_id", dependent: :destroy
   has_many :rewards, through: :user_rewards
 
   #############################
