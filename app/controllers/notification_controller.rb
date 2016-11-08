@@ -236,19 +236,19 @@ class NotificationController < ApplicationController
         end
       end
 
-      #add point prize to prize
-      if prize_id.present?
-        group_users.each do |user|
-          add_prize_user(prize_id, current_user.id, user.id, location_id) # Will send push notification
-        end
-      end
-
     end # end of case statement
 
     # If there are no users
     if group_users.empty?
       flash[:warning] = "There are no users to send to!"
       return redirect_to groupmessage_notification_index_path(restaurant: params[:notifications][:location_id], alert: params[:alert])
+    end
+
+    #add point prize to prize
+    if prize_id.present?
+      group_users.each do |user|
+        add_prize_user(prize_id, current_user.id, user.id, location_id) # Will send push notification
+      end
     end
 
     # Send notification (and possibly push notification) to each user in the group

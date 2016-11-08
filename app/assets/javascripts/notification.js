@@ -24,15 +24,15 @@ var GroupMessage = (function() {
             if (type === 'Rating' || type === 'Points Message' || type === 'Rating Reward') {
                 this.enablePoint();
             }
-            this.disablePrizePoint();
-            if (type === 'Points Message' || type === 'Rating Reward'){
-              this.enablePrizePoint();
-            }
+            // this.disablePrizePoint();
+            // if (type === 'Points Message' || type === 'Rating Reward'){
+            //   this.enablePrizePoint();
+            // }
         };
 
          // var options = "";
          //        $.get('url', function(data){
-                    
+
          //            options += '<option>' + value+ '</option>';
          //            $("#prize-points").html(options);
          //            $("#prize-points").show();
@@ -99,7 +99,7 @@ var GroupMessage = (function() {
             //     } else {
             //         $(".Validate_Email_Span").text("Please enter valid email to send");
             //     }
-                
+
             //     this.updateGUIuser_emails(false);
             //     result = false;
             //     // console.log('fdsfdsf')
@@ -251,7 +251,7 @@ var GroupMessage = (function() {
             $('.receipt-total > .total-span').addClass('hide-rating-total');
             return true;
           } //else {
-        //     if (($('#receipt_date').val() == "") && ($('#receipt_store').val() == "" ) 
+        //     if (($('#receipt_date').val() == "") && ($('#receipt_store').val() == "" )
         //         && ($('#receipt_ticket').val() == "") && ($('#receipt_total').val() == "")){
         //         $('.datepciker-receipt > .date-empty').removeClass('hide-rating-date-empty');
         //         $('.receipt-store span').removeClass('hide-rating-store');
@@ -347,7 +347,7 @@ var GroupMessage = (function() {
     //       textField.style.height = textField.scrollHeight + "px";
     //       if (textField.clientHeight < textField.scrollHeight)
     //       {
-    //         textField.style.height = 
+    //         textField.style.height =
     //           (textField.scrollHeight * 2 - textField.clientHeight) + "px";
     //       }
     //     }
@@ -385,7 +385,7 @@ $(document).ready(function() {
     var groupMessage = new GroupMessage(about);
     groupMessage.hideNotificationForm();
     groupMessage.disabledSelect();
-    
+
     // $(document).on('keyup', '#user_emails', function (event) {
     //    groupMessage.autoGrowTextArea(this);
     // });
@@ -425,7 +425,7 @@ $(document).ready(function() {
        $('.date-sort').addClass('hide');
     });
 
-   
+
     $(".image-arrows-message").on('click', function(){
       groupMessage.sortTableImage('.image-arrows-message', '.message-sort');
       $('.receipt-sort').addClass('hide');
@@ -434,7 +434,7 @@ $(document).ready(function() {
        $('.date-sort').addClass('hide');
     });
 
-    
+
 
     $(".image-arrows-product").on('click', function(){
       groupMessage.sortTableImage('.image-arrows-product', '.product-sort');
@@ -444,7 +444,7 @@ $(document).ready(function() {
       $('.date-sort').addClass('hide');
     });
 
-    
+
 
     $(".image-arrows-date").on('click', function(){
       groupMessage.sortTableImage('.image-arrows-date', '.date-sort');
@@ -454,7 +454,7 @@ $(document).ready(function() {
       $('.user-sort').addClass('hide');
     });
 
-    
+
 
     // $(document).on('click', '.approve-rating', function(e) {
     //    groupMessage.checkedForm();
@@ -476,7 +476,7 @@ $(document).ready(function() {
     $(document).on('keydown', '#redactor_points', function(e) {
       return Util.forceNumericOnly(this, e);
     });
-   
+
     $(".approve-rating").on('change', function(){
       groupMessage.approveRating(this);
       groupMessage.checkedForm();
@@ -528,13 +528,13 @@ $(document).ready(function() {
     });
 
     $(document).on('change', '#receipt_date', function(){
-      if ($('#receipt_date').val() != ""){ 
-        $('.datepciker-receipt > .date-span').addClass('hide-rating-ticket'); 
+      if ($('#receipt_date').val() != ""){
+        $('.datepciker-receipt > .date-span').addClass('hide-rating-ticket');
       }
     });
 
     $(document).on('change', '#receipt_store', function(){
-      if ($("#receipt_store option:selected").val()){ 
+      if ($("#receipt_store option:selected").val()){
         $('.receipt-store > .store-span').addClass('hide-rating-ticket');
       }
     });
@@ -558,7 +558,7 @@ $(document).ready(function() {
     // });
     $(document).on('keyup', '#receipt_total', function(){
       if ($('.approve-rating').is(":checked") == false){
-          if ($('#receipt_total').val() != ""){ 
+          if ($('#receipt_total').val() != ""){
             $(this).parent().find('.total-span').addClass('hide-rating-total');
           }else {
             $(this).parent().find('.total-span').removeClass('hide-rating-ticket');
