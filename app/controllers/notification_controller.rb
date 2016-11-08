@@ -931,6 +931,13 @@ class NotificationController < ApplicationController
     render status: 200, json: { status: :success, feedback: @feedback_rating_str}
   end
 
+  def send_weekly_prize_report
+    reward = Reward.find params[:reward_id]
+    UserMailer.send_email_weekly_prize_report(reward).deliver
+
+    redirect_to edit_restaurant_reward_path(reward.location, reward), notice: "Weekly prize report has been sent"
+  end
+
 
   private
 

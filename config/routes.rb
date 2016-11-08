@@ -765,4 +765,5 @@ end
   resources :location_merchants, only: [:create, :new]
 
   post '/auth/cognos/callback', to: 'webservice#callback'
+  post "/send_weekly_prize_report", to: 'notification#send_weekly_prize_report'
 end

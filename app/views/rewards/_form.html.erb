@@ -79,6 +79,11 @@
         <%= f.label :weekly_reward_email %>
         <%= f.text_area :weekly_reward_email, rows: 3 %>
       </div>
+      <% if @reward.persisted? %>
+        <div class="span6">
+          <%= link_to "Send weekly prize report", send_weekly_prize_report_path(reward_id: @reward.id), method: :post, class: "btn" %>
+        </div>
+      <% end %>
     </div>
     <div class="text-center">
       <%= f.submit nil, class: "btn btn-primary" %>
