@@ -88,6 +88,12 @@ namespace :redis do
   end
 end
 
+namespace :migration do
+  task :migrate do
+    run "cd /var/www/MultiplyMeApi/current; bundle exec rake db:migrate RAILS_ENV=production"
+  end
+end
+
 # after :deploy, 'figaro:setup'
 # after :deploy, 'figaro:finalize'
 # after :deploy, 'redis:restart'
