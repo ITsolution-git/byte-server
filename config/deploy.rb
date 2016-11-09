@@ -90,7 +90,7 @@ end
 
 namespace :migration do
   task :migrate do
-    run "cd /var/www/MultiplyMeApi/current; bundle exec rake db:migrate RAILS_ENV=production"
+    run "cd /var/www/MyMenu-Server/current; bundle exec rake db:migrate RAILS_ENV=production"
   end
 end
 
