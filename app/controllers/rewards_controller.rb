@@ -1,6 +1,9 @@
+# require 'rqrcode'
+
 class RewardsController < ApplicationController
   before_filter :authenticate_user!, :set_restaurant, :set_rewards, :populate_timezones
   before_filter :adjust_timezone, only: [:create, :update]
+  before_filter :fetch_reward, only: [:show, :edit, :update, :destroy, :print_qr_code]
 
   # GET /rewards
   # GET /rewards.json
@@ -14,8 +17,6 @@ class RewardsController < ApplicationController
   # GET /rewards/1
   # GET /rewards/1.json
   def show
-    @reward = Reward.find(params[:id])
-
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @reward }
@@ -35,13 +36,15 @@ class RewardsController < ApplicationController
 
   # GET /rewards/1/edit
   def edit
-    @reward = Reward.find(params[:id])
+    qrcode = @reward.qrcode.present? ? @reward.qrcode : (@reward.name.downcase.gsub(/\W/, '') + @reward.expired_until.strftime("%Y%m%d"))
+    @qr = RQRCode::QRCode.new(qrcode, :size => 5, :level => :h )
   end
 
   # POST /rewards
   # POST /rewards.json
   def create
     @reward = @restaurant.rewards.build(params[:reward])
+    @reward.qrcode = @reward.name.downcase.gsub(/\W/, '') + @reward.expired_until.to_date.to_s
 
     respond_to do |format|
       if @reward.save
@@ -57,7 +60,7 @@ class RewardsController < ApplicationController
   # PUT /rewards/1
   # PUT /rewards/1.json
   def update
-    @reward = Reward.find(params[:id])
+    params[:reward][:qrcode] = @reward.qrcode.present? ? @reward.qrcode : (@reward.name.downcase.gsub(/\W/, '') + @reward.expired_until.strftime("%Y%m%d"))
 
     respond_to do |format|
       if @reward.update_attributes(params[:reward])
@@ -73,7 +76,6 @@ class RewardsController < ApplicationController
   # DELETE /rewards/1
   # DELETE /rewards/1.json
   def destroy
-    @reward = Reward.find(params[:id])
     @reward.destroy
 
     respond_to do |format|
@@ -111,6 +113,27 @@ class RewardsController < ApplicationController
     # end
     if params[:reward][:share_link].present?
       params[:reward][:share_link] = params[:reward][:share_link].parameterize
+    end
+  end
+
+  def fetch_reward
+    @reward = Reward.find(params[:id])
+  end
+
+  def print_qr_code
+    pdf_reward_name = @reward.name.downcase.gsub(/\W/, "")
+    qrcode = @reward.qrcode.present? ? @reward.qrcode : (@reward.name.downcase.gsub(/\W/, '') + @reward.expired_until.strftime("%Y%m%d"))
+    @qr = RQRCode::QRCode.new(qrcode, :size => 5, :level => :h )
+    pdf_render_hash = {}
+    pdf_render_hash[:pdf] = "print_qr_code_#{pdf_reward_name}.pdf"
+    pdf_render_hash[:page_size] = 'A4'
+    pdf_render_hash[:margin] = { :top => 10, :left => 15, :bottom => 10, :right => 15 }
+    pdf_render_hash[:orientation] = 'Portrait'
+
+    respond_to do |format|
+      format.pdf do
+        render pdf_render_hash
+      end
     end
   end
 end

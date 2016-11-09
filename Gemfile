@@ -80,6 +80,9 @@ gem 'groupdate'
 gem 'daemons'
 gem 'whenever', require: false
 gem 'sidekiq'
+gem 'rqrcode'
+gem 'wicked_pdf'
+gem 'wkhtmltopdf-binary'
 
 group :assets do
   gem 'sass-rails', '~> 3.2.3'

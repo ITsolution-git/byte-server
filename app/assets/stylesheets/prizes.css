@@ -41,3 +41,44 @@
 .caret{
   float: right;
 }
+
+.qrcode{
+  float: left;
+  margin-right: 15px;
+}
+
+.qrcode, .print-qrcode {
+  border-width: 0;
+  border-style: none;
+  border-color: #0000ff;
+  border-collapse: collapse;
+}
+.qrcode td {
+  border-width: 0;
+  border-style: none;
+  border-color: #0000ff;
+  border-collapse: collapse;
+  padding: 0;
+  margin: 0;
+  width: 5px;
+  height: 5px;
+}
+.qrcode td.black, .print-qrcode td.black { background-color: #000; }
+.qrcode td.white, .print-qrcode td.white { background-color: #fff; }
+
+.redeem-qrcode-checkbox{
+  float: left;
+  width: 30px !important;
+  height: 30px !important;
+}
+
+.print-qrcode td{
+  border-width: 0;
+  border-style: none;
+  border-color: #0000ff;
+  border-collapse: collapse;
+  padding: 0;
+  margin: 0;
+  width: 10px;
+  height: 10px;
+}

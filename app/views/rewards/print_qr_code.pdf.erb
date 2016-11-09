@@ -1,0 +1,23 @@
+<%= wicked_pdf_stylesheet_link_tag "prizes" %>
+<center>
+<h2><%= @reward.location.name %></h2>
+<h2><%= @reward.name %></h2>
+
+<div>
+  <table class="print-qrcode">
+    <% @qr.modules.each_index do |x| %>
+      <tr>
+        <% @qr.modules.each_index do |y| %>
+          <% if @qr.dark?(x,y) %>
+            <td class="black"></td>
+          <% else %>
+            <td class="white"></td>
+          <% end %>
+        <% end %>
+      </tr>
+    <% end %>
+  </table>
+</div>
+
+<h3>Exp Date: <%= @reward.expired_until.strftime("%m.%d.%y") %></h3>
+</center>

@@ -654,7 +654,11 @@ end
     end
 
     # Rewards 3.0
-    resources :rewards
+    resources :rewards do
+      member do
+        post 'print_qr_code'
+      end
+    end
   end
 
   resources :tutorial_videos, :only=>[:edit, :update]

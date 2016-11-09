@@ -4,7 +4,7 @@ class Reward < ActiveRecord::Base
   has_many :senders, class_name: "User", foreign_key: "sender_id", through: :user_rewards
   has_many :receivers, class_name: "User", foreign_key: "receiver_id", through: :user_rewards
 
-  attr_accessible :available_from, :default_timezone, :description, :expired_until, :name, :photo, :quantity, :share_link, :stats, :timezone, :weekly_reward_email
+  attr_accessible :available_from, :default_timezone, :description, :expired_until, :name, :photo, :quantity, :share_link, :stats, :timezone, :weekly_reward_email, :redeem_by_qrcode
 
   validates :name, :available_from, :expired_until, :timezone, :quantity, :description, presence: true
 

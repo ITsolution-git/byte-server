@@ -17,8 +17,31 @@
         <%= f.text_field :name %>
       </div>
       <div class="span6">
-        <%= f.label :share_link %>
+        <%= f.label :prize_code %>
         <%= f.text_field :share_link %>
+        <div>
+          <%= f.check_box :redeem_by_qrcode, class: "redeem-qrcode-checkbox", tooltip: "make this reward can redeem by QRcode" %>
+          <%= f.label "redeem by QRcode" %>
+        </div>
+        <br/>
+        <% if @reward.persisted? %>
+          <div>
+            <table class="qrcode">
+              <% @qr.modules.each_index do |x| %>
+                <tr>
+                  <% @qr.modules.each_index do |y| %>
+                    <% if @qr.dark?(x,y) %>
+                      <td class="black"></td>
+                    <% else %>
+                      <td class="white"></td>
+                    <% end %>
+                  <% end %>
+                </tr>
+              <% end %>
+            </table>
+            <%= link_to image_tag("PDF.png"), print_qr_code_restaurant_reward_path(@reward.location, @reward, format: "pdf"), method: :post, target: "_blank" %>
+          </div>
+        <% end %>
       </div>
     </div>
     <div class="row-fluid">
