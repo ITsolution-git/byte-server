@@ -58,6 +58,10 @@ Imenu::Application.routes.draw do
         collection do
           post 'redeem'
         end
+        member do
+          get 'scan'
+          post 'redeem_code'
+        end
       end
     end
   end

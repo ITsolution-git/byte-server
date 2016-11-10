@@ -18,7 +18,7 @@ class Reward < ActiveRecord::Base
 
   def is_valid?
     time_valid = (Time.current > available_from) and (Time.current < expired_until)
-    quota_valid = if stats.eql? 0
+    quota_valid = if quantity.eql? 0
       true
     else
       quantity > stats
