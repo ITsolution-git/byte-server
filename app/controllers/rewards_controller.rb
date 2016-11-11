@@ -36,15 +36,13 @@ class RewardsController < ApplicationController
 
   # GET /rewards/1/edit
   def edit
-    qrcode = @reward.qrcode.present? ? @reward.qrcode : (@reward.name.downcase.gsub(/\W/, '') + @reward.expired_until.strftime("%Y%m%d"))
-    @qr = RQRCode::QRCode.new(qrcode, :size => 5, :level => :h )
+    @qr = RQRCode::QRCode.new(@reward.id.to_s, :size => 5, :level => :h )
   end
 
   # POST /rewards
   # POST /rewards.json
   def create
     @reward = @restaurant.rewards.build(params[:reward])
-    @reward.qrcode = @reward.name.downcase.gsub(/\W/, '') + @reward.expired_until.to_date.to_s
 
     respond_to do |format|
       if @reward.save
@@ -60,7 +58,6 @@ class RewardsController < ApplicationController
   # PUT /rewards/1
   # PUT /rewards/1.json
   def update
-    params[:reward][:qrcode] = @reward.qrcode.present? ? @reward.qrcode : (@reward.name.downcase.gsub(/\W/, '') + @reward.expired_until.strftime("%Y%m%d"))
 
     respond_to do |format|
       if @reward.update_attributes(params[:reward])
@@ -122,8 +119,7 @@ class RewardsController < ApplicationController
 
   def print_qr_code
     pdf_reward_name = @reward.name.downcase.gsub(/\W/, "")
-    qrcode = @reward.qrcode.present? ? @reward.qrcode : (@reward.name.downcase.gsub(/\W/, '') + @reward.expired_until.strftime("%Y%m%d"))
-    @qr = RQRCode::QRCode.new(qrcode, :size => 5, :level => :h )
+    @qr = RQRCode::QRCode.new(@reward.id.to_s, :size => 5, :level => :h )
     pdf_render_hash = {}
     pdf_render_hash[:pdf] = "print_qr_code_#{pdf_reward_name}.pdf"
     pdf_render_hash[:page_size] = 'A4'
