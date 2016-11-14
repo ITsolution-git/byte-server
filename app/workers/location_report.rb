@@ -26,6 +26,7 @@ class LocationReport
     @returning_customer_count = @returning_customers.group_by_day(:created_at, range: period.weeks.ago..(period-1).weeks.ago).count
     @redeemed_prize_count = PrizeRedeem.where(prize_id: @prize_ids).group_by_day(:created_at, range: period.weeks.ago..(period-1).weeks.ago).count
     @feedback_rating = @comments.group_by_day('item_comments.created_at', range: period.weeks.ago..(period-1).weeks.ago).group(:rating).count
+    @user_reward_count = UserReward.where(location_id: restaurant.id, is_reedemed: true).group_by_day(:updated_at, range: period.weeks.ago..(period-1).weeks.ago).count
 
     @feedback_rating_sum = 0
     @feedback_rating_count = 0
@@ -76,7 +77,7 @@ class LocationReport
       :social_count => @social_count.map { |k, v| v }.sum,
       :new_customer_count => @new_customer_count.map { |k, v| v }.sum,
       :returning_customer_count => @returning_customer_count.map { |k, v| v }.sum,
-      :redeemed_prize_count => @redeemed_prize_count.map { |k, v| v }.sum,
+      :redeemed_prize_count => @redeemed_prize_count.map { |k, v| v }.sum + @user_reward_count.map { |k, v| v }.sum,
       :feedback_rating => @feedback_rating_str
     }
 
@@ -87,6 +88,7 @@ class LocationReport
     @new_customer_count = @new_customers.group_by_week(:created_at, range: period.years.ago..(period-1).years.ago).count
     @returning_customer_count = @returning_customers.group_by_week(:created_at, range: period.years.ago..(period-1).years.ago).count
     @redeemed_prize_count = PrizeRedeem.where(prize_id: @prize_ids).group_by_week(:created_at, range: period.years.ago..(period-1).years.ago).count
+    @user_reward_count = UserReward.where(location_id: restaurant.id, is_reedemed: true).group_by_week(:updated_at, range: period.years.ago..(period-1).years.ago).count
 
     @year = {
       :feedback_count => @feedback_count.map { |k, v| v }.sum,
@@ -95,7 +97,7 @@ class LocationReport
       :social_count => @social_count.map { |k, v| v }.sum,
       :new_customer_count => @new_customer_count.map { |k, v| v }.sum,
       :returning_customer_count => @returning_customer_count.map { |k, v| v }.sum,
-      :redeemed_prize_count => @redeemed_prize_count.map { |k, v| v }.sum
+      :redeemed_prize_count => @redeemed_prize_count.map { |k, v| v }.sum + @user_reward_count.map { |k, v| v }.sum
     }
 
     UserMailer.send_email_weekly_report(restaurant.weekly_progress_email, restaurant, @week, @year).deliver
