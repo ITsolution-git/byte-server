@@ -19,9 +19,10 @@
       <div class="span6">
         <%= f.label :prize_code %>
         <%= f.text_field :share_link %>
-        <div>
-          <%= f.check_box :redeem_by_qrcode, class: "redeem-qrcode-checkbox", tooltip: "make this reward can redeem by QRcode" %>
-          <%= f.label "redeem by QRcode" %>
+        <div style="clear: both"></div>
+        <div class="redeem-qrcode-checkbox">
+          <%= f.check_box :redeem_by_qrcode, tooltip: "make this reward can redeem by QRcode" %>
+          <%#= f.label "redeem by QRcode" %>
         </div>
         <br/>
         <% if @reward.persisted? %>

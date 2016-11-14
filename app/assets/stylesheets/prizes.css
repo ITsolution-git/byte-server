@@ -60,16 +60,16 @@
   border-collapse: collapse;
   padding: 0;
   margin: 0;
-  width: 5px;
-  height: 5px;
+  width: 4px;
+  height: 4px;
 }
 .qrcode td.black, .print-qrcode td.black { background-color: #000; }
 .qrcode td.white, .print-qrcode td.white { background-color: #fff; }
 
 .redeem-qrcode-checkbox{
   float: left;
-  width: 30px !important;
-  height: 30px !important;
+  margin-top: 15px;
+  margin-right: 10px;
 }
 
 .print-qrcode td{
