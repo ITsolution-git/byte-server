@@ -1,7 +1,8 @@
 module Api
   module V2
     class RewardsController < Api::BaseController
-      before_filter :set_reward, only: [:scan, :redeem_code]
+      before_filter :set_reward, only: [:redeem_code]
+      before_filter :set_user_reward, only: [:scan, :redeem]
       respond_to :json
 
       def index
@@ -10,7 +11,6 @@ module Api
 
       # Redeem Normally
       def redeem
-        @user_reward = @user.user_rewards.find(params[:id])
         if @user_reward.is_reedemed and !@user_reward.reward.is_valid?
           render json: { error: "The reward you requested is not available." }, status: 422
         else
@@ -24,11 +24,13 @@ module Api
       end
 
       def redeem_code
-        if @reward.is_valid? and @reward.redeem_by_qrcode
+        @user_reward = @user.user_rewards.find(params[:user_reward_id])
+        if @reward.is_valid? && @reward.redeem_by_qrcode && @user_reward.is_reedemed.eql?(false)
+          @user_reward.update_attribute(:is_reedemed, true)
           @reward.update_attribute :stats, (@reward.stats + 1)
-          render json: { success: "The reward is redeemed successfully." }, status: 200
+          render json: { success: "The reward is redeemed successfully.", id: @user_reward.id }, status: 200
         else
-          render json: { error: "The reward you requested is expired or redeem limit exceeded." }, status: 422
+          render json: { error: "The reward you requested is not available." }, status: 422
         end
       end
 
@@ -36,6 +38,10 @@ module Api
 
       def set_reward
         @reward = Reward.find(params[:id])
+      end
+
+      def set_user_reward
+        @user_reward = @user.user_rewards.find(params[:id])
       end
     end
   end
