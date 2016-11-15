@@ -25,7 +25,7 @@ module Api
 
       def redeem_code
         @user_reward = @user.user_rewards.find(params[:user_reward_id])
-        if @reward.is_valid? && @reward.redeem_by_qrcode && @user_reward.is_reedemed.eql?(false)
+        if @reward.is_valid? && @reward.redeem_by_qrcode && @user_reward.is_reedemed.eql?(false) && @user_reward.reward_id.eql?(@reward.id)
           @user_reward.update_attribute(:is_reedemed, true)
           @reward.update_attribute :stats, (@reward.stats + 1)
           render json: { success: "The reward is redeemed successfully.", id: @user_reward.id }, status: 200
