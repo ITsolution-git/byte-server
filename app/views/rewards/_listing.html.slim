@@ -10,7 +10,7 @@ hr
           strong = reward.name
         p
           | Expiration Date:&nbsp;
-          = reward.expired_until.strftime("%d/%m/%Y | %H:%M") rescue "-"
+          = reward.expired_until.strftime("%m/%d/%Y | %H:%M") rescue "-"
         ul.list-inline
           li = link_to "View/Edit", edit_restaurant_reward_path(@restaurant, reward)
           li = link_to "Delete", restaurant_reward_path(@restaurant, reward), data: {:confirm => 'Are you sure?'}, :method => :delete, remote: true
