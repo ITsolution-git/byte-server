@@ -505,6 +505,8 @@ class PointsController < ApplicationController
       end
     end
 
+    @user_rewards = @restaurant.user_rewards.where(is_reedemed: true)
+
     @reward_rating_notifications = Notifications.get_rating_notifications(current_user, location_ids)
 
     # calculate points
@@ -599,7 +601,13 @@ class PointsController < ApplicationController
       end
     end
 
-    @points_ledger_info.sort_by! {|obj| obj.created_at}.reverse!
+    @user_rewards.each do |i|
+      if i.present?
+        @points_ledger_info << i
+      end
+    end
+
+    @points_ledger_info.sort_by! {|obj| obj.updated_at}.reverse!
     @points_ledger_info = Kaminari.paginate_array(@points_ledger_info).page(params[:page]).per(10)
 
     if @check == false && !current_user.admin? && !@is_my_rewards_page

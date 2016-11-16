@@ -64,6 +64,7 @@ class Location < ActiveRecord::Base
   has_many :subscriptions
   has_many :social_shares
   has_many :rewards
+  has_many :user_rewards, through: :rewards
 
   #############################
   ###  CALLBACKS

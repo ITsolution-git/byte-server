@@ -61,6 +61,17 @@
             <td><%= i.created_at.in_time_zone("America/Chicago").strftime("%l:%M %p") %></td>
             <td></td>
           </tr>
+
+        <% elsif i.class == UserReward %>
+          <tr>
+            <td><%= i.receiver.username %></td>
+            <td>Redeem</td>
+            <td><%= i.reward.name %></td>
+            <td>10</td>
+            <td><%= i.updated_at.in_time_zone("America/Chicago").strftime("%Y-%m-%d ")%></td>
+            <td><%= i.updated_at.in_time_zone("America/Chicago").strftime("%l:%M %p") %></td>
+            <td></td>
+          </tr>
         <% else %>
 
           <% # This may be a Notification record! %>
