@@ -27,7 +27,7 @@ class RewardsController < ApplicationController
   # GET /rewards/new.json
   def new
     @reward = @restaurant.rewards.build
-
+    @reward.share_link = SecureRandom.hex(5)
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @reward }
@@ -37,6 +37,7 @@ class RewardsController < ApplicationController
   # GET /rewards/1/edit
   def edit
     @qr = RQRCode::QRCode.new(@reward.id.to_s, :size => 5, :level => :h )
+    @reward.share_link = SecureRandom.hex(5) if @reward.share_link.blank?
   end
 
   # POST /rewards

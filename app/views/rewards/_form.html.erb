@@ -18,7 +18,7 @@
       </div>
       <div class="span6">
         <%= f.label :prize_code %>
-        <%= f.text_field :share_link %>
+        <%= f.text_field :share_link, readonly: true %>
         <div style="clear: both"></div>
         <div class="redeem-qrcode-checkbox">
           <%= f.check_box :redeem_by_qrcode, tooltip: "make this reward can redeem by QRcode", style: "float:left;" %>
