@@ -67,7 +67,6 @@
 .qrcode td.white, .print-qrcode td.white { background-color: #fff; }
 
 .redeem-qrcode-checkbox{
-  float: left;
   margin-top: 15px;
   margin-right: 10px;
 }
