@@ -128,7 +128,7 @@ class NotificationController < ApplicationController
     # end
 
     # NEW CODE FOR REWARD 3.0
-    @prizes = @restaurant.rewards
+    @prizes = @restaurant.rewards.where("expired_until >= ? ", Time.now)
   end #end of groupmessage
 
   # POST /notification/addgroup  (Receives posts from the groupmessage action)
@@ -246,8 +246,16 @@ class NotificationController < ApplicationController
 
     #add point prize to prize
     if prize_id.present?
-      group_users.each do |user|
-        add_prize_user(prize_id, current_user.id, user.id, location_id) # Will send push notification
+      reward = Reward.find prize_id
+      qty = reward.quantity
+      invitation_qty = reward.user_rewards.count + group_users.count
+      if qty.zero? || (qty >= invitation_qty)
+        group_users.each do |user|
+          add_prize_user(prize_id, current_user.id, user.id, location_id) # Will send push notification
+        end
+      else
+        flash[:warning] = "Prize Quantity has exceeded. please choose another prize."
+        return redirect_to groupmessage_notification_index_path(restaurant: params[:notifications][:location_id], alert: "GM")
       end
     end
 
