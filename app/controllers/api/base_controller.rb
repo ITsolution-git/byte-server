@@ -17,7 +17,8 @@ module Api
     end
 
     def nearby_locations
-      Location.all_nearby_including_unregistered(params[:latitude], params[:longitude], params[:radius])
+      Location.all_nearby_including_unregistered(params[:latitude], params[:longitude], 5)
+      #params[:radius]
     end
 
     # def nearby_locations
