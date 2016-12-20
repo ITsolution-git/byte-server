@@ -1,0 +1,60 @@
+p#notice = notice
+
+p
+  strong Fundraiser name:
+  = @fundraiser.fundraiser_name
+p
+  strong Name:
+  = @fundraiser.name
+p
+  strong Url:
+  = @fundraiser.url
+p
+  strong Status:
+  = @fundraiser.status
+p
+  strong Url:
+  = @fundraiser.url
+p
+  strong Phone:
+  = @fundraiser.phone
+p
+  strong Email:
+  = @fundraiser.email
+p
+  strong Alt email:
+  = @fundraiser.alt_email
+p
+  strong Address:
+  = @fundraiser.address
+p
+  strong City:
+  = @fundraiser.city
+p
+  strong State:
+  = @fundraiser.state
+p
+  strong Zipcode:
+  = @fundraiser.zipcode
+p
+  strong Division type:
+  = @fundraiser.division_type
+p
+  strong Division image:
+  = @fundraiser.division_image
+p
+  strong Credit card type:
+  = @fundraiser.credit_card_type
+p
+  strong Credit card number:
+  = @fundraiser.credit_card_number
+p
+  strong Credit card expiration date:
+  = @fundraiser.credit_card_expiration_date
+p
+  strong Credit card security code:
+  = @fundraiser.credit_card_security_code
+
+= link_to 'Edit', edit_fundraiser_path(@fundraiser)
+'|
+= link_to 'Back', fundraisers_path

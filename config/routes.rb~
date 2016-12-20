@@ -86,9 +86,7 @@ Imenu::Application.routes.draw do
   match '/get_message', to: 'notification#get_message', via: 'get'
   match '/get_detail_message', to: 'notification#get_detail_message', via: 'get'
   match '/get_unread_by_chain', to: 'notification#get_unread_by_chain', via: 'get'
-  match '/add_fundraiser', to: 'restaurants#add_fundraiser', via: 'post'
-  match '/delete_fundraiser', to: 'restaurants#delete_fundraiser', via: 'post'
-  
+
   match '/delete_message_by_restaurant', to: 'notification#delete_message_by_restaurant', via: 'post'
   match '/delete_message', to: 'notification#delete_message', via: 'post'
 

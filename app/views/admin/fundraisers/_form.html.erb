@@ -1,0 +1,169 @@
+
+<style type='text/css'>
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+</style>
+
+<script type="text/javascript">
+   $.cloudinary.config({"api_key":"<%=Figaro.env.cloudinary_api_key%>","cloud_name":"<%=Figaro.env.cloudinary_cloud_name%>"});
+</script>
+<%
+  url = @fundraiser.new_record? ? admin_fundraisers_path : admin_fundraiser_path(@fundraiser)
+  id = ''
+  if not @fundraiser.new_record?
+    # @fundraiser.tax = '%.2f' % @restaurant.tax if @restaurant.tax?
+    id = @fundraiser.id
+  end
+%>
+<div id="error_div" class="fundraiser_form_errors_container"></div>
+<h4>Fundraiser Info</h4>
+<div class="row-fluid">
+  <%= nested_form_for @fundraiser,url: url, :html=>{:id => "fundraiser_form", :multipart => true}, as: "fundraiser", :multipart=>true do |f| %>
+    <%= render 'shared/error_messages', :object => @fundraiser %>
+    <% #= f.hidden_field :token, value: @fundraiser.token %>
+    <div class="location_form_container span12">
+      <fieldset class="span6 row">
+        <div class="row-fluid top10">
+          <div class="span12">
+            <%= f.text_field :fundraiser_name, :autofocus => true, :placeholder=>"Fundraiser Name",:class=>"input-block-level" %>
+          </div>
+        </div>
+        <div class="row-fluid top10">
+          <div class="span6">
+            <%= f.text_field :name, :placeholder=>"Name",:class=>"input-block-level" %>
+          </div>
+          <div class="span6">
+            <%= f.text_field :url,:placeholder=>"Url:website",:class=>"input-block-level" %>
+          </div>
+        </div>
+        <div class="row-fluid top10">
+          <div class="span6">
+            <%= f.text_field :phone, :placeholder=>"Phone",:class=>"input-block-level" %>
+          </div>
+          <div class="span6">
+            <%= f.text_field :email,:placeholder=>"Email",:class=>"input-block-level" %>
+          </div>
+        </div>
+        <div class="row-fluid top10">
+          <div class="span6">
+            <%= f.text_field :address, :placeholder=>"Address",:class=>"input-block-level" %>
+          </div>
+          <div class="span6">
+            <%= f.text_field :city,:placeholder=>"City",:class=>"input-block-level" %>
+          </div>
+        </div>
+        <div class="row-fluid top10 ">
+          <div class="span6">
+            <% Rails.logger.warn "***STATE #{@fundraiser.state}" %>
+              <%= f.select(:state, options_from_collection_for_select(State.all, 'name', 'name'), {:prompt=>"Select State"}, :class => "span12",) %>
+          </div>
+          <div class="span6">
+            <%= f.text_field :zipcode,:placeholder=>"Zipcode",:class=>"input-block-level" %>
+          </div>
+        </div>
+      </fieldset>
+      <fieldset class="row-fulid top10" style=" padding-left:15px">
+        <div class="row-fluid " style="padding:0px;margin-bottom:0px;">
+          <div class="row-fluid span6">
+            <div class="span12">
+            
+              <div>
+              Choose Logo 
+                  <label class="btn btn-default btn-file">
+                    Browse 
+                    <%= cl_image_upload_tag(:logo_public_id,
+                      :crop => :limit, :width => 200, :height => 200,
+                      :eager => [{ :crop => :fill, :width => 150, :height => 100 }],
+                      :html => { :display => "none",
+                      :type => "file" ,
+                      :class => "cloudinary-fileupload"}  
+                           ) %>
+                     </label>
+                     <input class="logo_public_id" name="logo_public_id" type="hidden" value="<%=f.object.logo%>"/>
+              </div>
+            </div>
+            <div class="span12" style="margin-top:10px !important">
+              <%= f.select(:status, options_for_status , {:prompt=>"Select Status"}, :class => "") %>
+            </div>
+            <div class="span12" style="margin-top:10px !important">
+            <%= f.text_field :alt_email,:placeholder=>"Second email",:class=>"input-block-level" %>
+            </div>
+          </div>
+          <div class="row span6">
+            <div class="preview span12  text-center">  
+              <% #debugger %>
+              <%= cl_image_tag(f.object.logo, :crop => :fill, :width => 120, :height => 80) %>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+      <fieldset class="row-fluid top10">
+      
+        <div class="row-fluid span3 text-center" style="border:1px solid grey;padding:5px">
+          <%= f.text_field :division_type,:placeholder=>"Enter Type",:class=>"input-block-level" %>
+          <br/>
+          <div style="height:40px"></div>
+          <%= link_to "Add", admin_fundraisers_path, :class => "normal-btn go-back-link btn btn-lg btn-cancel" %>
+          <br/>
+          <div style="height:40px"></div>
+          <%= image_tag("/assets/MyMenu_Cranberry_WhiteFork.png", class: "menu_icon")%>
+          <%#= f.image "DownArrow.jpg" %>
+          <br/>
+          <%= link_to "Upload", admin_fundraisers_path, :class => "normal-btn go-back-link btn btn-cancel" %>
+        </div>
+        <div class="row-fluid span3">
+            <%= f.select(:state, options_from_collection_for_select(State.all, 'name', 'name', @fundraiser.state), {:prompt=>"Select Type"}, :class => "span12",) %>
+        </div>
+        <fieldset  class="row-fluid span6">
+
+          <legend>Credit Card Information:</legend>
+          <%= f.text_field :credit_card_type,:placeholder=>"Card Type",:class=>"input-block-level span12" %>
+          <%= f.text_field :credit_card_number,:placeholder=>"Card Number",:class=>"input-block-level span12" %>
+          <%= f.text_field :credit_card_security_code,:placeholder=>"Expriration Date",:class=>"input-block-level span12" %>
+          <%= f.text_field :credit_card_security_code,:placeholder=>"Security code",:class=>"input-block-level span12" %>
+
+        </fieldset>
+      </fieldset>
+
+    <div class="row-fluid restaurant-btn top20" >
+      <div class="button-group">
+        <%= link_to "Cancel", admin_fundraisers_path, :class => "normal-btn go-back-link btn btn-cancel" %>
+        <%= link_to "Save", '#', :class => "normal-btn fakesubmit btn btn-primary" %>
+      </div>
+    </div>
+  <% end %>
+</div>
+<script type="text/javascript">
+</script> 
+<script type="text/javascript">
+  $(document).ready(function(){
+
+    $(".fakesubmit").click(function() {
+      $('#fundraiser_form').submit();
+    });
+    $('.cloudinary-fileupload').bind('cloudinarydone', function(e, data) {  
+        var str  = $.cloudinary.image(data.result.public_id,  { format: data.result.format, version: data.result.version, crop: 'scale', width: 200 })
+        $('.preview').html(str);    
+        $('.image_public_id').val(data.result.public_id);    
+      return true;
+    });
+  });
+</script>
+

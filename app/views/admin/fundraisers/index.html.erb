@@ -1,0 +1,107 @@
+
+<%
+allow = false
+allow = true
+# if current_user && !current_user.user?
+#   if current_user.admin? || (current_user.owner? && current_user.active_braintree) \
+#       || (current_user.restaurant_manager? && current_user.parent_user \
+#       && current_user.parent_user.active_braintree && location.any?) \
+#       || (current_user.restaurant_manager? \
+#       && current_user.parent_user && current_user.parent_user.admin? && location.any?)
+#     allow = true
+#   end
+# end
+%>
+
+
+<% if allow %>
+
+
+<div class="clear"></div>
+  <%= link_to "New Fundraiser", new_admin_fundraiser_path, :class=>"btn btn-primary" %>
+
+<table class="table table-striped table-hover" id="restaurant-table">
+  <thead>
+      <tr class="success">
+        <th >
+          Fundraisers
+        </th>
+        <th>
+          Status
+        </th>
+        <th>
+          Restaurants
+        </th>
+        <th>
+          Redeemed
+        </th>
+        <th>
+          City
+        </th>
+        <th>
+          Dates
+        </th>
+        <th width="100px">
+        </th>
+      </tr>
+  </thead>
+  <tbody>
+  <% if @fundraisers.any?%>
+    <% @fundraisers.each do |fundraiser| %>
+        <%
+
+        %>
+        <tr>
+          <td>
+            <%= link_to fundraiser.name, edit_admin_fundraiser_path(fundraiser) %>
+          </td>
+          <td>
+            <%= options_for_status fundraiser.status %>
+          </td>
+          <td class="aligncenter">
+            <%= fundraiser.locations.count %>
+          </td>
+          <td class="aligncenter">
+            5
+          </td>
+          <td >
+            <%= fundraiser.city %>
+          </td>
+          <td>
+            <%= fundraiser.created_at %>
+          </td>
+          <td>
+            <%= link_to image_tag('contest_edit_icon.png'), edit_admin_fundraiser_path(fundraiser), :title=>"Edit", :class => ' ', :style=>'display:inline' %>
+            <%= link_to image_tag('contest_csv_icon.png'), edit_admin_fundraiser_path(fundraiser), :title=>"Delete", :class => ' ', :style=>'display:inline' %>
+            <%= link_to image_tag('contest_remove_icon.png'), edit_admin_fundraiser_path(fundraiser), :title=>"Delete", :class => '',:style=>'display:inline' %>
+             <%#= link_to image_tag('delete_icon.png'), delete_user_manager_path(info),method: :get, :class => 'delete-item-action',:title => "Delete", :"data-toggle" => "tooltip", :rel => "tooltip", :remote=> true, :confirm => 'Are you sure to delete this account?'%>
+          </td>
+        </tr>
+    <% end %>
+  <% else %>
+    <tr><td class="width-no-result"><h5>No Result Found</h5></td>
+      <td></td><td></td><td></td><td></td><td></td><td></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+<% end %>
+
+<% content_for :scripts do %>
+  <script type="text/javascript">
+    (function() {
+      $(document).ready(function() {
+
+        if($(".alert-success").length!=0){
+          $(".alert-success").delay(3000).fadeOut();
+        }
+
+        var published_menus_date = $('td.published_menu .published_menu_date');
+        published_menus_date.each(function(index) {
+          var date = Date.parse($(this).text() + " GMT");
+          $(this).text(date.toString("MM.dd.yy / hh:mm tt"));
+        });
+      });
+    })();
+  </script>
+<% end %>

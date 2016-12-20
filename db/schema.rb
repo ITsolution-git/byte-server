@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20161019064419) do
+ActiveRecord::Schema.define(:version => 20161219193643) do
 
   create_table "app_services", :force => true do |t|
     t.string   "name"
@@ -119,39 +119,6 @@ ActiveRecord::Schema.define(:version => 20161019064419) do
     t.datetime "updated_at",  :null => false
   end
 
-  create_table "contest_actions", :force => true do |t|
-    t.integer  "contest_id"
-    t.integer  "user_id"
-    t.integer  "location_id"
-    t.integer  "item_id"
-    t.string   "item_name",   :limit => 200
-    t.string   "photo_url"
-    t.string   "status",      :limit => 45
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.boolean  "facebook"
-    t.boolean  "twitter"
-    t.boolean  "instagram"
-    t.string   "grade",       :limit => 45
-    t.text     "comment"
-  end
-
-  create_table "contests", :force => true do |t|
-    t.string   "name",         :limit => 50
-    t.string   "url"
-    t.string   "contact_name", :limit => 100
-    t.string   "contact",      :limit => 50
-    t.text     "description"
-    t.string   "publish_date", :limit => 30
-    t.string   "start_date",   :limit => 30
-    t.string   "end_date",     :limit => 30
-    t.string   "location",     :limit => 50
-    t.text     "restaurants"
-    t.string   "status",       :limit => 30
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "copy_shared_menu_statuses", :force => true do |t|
     t.integer  "location_id"
     t.string   "job_id"
@@ -246,6 +213,34 @@ ActiveRecord::Schema.define(:version => 20161019064419) do
     t.integer  "pending"
     t.datetime "created_at",    :null => false
     t.datetime "updated_at",    :null => false
+  end
+
+  create_table "fundraisers", :force => true do |t|
+    t.string   "fundraiser_name"
+    t.string   "name"
+    t.string   "url"
+    t.integer  "status"
+    t.string   "phone"
+    t.string   "email"
+    t.string   "alt_email"
+    t.string   "address"
+    t.string   "city"
+    t.string   "state"
+    t.string   "zipcode"
+    t.string   "division_type"
+    t.string   "division_image"
+    t.string   "credit_card_type"
+    t.string   "credit_card_number"
+    t.string   "credit_card_expiration_date"
+    t.string   "credit_card_security_code"
+    t.datetime "created_at",                  :null => false
+    t.datetime "updated_at",                  :null => false
+    t.string   "logo"
+  end
+
+  create_table "fundraisers_locations", :force => true do |t|
+    t.integer "fundraiser_id"
+    t.integer "location_id"
   end
 
   create_table "group_users", :force => true do |t|
@@ -521,9 +516,9 @@ ActiveRecord::Schema.define(:version => 20161019064419) do
   create_table "locations", :force => true do |t|
     t.string   "name"
     t.string   "address"
-    t.decimal  "lat",                                     :precision => 15, :scale => 6
-    t.decimal  "long",                                    :precision => 15, :scale => 6
-    t.decimal  "rating",                                  :precision => 3,  :scale => 1
+    t.decimal  "lat",                                  :precision => 15, :scale => 6
+    t.decimal  "long",                                 :precision => 15, :scale => 6
+    t.decimal  "rating",                               :precision => 3,  :scale => 1
     t.string   "city"
     t.string   "state"
     t.string   "country"
@@ -532,13 +527,13 @@ ActiveRecord::Schema.define(:version => 20161019064419) do
     t.string   "phone"
     t.string   "url"
     t.integer  "owner_id"
-    t.float    "tax",                                                                    :default => 0.0
-    t.string   "bio",                    :limit => 10000
+    t.float    "tax",                                                                 :default => 0.0
+    t.string   "bio",                 :limit => 10000
     t.integer  "global"
     t.string   "time_from"
     t.string   "time_to"
-    t.datetime "created_at",                                                                                  :null => false
-    t.datetime "updated_at",                                                                                  :null => false
+    t.datetime "created_at",                                                                               :null => false
+    t.datetime "updated_at",                                                                               :null => false
     t.string   "chain_name"
     t.string   "token"
     t.string   "timezone"
@@ -547,7 +542,7 @@ ActiveRecord::Schema.define(:version => 20161019064419) do
     t.integer  "created_by"
     t.integer  "last_updated_by"
     t.integer  "info_id"
-    t.boolean  "active",                                                                 :default => true
+    t.boolean  "active",                                                              :default => true
     t.string   "twiter_url"
     t.string   "facebook_url"
     t.string   "google_url"
@@ -561,12 +556,10 @@ ActiveRecord::Schema.define(:version => 20161019064419) do
     t.string   "levelup_location_id"
     t.text     "customer_id"
     t.integer  "logo_id"
-    t.integer  "copied_menus_cnt",                                                       :default => 0
+    t.integer  "copied_menus_cnt",                                                    :default => 0
     t.string   "logo_url"
-    t.string   "service_fee_type",       :limit => 45,                                   :default => "fixed"
-    t.float    "fee",                                                                    :default => 0.0
-    t.boolean  "weekly_progress_report",                                                 :default => false
-    t.string   "weekly_progress_email"
+    t.string   "service_fee_type",    :limit => 45,                                   :default => "fixed"
+    t.float    "fee",                                                                 :default => 0.0
   end
 
   add_index "locations", ["chain_name"], :name => "chain_name"
@@ -881,8 +874,9 @@ ActiveRecord::Schema.define(:version => 20161019064419) do
     t.integer  "quantity"
     t.integer  "stats"
     t.integer  "location_id"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.datetime "created_at",                          :null => false
+    t.datetime "updated_at",                          :null => false
+    t.boolean  "redeem_by_qrcode", :default => false
   end
 
   add_index "rewards", ["location_id"], :name => "index_rewards_on_location_id"
@@ -1054,14 +1048,6 @@ ActiveRecord::Schema.define(:version => 20161019064419) do
     t.string   "user_token"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
-  end
-
-  create_table "user_billings", :force => true do |t|
-    t.string   "billing_email"
-    t.string   "billing_password"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "user_id"
   end
 
   create_table "user_contacts", :force => true do |t|

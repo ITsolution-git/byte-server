@@ -25,6 +25,7 @@
           <span class="item-name"><%= link_to info.name,edit_roles_accounts_path(info), remote: true %></span>
            <%= link_to image_tag('delete_icon.png'), delete_user_manager_path(info),method: :get, :class => 'delete-item-action',:title => "Delete", :"data-toggle" => "tooltip", :rel => "tooltip", :remote=> true, :confirm => 'Are you sure to delete this account?'%>
           <div class="clear"></div>
+        
         </div>
       </li>
     <% end %>

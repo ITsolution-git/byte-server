@@ -853,6 +853,32 @@ class RestaurantsController < ApplicationController
     end
   end
 
+  def add_fundraiser
+    @restaurant = Location.find_by_id(params[:id]);
+    @fundraiser = Fundraiser.find_by_id(params[:fundraiser_id])
+    if(@restaurant.fundraisers.include?(@fundraiser)) 
+      render :json => {:message => "Existing Fundraiser", :success=>0}.to_json
+    else 
+      @restaurant.fundraisers<<@fundraiser
+      if @restaurant.save
+        render :json => {:message => "Fundraiser added", :success=>1, :name=>@fundraiser.name, :id=>@fundraiser.id}.to_json
+      else
+        render :json => {:message => "Add Failed", :success=>0}.to_json
+      end
+    end
+  end
+  def delete_fundraiser
+    @restaurant = Location.find_by_id(params[:id]);
+    @fundraiser = Fundraiser.find_by_id(params[:fundraiser_id])
+    
+    @restaurant.fundraisers.delete @fundraiser
+    if @restaurant.save
+      render :json => {:message => "Fundraiser removed", :success=>1}.to_json
+    else
+      render :json => {:message => "Remove Failed", :success=>0}.to_json
+    end
+  end
+
   def profile_menu_csv
     @items = []
     @restaurant = Location.find(params[:id])
