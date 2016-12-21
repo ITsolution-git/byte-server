@@ -72,8 +72,8 @@ allow = true
           </td>
           <td>
             <%= link_to image_tag('contest_edit_icon.png'), edit_admin_fundraiser_path(fundraiser), :title=>"Edit", :class => ' ', :style=>'display:inline' %>
-            <%= link_to image_tag('contest_csv_icon.png'), edit_admin_fundraiser_path(fundraiser), :title=>"Delete", :class => ' ', :style=>'display:inline' %>
-            <%= link_to image_tag('contest_remove_icon.png'), edit_admin_fundraiser_path(fundraiser), :title=>"Delete", :class => '',:style=>'display:inline' %>
+            <%= link_to image_tag('contest_csv_icon.png'), edit_admin_fundraiser_path(fundraiser), :title=>"CSV", :class => ' ', :style=>'display:inline' %>
+            <%= link_to image_tag('contest_remove_icon.png'), admin_fundraiser_path(fundraiser), :title=>"Delete", :class => '',:style=>'display:inline', method: :delete, data: { confirm: 'Are you sure?' } %>
              <%#= link_to image_tag('delete_icon.png'), delete_user_manager_path(info),method: :get, :class => 'delete-item-action',:title => "Delete", :"data-toggle" => "tooltip", :rel => "tooltip", :remote=> true, :confirm => 'Are you sure to delete this account?'%>
           </td>
         </tr>
