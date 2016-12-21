@@ -465,8 +465,11 @@ Imenu::Application.routes.draw do
   match 'admin' => 'admin#index',:as=>"admin"
   namespace :admin do
     resources :fundraisers do
-      collection do
-        post 'getdivisionimage'
+
+      member do
+        get 'new'
+        post 'gettype'
+        post 'addtype'
       end
     end
 

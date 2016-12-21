@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20161219193643) do
+ActiveRecord::Schema.define(:version => 20161221223802) do
 
   create_table "app_services", :force => true do |t|
     t.string   "name"
@@ -215,6 +215,14 @@ ActiveRecord::Schema.define(:version => 20161219193643) do
     t.datetime "updated_at",    :null => false
   end
 
+  create_table "fundraiser_types", :force => true do |t|
+    t.integer  "fundraiser_id"
+    t.string   "name"
+    t.string   "image"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
   create_table "fundraisers", :force => true do |t|
     t.string   "fundraiser_name"
     t.string   "name"
@@ -227,8 +235,6 @@ ActiveRecord::Schema.define(:version => 20161219193643) do
     t.string   "city"
     t.string   "state"
     t.string   "zipcode"
-    t.string   "division_type"
-    t.string   "division_image"
     t.string   "credit_card_type"
     t.string   "credit_card_number"
     t.string   "credit_card_expiration_date"

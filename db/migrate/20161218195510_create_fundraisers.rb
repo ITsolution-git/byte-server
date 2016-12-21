@@ -13,8 +13,6 @@ class CreateFundraisers < ActiveRecord::Migration
       t.string :city
       t.string :state
       t.string :zipcode
-      t.string :division_type
-      t.string :division_image
       t.string :credit_card_type
       t.string :credit_card_number
       t.string :credit_card_expiration_date
