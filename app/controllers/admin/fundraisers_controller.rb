@@ -121,4 +121,11 @@ class Admin::FundraisersController < ApplicationController
       format.html { redirect_to admin_fundraisers_url }
     end
   end
+
+  def getdivisionimage
+
+    @fundraiser = Fundraiser.find(params[:id])
+    render :json => {:division_image => @fundraiser[:division_image], :success=>1}.to_json
+
+  end
 end

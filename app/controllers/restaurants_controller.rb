@@ -854,7 +854,7 @@ class RestaurantsController < ApplicationController
   end
 
   def add_fundraiser
-    @restaurant = Location.find_by_id(params[:id]);
+    @restaurant = Location.find(params[:id]);
     @fundraiser = Fundraiser.find_by_id(params[:fundraiser_id])
     if(@restaurant.fundraisers.include?(@fundraiser)) 
       render :json => {:message => "Existing Fundraiser", :success=>0}.to_json
@@ -868,7 +868,7 @@ class RestaurantsController < ApplicationController
     end
   end
   def delete_fundraiser
-    @restaurant = Location.find_by_id(params[:id]);
+    @restaurant = Location.find(params[:id]);
     @fundraiser = Fundraiser.find_by_id(params[:fundraiser_id])
     
     @restaurant.fundraisers.delete @fundraiser

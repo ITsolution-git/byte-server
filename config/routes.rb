@@ -86,9 +86,7 @@ Imenu::Application.routes.draw do
   match '/get_message', to: 'notification#get_message', via: 'get'
   match '/get_detail_message', to: 'notification#get_detail_message', via: 'get'
   match '/get_unread_by_chain', to: 'notification#get_unread_by_chain', via: 'get'
-  match '/add_fundraiser', to: 'restaurants#add_fundraiser', via: 'post'
-  match '/delete_fundraiser', to: 'restaurants#delete_fundraiser', via: 'post'
-  
+
   match '/delete_message_by_restaurant', to: 'notification#delete_message_by_restaurant', via: 'post'
   match '/delete_message', to: 'notification#delete_message', via: 'post'
 
@@ -466,7 +464,12 @@ Imenu::Application.routes.draw do
 
   match 'admin' => 'admin#index',:as=>"admin"
   namespace :admin do
-    resources :fundraisers
+    resources :fundraisers do
+      collection do
+        post 'getdivisionimage'
+      end
+    end
+
     resources :users, only: [] do
       resource :suspend_account, only: [:update]
     end
@@ -552,13 +555,14 @@ end
       post "update_latLng"
       get "crop_logoURL"
     end
-
     member do
       get 'delete_logo'
       get 'manage_photos'
       put 'create_photos'
       get 'delete_photo'
       get 'profile_menu_csv'
+      post 'add_fundraiser'
+      post 'delete_fundraiser'
     end
     resources :notification do
       collection do

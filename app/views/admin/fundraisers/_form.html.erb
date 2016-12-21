@@ -135,14 +135,19 @@
                  </label>
                  <input class="division_public_id" name="division_public_id" type="hidden" value="<%=f.object.division_image%>"/>
           </div>
-
+     
           <div class="preview_division span12  text-center">  
             <% #debugger %>
             <%= cl_image_tag(f.object.division_image, :crop => :fill, :width => 50, :height => 50) %>
           </div>
+
+          <div style="height:70px"></div> 
+          <%= link_to "Add", '#', :id => "addType", :class => "normal-btn btn btn-primary" %>
         </div>
-        <div class="row-fluid span3">
-            <%= f.select(:division_type, (@types), {:prompt=>"Select Type"}, :class => "span12",) %>
+        <div class="row-fluid span3" >
+            <%= select_tag(:division_type_select, options_for_select(Fundraiser.all.collect{|x| [x.division_type,x.id]}), {:prompt=>"Select Type", :class => "span12"}) %>
+            <div class = "preview_type_division" style="margin:10px">
+            </div>
         </div>
         <fieldset  class="row-fluid span6">
 
@@ -181,11 +186,18 @@
     $(".fakesubmit").click(function() {
       $('#fundraiser_form').submit();
     });
-    $('.cloudinary-fileupload_logo').bind('cloudinarydone', function(e, data) {  
-        var str  = $.cloudinary.image(data.result.public_id,  { format: data.result.format, version: data.result.version, crop: 'scale', width: 200 })
-        $('.preview_logo').html(str);    
-        // $('.image_public_id').val(data.result.public_id);    
-      return true;
+    $("#addType").click(function() {
+      $('#division_type_select option[value=<%=@fundraiser.id%>]').remove();
+      $('#division_type_select').append('<option value="<%=@fundraiser.id%>">'+$("#fundraiser_division_type").val()+'</option>');
+    });
+    $("#division_type_select").change(function() {
+      $.post("<%=getdivisionimage_admin_fundraisers_path%>",
+            {id:$("#division_type_select").val()}, 
+            function(data)
+          {
+            var str  = $.cloudinary.image(data.division_image,  { })
+            $('.preview_type_division').html(str);    
+        });
     });
     $('.cloudinary-fileupload_division').bind('cloudinarydone', function(e, data) {  
         var str  = $.cloudinary.image(data.result.public_id,  { format: data.result.format, version: data.result.version, crop: 'scale', width: 200 })
@@ -194,5 +206,6 @@
       return true;
     });
   });
+
 </script>
 
