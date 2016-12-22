@@ -19,7 +19,7 @@ class UsersController < ApplicationController
     email = parameters[:email]
     password = parameters[:password]
     username = parameters[:username]
-
+    devise_token = parameters[:devise_token]
     # Validate the incoming parameters
     # TODO: Revamp this logic
     if email.nil? && username.nil?
@@ -51,6 +51,7 @@ class UsersController < ApplicationController
 
     # Authenticate the user
     if @user.valid_password?(password)
+      @user.device_token = devise_token
       @user.ensure_authentication_token!
       set_curret_user_device_by_parse_id(@user, parameters[:push_id])
       PushNotificationSubscription.subscribe(@user, @user)

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20161221223802) do
+ActiveRecord::Schema.define(:version => 20161222180552) do
 
   create_table "app_services", :force => true do |t|
     t.string   "name"
@@ -1186,6 +1186,7 @@ ActiveRecord::Schema.define(:version => 20161221223802) do
     t.boolean  "has_byte",               :default => false
     t.string   "social_image_url"
     t.string   "restaurant_type"
+    t.string   "devise_token"
   end
 
   add_index "users", ["authentication_token"], :name => "index_users_on_authentication_token", :unique => true
