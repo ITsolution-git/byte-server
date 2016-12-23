@@ -31,7 +31,7 @@ class PushNotification < ActiveRecord::Base
   #############################
   ###  INSTANCE METHODS
   #############################
-  def dispatch device_type
+  def dispatch device_token
     # You can use this method with something like:
     # Item.push_notifications.create(message: 'Great new price!').dispatch
     # but the more common way is the dispatch_message_to_resource_subscribers
@@ -76,7 +76,7 @@ class PushNotification < ActiveRecord::Base
     }
 
     registration_ids=[]
-    registration_ids << device_type
+    registration_ids << device_token
     options = {data: data, collapse_key: "updated_score"}
     response = fcm.send(registration_ids, options)
     return response
