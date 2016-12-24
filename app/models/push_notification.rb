@@ -1,3 +1,4 @@
+require 'fcm'
 class PushNotification < ActiveRecord::Base
   # A PushNotification uses the Parse API to send a standard
   # push notification message to the mobile devices of all
@@ -65,6 +66,7 @@ class PushNotification < ActiveRecord::Base
     # push.save
 
     # return true
+    fcm = FCM.new(Rails.application.config.fcm_public_key)
 
     data = {
       alert: message,

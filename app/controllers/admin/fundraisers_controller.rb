@@ -1,3 +1,4 @@
+
 class Admin::FundraisersController < ApplicationController
   # GET /fundraisers
   # GET /fundraisers.json
@@ -7,6 +8,7 @@ class Admin::FundraisersController < ApplicationController
       format.html # index.html.erb
       format.json { render json: @fundraisers }
     end
+
   end
 
   # GET /fundraisers/1

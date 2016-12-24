@@ -20,7 +20,7 @@ module Imenu
     # -- all .rb files in that directory are automatically loaded.
 
     config.assets.initialize_on_precompile = false
-
+    config.fcm_public_key = "AAAAXvtplVs:APA91bEFWEgrogsFZU5OhQZivSieK7QLf3ErPCGv-6pwTgwI54OPmUDkvnEPVLy5ud_Sz7fqTLrczTQSbZjjgpVbVn4pfBpfAN6zeTMO2Qe7NT9RQ26yL1z1uIJJ3jhF1EmFm7Go0Xc27fLYJVsVLQr8ILBMHXHRhg"
     # Custom directories with classes and modules you want to be autoloadable.
     # config.autoload_paths += %W(#{config.root}/extras)
     config.autoload_paths += %W(#{config.root}/lib)
@@ -71,7 +71,7 @@ module Imenu
     config.assets.precompile = ['*.js', '*.css', '*.png', '*jpg', '*.woff', '*.tff', '*.eot', '*.svg', '*.ico']
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
-
+    
     # Configure time zone
     # config.time_zone = 'Eastern Time (US & Canada)'
     # config.active_record.default_timezone = 'Eastern Time (US & Canada)'
