@@ -1186,7 +1186,7 @@ ActiveRecord::Schema.define(:version => 20161222180552) do
     t.boolean  "has_byte",               :default => false
     t.string   "social_image_url"
     t.string   "restaurant_type"
-    t.string   "devise_token"
+    t.string   "device_token"
   end
 
   add_index "users", ["authentication_token"], :name => "index_users_on_authentication_token", :unique => true

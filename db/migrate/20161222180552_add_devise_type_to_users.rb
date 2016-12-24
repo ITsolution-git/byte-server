@@ -1,5 +1,5 @@
 class AddDeviseTypeToUsers < ActiveRecord::Migration
   def change
-    add_column :users, :devise_token, :string
+    add_column :users, :device_token, :string
   end
 end

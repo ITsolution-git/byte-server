@@ -9,8 +9,8 @@ module Api
       return render status: 401, json: { status: :failed, error: 'No access token passed' } if auth_token.blank?
 
       @user = User.where(authentication_token: auth_token).first
-      devise_token = params[:devise_token]
-      @user.device_token = devise_token;
+      device_token = params[:device_token] if params[:device_token]
+      @user.device_token = device_token;
       @user.save
       return render status: 401, json: { status: :failed, error: 'User not found' } if @user.blank?
     end

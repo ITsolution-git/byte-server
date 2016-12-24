@@ -99,7 +99,7 @@ class User < ActiveRecord::Base
     :avatar_id,
     :skip_restaurant_type_validation,
     :restaurant_type
-    :devise_token
+    :device_token
 
   #############################
   ###  ASSOCIATIONS

@@ -19,7 +19,8 @@ class UsersController < ApplicationController
     email = parameters[:email]
     password = parameters[:password]
     username = parameters[:username]
-    devise_token = parameters[:devise_token]
+    device_token = ""
+    device_token = parameters[:device_token] if parameters[:device_token] 
     # Validate the incoming parameters
     # TODO: Revamp this logic
     if email.nil? && username.nil?
@@ -52,7 +53,9 @@ class UsersController < ApplicationController
     # Authenticate the user
     if @user.valid_password?(password)
       @user.ensure_authentication_token!
-      set_curret_user_device_by_parse_id(@user, parameters[:push_id])
+      @user.device_token = device_token
+      @user.save(:validate => false)
+      # set_curret_user_device_by_parse_id(@user, parameters[:push_id])
       PushNotificationSubscription.subscribe(@user, @user)
       @search_profile = SearchProfile.where('user_id = ? and isdefault = ?', @user.id, 1)
     else
@@ -226,6 +229,7 @@ class UsersController < ApplicationController
         @user.first_name = params['first_name']
         @user.last_name = params['last_name']
         @user.social_image_url = params['imageURL']
+        @user.device_token = params['device_token'] if params['device_token']
         @user.role = USER_ROLE
         @user.skip_first_name_validation = 1
         @user.skip_last_name_validation = 1
@@ -237,12 +241,12 @@ class UsersController < ApplicationController
         end
 
         # Finalize the new User record
-        if @user.save
+        if @user.save(:validate => false)
           name = params['email']
           @user.apply_omniauth(params['provider'], params['uid'], name)
           @user = sign_in(:user, @user)
           @search_profile = SearchProfile.where('user_id = ? and isdefault = ?', @user.id, 1) # Used in the view
-          set_curret_user_device_by_parse_id(@user, params['push_id'])
+          # set_curret_user_device_by_parse_id(@user, params['push_id'])
           @user.ensure_authentication_token!
           begin
             UserMailer.custom_send_email(@user.email,SIGNUP_SUCCESS_SUBJECT,SIGNUP_SUCCESS_BODY).deliver
@@ -269,7 +273,9 @@ class UsersController < ApplicationController
         email = @parsed_json["email"] if @parsed_json["email"]
         name = (@parsed_json["name"] ? @parsed_json["name"] : '')
         username = @parsed_json["username"] if @parsed_json["username"]
-        push_id = @parsed_json['push_id']
+        # push_id = @parsed_json['push_id']
+        device_token = @parsed_json['device_token']
+        # devise_token = @parsed_json["devise_token"] if @parsed_json["devise_token"]
 
         # Confirm the required inputs are given
         if uid == "" || uid.nil?
@@ -298,8 +304,12 @@ class UsersController < ApplicationController
         auth = Service.find_by_provider_and_uid(provider, uid)
         if auth && auth.user.present?
           @user = sign_in(:user, auth.user)
+
+          @user.device_token = device_token
+          @user.save(:validate => false)
+
           PushNotificationSubscription.subscribe(@user, @user)
-          set_curret_user_device_by_parse_id(@user, push_id)
+          # set_curret_user_device_by_parse_id(@user, push_id)
           return @user.ensure_authentication_token!
         else
           if provider == "twitter" && auth.nil?
@@ -308,7 +318,11 @@ class UsersController < ApplicationController
             unless check_email.nil?
               check_email.services.create(:provider => provider, :uid => uid, :uname => name)
               @user = sign_in(:user,check_email)
-              set_curret_user_device_by_parse_id(@user, push_id)
+
+              @user.device_token = device_token
+              @user.save(:validate => false)
+          
+              # set_curret_user_device_by_parse_id(@user, push_id)
               PushNotificationSubscription.subscribe(@user, @user)
               return @user.ensure_authentication_token!
               @user.ensure_authentication_token!
@@ -617,6 +631,7 @@ class UsersController < ApplicationController
       ActiveRecord::Base.transaction do
         # Set variables
         @user = User.new(params[:user])
+        @user.device_token = params[:device_token] if params[:device_token] 
         @user.role = USER_ROLE
 
         # Attempt to geocode the User's location
@@ -636,7 +651,7 @@ class UsersController < ApplicationController
         # Automatically sign in
         if rs
           @user = sign_in(:user, @user)
-          set_curret_user_device_by_parse_id(@user, params[:push_id])
+          # set_curret_user_device_by_parse_id(@user, params[:push_id])
           @user.ensure_authentication_token!
           begin
             UserMailer.custom_send_email(@user.email,SIGNUP_SUCCESS_SUBJECT,SIGNUP_SUCCESS_BODY).deliver

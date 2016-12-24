@@ -41,31 +41,30 @@ class PushNotification < ActiveRecord::Base
     # allow them.
 
     # Create the push notification object
-    data = {
-      alert: message,
-      pushtype: notification_type,
-      # title: 'TBD',
-      sound: 'chime',
-      badge: 'Increment',
-    }
-    data.merge!(additional_data) if additional_data.present?
-    push = Parse::Push.new(data)
+    # data = {
+    #   alert: message,
+    #   pushtype: notification_type,
+    #   # title: 'TBD',
+    #   sound: 'chime',
+    #   badge: 'Increment',
+    # }
+    # data.merge!(additional_data) if additional_data.present?
+    # push = Parse::Push.new(data)
 
     # Advanced Targeting parameters
     # (See the "Sending Pushes to Queries" subsection of:
     # https://parse.com/docs/push_guide#sending-queries/REST )
     # The User must be subscribed to the given channel and accept notifications of
     # the given type, and notifications may only be sent to the User's current device.
-    query = Parse::Query.new(Parse::Protocol::CLASS_INSTALLATION).
-      eq('channels', PushNotificationSubscription.channel_name_for(push_notifiable)). # 'channels' is an array but the Parse documentation indicates it may be used this way
-      eq('push_notification_types', notification_type) # This should work the same way as 'channels'; an array that can be used without 'include' sytax
-    push.where = query.where
+    # query = Parse::Query.new(Parse::Protocol::CLASS_INSTALLATION).
+    #   eq('channels', PushNotificationSubscription.channel_name_for(push_notifiable)). # 'channels' is an array but the Parse documentation indicates it may be used this way
+    #   eq('push_notification_types', notification_type) # This should work the same way as 'channels'; an array that can be used without 'include' sytax
+    # push.where = query.where
 
     # Send the push notification to all currently-active subscriber devices
-    push.save
+    # push.save
 
     # return true
-
 
     data = {
       alert: message,
@@ -98,7 +97,6 @@ class PushNotification < ActiveRecord::Base
     #   message: message,
     #   additional_data: additional_data_hash
     # }).dispatch
-
     return false unless self.resource_is_valid?(resource)
 
     resource.push_notifications.create({
