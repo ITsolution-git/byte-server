@@ -39,7 +39,7 @@ gem 'kaminari', :require => true
 gem 'less-rails'
 gem 'masked_input-rails'
 gem 'mini_magick'
-gem 'mysql2', ' ~> 0.3.10'
+gem 'mysql2'
 gem 'oauth2'
 gem 'parse-ruby-client', git: 'https://bitbucket.org/irfanfadilah/parse-ruby-client.git'
 gem 'piet'

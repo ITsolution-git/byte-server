@@ -679,7 +679,7 @@ DEPENDENCIES
   masked_input-rails
   meta_request
   mini_magick
-  mysql2 (~> 0.3.10)
+  mysql2
   nested_form
   newrelic_rpm
   oauth2
