@@ -19,8 +19,10 @@ class UsersController < ApplicationController
     email = parameters[:email]
     password = parameters[:password]
     username = parameters[:username]
+    debugger
     device_token = ""
     device_token = parameters[:device_token] if parameters[:device_token] 
+
     # Validate the incoming parameters
     # TODO: Revamp this logic
     if email.nil? && username.nil?
