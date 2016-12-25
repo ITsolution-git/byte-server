@@ -67,10 +67,11 @@ class PushNotification < ActiveRecord::Base
 
     # return true
     # dm2EQT55ewY:APA91bF9xk24TPxNedvAvvdqsOIxmKngzjTiIbR6AO1xNUHSB-mrEpvVA0BWllvWMTuYgj4nlTwPGk9wzBNw3wn33trzrHiNetbWcJ_PjDKDM-WhM4nThKMvnfPzbZnwD1fmdvU1JSso,
+
     data = {
       :notification => {
-        :body => "great match!",
-        :title => "Portugal vs. Denmark",
+        :body => message,
+        :title => "TBD",
         :icon => "myicon"
       },
       :content_available => true,
