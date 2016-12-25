@@ -1,14 +1,13 @@
-
 class Admin::FundraisersController < ApplicationController
   # GET /fundraisers
   # GET /fundraisers.json
   def index
+
     @fundraisers = Fundraiser.all
      respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @fundraisers }
     end
-
   end
 
   # GET /fundraisers/1

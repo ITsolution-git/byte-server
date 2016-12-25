@@ -20,6 +20,7 @@ module Imenu
     # -- all .rb files in that directory are automatically loaded.
 
     config.assets.initialize_on_precompile = false
+    # config.fcm_public_key = "AIzaSyAmlgN1vxj6LIR9Y18uKIfKPZfZeXh2lb8"
     config.fcm_public_key = "AAAAXvtplVs:APA91bEFWEgrogsFZU5OhQZivSieK7QLf3ErPCGv-6pwTgwI54OPmUDkvnEPVLy5ud_Sz7fqTLrczTQSbZjjgpVbVn4pfBpfAN6zeTMO2Qe7NT9RQ26yL1z1uIJJ3jhF1EmFm7Go0Xc27fLYJVsVLQr8ILBMHXHRhg"
     # Custom directories with classes and modules you want to be autoloadable.
     # config.autoload_paths += %W(#{config.root}/extras)

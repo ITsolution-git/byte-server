@@ -66,20 +66,41 @@ class PushNotification < ActiveRecord::Base
     # push.save
 
     # return true
-    fcm = FCM.new(Rails.application.config.fcm_public_key)
-
+    # dm2EQT55ewY:APA91bF9xk24TPxNedvAvvdqsOIxmKngzjTiIbR6AO1xNUHSB-mrEpvVA0BWllvWMTuYgj4nlTwPGk9wzBNw3wn33trzrHiNetbWcJ_PjDKDM-WhM4nThKMvnfPzbZnwD1fmdvU1JSso,
     data = {
-      alert: message,
-      pushtype: notification_type,
-      # title: 'TBD',
-      sound: 'chime',
-      badge: 'Increment',
+      :notification => {
+        :body => "great match!",
+        :title => "Portugal vs. Denmark",
+        :icon => "myicon"
+      },
+      :content_available => true,
+      :to=> device_token,
+      :priority => 'high'
     }
+    url = URI.parse('https://fcm.googleapis.com/fcm/send')
+    http = Net::HTTP.new(url.host, url.port)
+    http.use_ssl = true
 
-    registration_ids=[]
-    registration_ids << device_token
-    options = {data: data, collapse_key: "updated_score"}
-    response = fcm.send(registration_ids, options)
+    request = Net::HTTP::Post.new(url.path, 
+        {"Content-Type" => 'application/json',
+        'Authorization' => 'key=' + Rails.application.config.fcm_public_key}
+    )
+    request.body = data.to_json
+
+    response = http.request(request)
+
+    # fcm = FCM.new(Rails.application.config.fcm_public_key)
+    # data = {
+    #   alert: message,
+    #   pushtype: notification_type,
+    #   # title: 'TBD',
+    #   sound: 'chime',
+    #   badge: 'Increment',
+    # }   
+    # registration_ids=[]
+    # registration_ids << device_token
+    # options = {data: data, collapse_key: "updated_score"}
+    # response = fcm.send(registration_ids, options)
     return response
   end
 
@@ -100,7 +121,6 @@ class PushNotification < ActiveRecord::Base
     #   additional_data: additional_data_hash
     # }).dispatch
     return false unless self.resource_is_valid?(resource)
-
     resource.push_notifications.create({
       notification_type: notification_type,
       message: message,

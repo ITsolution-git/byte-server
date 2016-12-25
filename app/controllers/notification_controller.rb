@@ -289,6 +289,7 @@ class NotificationController < ApplicationController
 
       # Send a push notification
       # NOTE: Point and prize push notifications will be sent automatically by model callbacks.
+
       if [DIRECT_ALERT_TYPE, GENERAL_ALERT_TYPE].include?(alert_type)
         message = "You have received a message from #{@restaurant.name}"
         PushNotification.dispatch_message_to_resource_subscribers('msg_from_restaurant', message, user)
