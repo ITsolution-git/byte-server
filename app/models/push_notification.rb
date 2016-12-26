@@ -67,21 +67,27 @@ class PushNotification < ActiveRecord::Base
 
     # return true
     # dm2EQT55ewY:APA91bF9xk24TPxNedvAvvdqsOIxmKngzjTiIbR6AO1xNUHSB-mrEpvVA0BWllvWMTuYgj4nlTwPGk9wzBNw3wn33trzrHiNetbWcJ_PjDKDM-WhM4nThKMvnfPzbZnwD1fmdvU1JSso,
-
+    # debugger
     data = {
       :notification => {
         :body => message,
-        :title => "TBD",
-        :icon => "myicon"
+        # :title => "TBD",
+        :icon => "myicon",
+        :sound => 'chime',
+        # :badge => 'Increment',
+        :pushtype=> notification_type,
       },
       :content_available => true,
       :to=> device_token,
       :priority => 'high'
     }
+    
+    # data.merge!(additional_data) if additional_data.present?
     url = URI.parse('https://fcm.googleapis.com/fcm/send')
     http = Net::HTTP.new(url.host, url.port)
     http.use_ssl = true
 
+    # data.merge!(additional_data) if additional_data.present?
     request = Net::HTTP::Post.new(url.path, 
         {"Content-Type" => 'application/json',
         'Authorization' => 'key=' + Rails.application.config.fcm_public_key}
