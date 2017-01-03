@@ -28,16 +28,24 @@
               <div class="span6">
                 <% if @profile.show_type == "restaurant" %>
                     <%= f.radio_button :show_type, 'restaurant', :checked => true %> Home > Restaurant > Menu Item<br>
-                    <%= f.radio_button :show_type, 'menuitem' %> Home > Menu Item > Restaurant
-                    <%= f.radio_button :show_type, 'contest' %> Photo Contest
+                    <%= f.radio_button :show_type, 'menuitem' %> Home > Menu Item > Restaurant<br>
+                    <%= f.radio_button :show_type, 'contest' %> Photo Contest<br>
+                    <%= f.radio_button :show_type, 'fundraiser' %> Fundraiser
                 <% elsif @profile.show_type =="menuitem" %>
                     <%= f.radio_button :show_type, 'restaurant' %> Home > Restaurant > Menu Item<br>
-                    <%= f.radio_button :show_type, 'menuitem',:checked => true %> Home > Menu Item > Restaurant
-                    <%= f.radio_button :show_type, 'contest' %> Photo Contest
+                    <%= f.radio_button :show_type, 'menuitem',:checked => true %> Home > Menu Item > Restaurant<br>
+                    <%= f.radio_button :show_type, 'contest' %> Photo Contest<br>
+                    <%= f.radio_button :show_type, 'fundraiser' %> Fundraiser
                 <% elsif @profile.show_type == "contest" %>
-                <%= f.radio_button :show_type, 'restaurant' %> Home > Restaurant > Menu Item<br>
-                <%= f.radio_button :show_type, 'menuitem' %> Home > Menu Item > Restaurant
-                <%= f.radio_button :show_type, 'contest',:checked => true %> Photo Contest
+                    <%= f.radio_button :show_type, 'restaurant' %> Home > Restaurant > Menu Item<br>
+                    <%= f.radio_button :show_type, 'menuitem' %> Home > Menu Item > Restaurant<br>
+                    <%= f.radio_button :show_type, 'contest',:checked => true %> Photo Contest<br>
+                    <%= f.radio_button :show_type, 'fundraiser' %> Fundraiser
+                <% elsif @profile.show_type == "fundraiser" %>
+                    <%= f.radio_button :show_type, 'restaurant' %> Home > Restaurant > Menu Item<br>
+                    <%= f.radio_button :show_type, 'menuitem' %> Home > Menu Item > Restaurant<br>
+                    <%= f.radio_button :show_type, 'contest' %> Photo Contest<br>
+                    <%= f.radio_button :show_type, 'fundraiser',:checked => true %> Fundraiser
                 <% end %>
               </div>
             </div>
@@ -101,8 +109,10 @@
                     <%=select_tag 'tags[]', options_for_select(@keys.map {|s| [s.name, s.id]}), :multiple => true, :class=>"js-example-basic-multiple" %>
                 <% elsif @profile.show_type =="restaurant" %>
                     <%=select_tag 'tags[]', options_for_select(@tags.map {|s| [s.name, s.id]}), :multiple => true, :class=>"js-example-basic-multiple" %>
-                <% else %>
+                <% elsif @profile.show_type =="contest" %>
                     <%=select_tag 'tags[]', options_for_select(@contests.map {|s| [s.name, s.id]}), :class=>"js-example-basic-multiple" %>
+                <% elsif @profile.show_type =="fundraiser" %>
+                    <%=select_tag 'tags[]', options_for_select(@fundraisers.map {|s| [s.fundraiser_name, s.id]}), :multiple => true, :class=>"js-example-basic-multiple" %>
                 <% end %>
               </div>
             </div><br><br>
@@ -139,7 +149,7 @@
 
     $(document).on("page:load ready", function(){
         var tags = [];
-        var keys = [], contests=[];
+        var keys = [], contests=[], fundraisers=[];
         <% @tags.each do |t| %>
         tags.push({id:<%=t.id %>, text: '<%=t.name %>'});
         <% end %>
@@ -150,6 +160,11 @@
         <% @contests.each do |c| %>
             contests.push({id:<%=c.id %>, text: '<%=c.name %>'});
         <% end %>
+
+        <% @fundraisers.each do |c| %>
+            fundraisers.push({id:<%=c.id %>, text: '<%=c.fundraiser_name %>'});
+        <% end %>
+
         if($('#datetimepicker1'))
             $('#datetimepicker1').datetimepicker({});
 
@@ -185,6 +200,16 @@
                 $(".js-example-basic-multiple").append('<option value="'+contests[i].id+'">'+contests[i].text+'</option>')
             multitags = $(".js-example-basic-multiple").select2();
         });
+
+        $("#user_profile_show_type_fundraiser").click(function() {
+            multitags.select2("destroy");
+            $(".js-example-basic-multiple").html("");
+            $(".js-example-basic-multiple").attr("multiple", "multiple");
+            for(var i = 0; i < fundraisers.length; i++)
+                $(".js-example-basic-multiple").append('<option value="'+fundraisers[i].id+'">'+fundraisers[i].text+'</option>')
+            multitags = $(".js-example-basic-multiple").select2();
+        });
+
         $("#user_profile_zipcode").change(function() {
             $.ajax({
                 url: 'https://maps.googleapis.com/maps/api/geocode/json?address='+$("#user_profile_zipcode").val(),

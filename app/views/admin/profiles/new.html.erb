@@ -28,8 +28,9 @@
             <div class="row-fluid">
               <div class="span6">
                 <%= f.radio_button :show_type, 'restaurant', :checked => true %> Home > Restaurant > Menu Item<br>
-                <%= f.radio_button :show_type, 'menuitem' %> Home > Menu Item > Restaurant
-                <%= f.radio_button :show_type, 'contest' %> Photo Contest
+                <%= f.radio_button :show_type, 'menuitem' %> Home > Menu Item > Restaurant<br>
+                <%= f.radio_button :show_type, 'contest' %> Photo Contest<br>
+                <%= f.radio_button :show_type, 'fundraiser' %> Fundraiser
               </div>
             </div>
             <div class="row-fluid datetime-container">
@@ -124,7 +125,7 @@
 
     $(document).on("page:load ready", function(){
         var tags = [];
-        var keys = [], contests=[];
+        var keys = [], contests=[], fundraisers=[];
         <% @tags.each do |t| %>
             tags.push({id:<%=t.id %>, text: '<%=t.name %>'});
         <% end %>
@@ -135,6 +136,11 @@
         <% @contests.each do |c| %>
             contests.push({id:<%=c.id %>, text: '<%=c.name %>'});
         <% end %>
+
+        <% @fundraisers.each do |c| %>
+            fundraisers.push({id:<%=c.id %>, text: '<%=c.fundraiser_name %>'});
+        <% end %>
+
         if($('#datetimepicker1'))
             $('#datetimepicker1').datetimepicker({});
 
@@ -167,6 +173,15 @@
             $(".js-example-basic-multiple").removeAttr("multiple");
             for(var i = 0; i < contests.length; i++)
                 $(".js-example-basic-multiple").append('<option value="'+contests[i].id+'">'+contests[i].text+'</option>')
+            multitags = $(".js-example-basic-multiple").select2();
+        });
+
+        $("#user_profile_show_type_fundraiser").click(function() {
+            multitags.select2("destroy");
+            $(".js-example-basic-multiple").html("");
+            $(".js-example-basic-multiple").attr("multiple", "multiple");
+            for(var i = 0; i < fundraisers.length; i++)
+                $(".js-example-basic-multiple").append('<option value="'+fundraisers[i].id+'">'+fundraisers[i].text+'</option>')
             multitags = $(".js-example-basic-multiple").select2();
         });
 

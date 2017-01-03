@@ -36,6 +36,7 @@ class Admin::ProfilesController < ApplicationController
     @tags = CuisineType.all
     @keys = ItemKey.where(:is_global => true)
     @contests = Contest.all
+    @fundraisers = Fundraiser.all
   end
 
   # GET /admin/pages/1/edit
@@ -50,6 +51,7 @@ class Admin::ProfilesController < ApplicationController
     @tags = CuisineType.all
     @keys = ItemKey.where(:is_global => true)
     @contests = Contest.all
+    @fundraisers = Fundraiser.all
     @profiles = UserProfile.where(:user_id => current_user.id)
   end
 

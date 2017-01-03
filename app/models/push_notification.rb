@@ -76,19 +76,24 @@ class PushNotification < ActiveRecord::Base
         :sound => 'chime',
         # :badge => 'Increment',
         :pushtype=> notification_type,
+        :click_action=> "OpenAction",
       },
       :content_available => true,
       :to=> device_token,
-      :priority => 'high'
+      :priority => 'high',
+      :data=> {
+        :body => message,
+        :pushtype=> notification_type,
+      }
     }
-    
+
     # data.merge!(additional_data) if additional_data.present?
     url = URI.parse('https://fcm.googleapis.com/fcm/send')
     http = Net::HTTP.new(url.host, url.port)
     http.use_ssl = true
 
     # data.merge!(additional_data) if additional_data.present?
-    request = Net::HTTP::Post.new(url.path, 
+    request = Net::HTTP::Post.new(url.path,
         {"Content-Type" => 'application/json',
         'Authorization' => 'key=' + Rails.application.config.fcm_public_key}
     )
@@ -103,7 +108,7 @@ class PushNotification < ActiveRecord::Base
     #   # title: 'TBD',
     #   sound: 'chime',
     #   badge: 'Increment',
-    # }   
+    # }
     # registration_ids=[]
     # registration_ids << device_token
     # options = {data: data, collapse_key: "updated_score"}
