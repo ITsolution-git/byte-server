@@ -34,6 +34,8 @@ Imenu::Application.routes.draw do
       resources :favorites, only: [:index]
       resources :orders, only: [:index]
       resources :contest_actions, only: [:create]
+      post 'get_fundraisers', to: 'fundraisers#get_fundraisers'
+      post 'get_restaurants', to: 'fundraisers#get_restaurants'
       post 'orders/:id/remove_order', to: 'orders#remove_order'
 
       post 'locations/:id/favorite/:should_favourite', to: 'locations#favorite'
@@ -467,7 +469,6 @@ Imenu::Application.routes.draw do
     resources :fundraisers do
 
       member do
-        get 'new'
         post 'gettype'
         post 'addtype'
       end

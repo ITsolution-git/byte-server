@@ -186,8 +186,9 @@
     $(".fakesubmit").click(function() {
       $('#fundraiser_form').submit();
     });
+    <% if !@fundraiser.new_record? %> 
     $("#addType").click(function() {
-      $.post("<%=addtype_admin_fundraiser_path%>",
+      $.post("<%=addtype_admin_fundraiser_path(@fundraiser)%>",
             {name:$("#type_name").val(),
               image:$(".type_image_public_id").val()}, 
             function(data)
@@ -202,7 +203,7 @@
         });
     });
     $("#type_select").change(function() {
-      $.post("<%=gettype_admin_fundraiser_path%>",
+      $.post("<%=gettype_admin_fundraiser_path(@fundraiser)%>",
             {type_id:$("#type_select").val()}, 
             function(data)
           {
@@ -210,6 +211,7 @@
             $('.type_image').html(str);    
         });
     });
+    <% end %>
     $('.cloudinary-fileupload_type').bind('cloudinarydone', function(e, data) {  
         var str  = $.cloudinary.image(data.result.public_id,  { format: data.result.format, version: data.result.version, crop: 'scale', width: 200 })
         $('.preview_type').html(str);    

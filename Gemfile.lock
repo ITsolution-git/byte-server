@@ -729,9 +729,3 @@ DEPENDENCIES
   wicked_pdf
   wkhtmltopdf-binary
   word-count-validator (~> 1.0.0)
-
-RUBY VERSION
-   ruby 2.1.2p95
-
-BUNDLED WITH
-   1.13.6
