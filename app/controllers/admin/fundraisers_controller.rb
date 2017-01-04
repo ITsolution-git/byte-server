@@ -116,14 +116,14 @@ class Admin::FundraisersController < ApplicationController
 
   end
   def addtype
-
     @fundraiser = Fundraiser.find(params[:id])
     @type = FundraiserType.create(:name=>params[:name])
     if params[:image].present?
       preloaded = Cloudinary::PreloadedFile.new(params[:image])         
       raise "Invalid upload signature" if !preloaded.valid?
-      @type.image = preloaded.identifier
+      @type.image =  cl_image_tag(preloaded.identifier)
     end
+         
     @fundraiser.fundraiser_types << @type
     render :json => {:obj => @type, :success=>1}.to_json
 

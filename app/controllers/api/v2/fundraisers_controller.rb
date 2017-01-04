@@ -12,8 +12,7 @@ module Api
 		    fund_ids.each do |id| 
 		    	fundraiser = Fundraiser.find_by_id(id)#.select(Fundraiser.column_names - ["credit_card_expiration_date", "credit_card_number","credit_card_security_code","credit_card_type"])
 		    	if(fundraiser != nil) 
-			    	fundraiser
-			    	fund = {"fundraiser" => fundraiser, "locations" => fundraiser.locations, "fundraiser_types" =>fundraiser.fundraiser_types }
+			  	 	fund = {"fundraiser" => fundraiser, "locations" => fundraiser.locations, "fundraiser_types" =>fundraiser.fundraiser_types }
 			    	res << fund
 			    end
 		    end
