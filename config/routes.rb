@@ -471,6 +471,7 @@ Imenu::Application.routes.draw do
       member do
         post 'gettype'
         post 'addtype'
+        post 'deletetype'
       end
     end
 

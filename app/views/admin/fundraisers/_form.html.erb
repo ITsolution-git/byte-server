@@ -1,4 +1,7 @@
 
+<!-- <script type="text/javascript" src= "https://maxcdn.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href ="https://maxcdn.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css"/>
+ -->
 <style type='text/css'>
 .btn-file {
     position: relative;
@@ -143,10 +146,11 @@
           <div style="height:70px"></div> 
           <%= link_to "Add", '#', :id => "addType", :class => "normal-btn btn btn-primary" %>
         </div>
-        <div class="row-fluid span3" >
+        <div class="row-fluid span3  text-center" >
             <%= select_tag(:type_select, options_for_select(@fundraiser.fundraiser_types.collect{|x| [x.name,x.id]}), {:prompt=>"Select Type", :class => "span12"}) %>
             <div class = "type_image" style="margin:10px">
             </div>
+            <%= link_to "Delete", '#', :id => "deleteType", :class => "normal-btn btn btn-primary disabled" %>
         </div>
         <% end %>
         <fieldset  class="row-fluid span6">
@@ -207,8 +211,23 @@
             {type_id:$("#type_select").val()}, 
             function(data)
           {
-            var str  = $.cloudinary.image(data.data.image,  { })
+            var str  = $.cloudinary.image(data.data.image,  { });
+
+            $('#deleteType').removeClass('disabled');
             $('.type_image').html(str);    
+        });
+    });
+    $("#deleteType").click(function() {
+      $.post("<%=deletetype_admin_fundraiser_path(@fundraiser)%>",
+            {type_id:$("#type_select").val()}, 
+            function(data)
+          {
+            if(data.success==0)
+              return;
+            $('#deleteType').addClass('disabled');
+            $('.type_image').html("");  
+            opt = $("#type_select option[value='"+data.obj.id+"']");
+            opt.remove();
         });
     });
     <% end %>

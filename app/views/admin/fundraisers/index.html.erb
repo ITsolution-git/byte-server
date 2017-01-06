@@ -12,8 +12,6 @@ allow = true
 #   end
 # end
 %>
-
-
 <% if allow %>
 
 
@@ -53,7 +51,7 @@ allow = true
         %>
         <tr>
           <td>
-            <%= link_to fundraiser.name, edit_admin_fundraiser_path(fundraiser) %>
+            <%= link_to fundraiser.fundraiser_name, edit_admin_fundraiser_path(fundraiser) %>
           </td>
           <td>
             <%= options_for_status fundraiser.status %>

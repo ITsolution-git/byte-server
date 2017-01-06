@@ -1,6 +1,7 @@
 class Admin::FundraisersController < ApplicationController
   # GET /fundraisers
   # GET /fundraisers.json
+  before_filter :authenticate_user!, :except=>[:gettype, :addtype, :deletetype]
   def index
 
     @fundraisers = Fundraiser.all
@@ -129,5 +130,16 @@ class Admin::FundraisersController < ApplicationController
 
   end
 
+  def deletetype
+    @fundraiser = Fundraiser.find(params[:id])
+    @type = FundraiserType.find_by_id(params[:type_id])
+
+    if(@type==nil)
+      render :json => {:success=>0}.to_json
+    else
+      @type.destroy
+      render :json => {:obj => @type, :success=>1}.to_json
+    end
+  end
 
 end
