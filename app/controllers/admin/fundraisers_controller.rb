@@ -1,6 +1,7 @@
 class Admin::FundraisersController < ApplicationController
   # GET /fundraisers
   # GET /fundraisers.json
+  before_filter :authenticate_user!
   def index
 
     @fundraisers = Fundraiser.all
@@ -43,12 +44,12 @@ class Admin::FundraisersController < ApplicationController
   def create
     @fundraiser = Fundraiser.new(params[:fundraiser])
     if params[:logo_public_id].present?
-      preloaded = Cloudinary::PreloadedFile.new(params[:logo_public_id])         
+      preloaded = Cloudinary::PreloadedFile.new(params[:logo_public_id])
       raise "Invalid upload signature" if !preloaded.valid?
-      @fundraiser.logo = preloaded.identifier
+      @fundraiser.logo = Cloudinary::Utils.cloudinary_url(preloaded.identifier)
     end
     # if params[:division_public_id].present?
-    #   preloaded = Cloudinary::PreloadedFile.new(params[:division_public_id])         
+    #   preloaded = Cloudinary::PreloadedFile.new(params[:division_public_id])
     #   raise "Invalid upload signature" if !preloaded.valid?
     #   @fundraiser.division_image = preloaded.identifier
     # end
@@ -66,13 +67,13 @@ class Admin::FundraisersController < ApplicationController
   def update
     @fundraiser = Fundraiser.find(params[:id])
     if @fundraiser.logo != params[:logo_public_id] and params[:logo_public_id].present?
-      preloaded = Cloudinary::PreloadedFile.new(params[:logo_public_id])         
+      preloaded = Cloudinary::PreloadedFile.new(params[:logo_public_id])
       raise "Invalid upload signature" if !preloaded.valid?
-      @fundraiser.logo = preloaded.identifier
+      @fundraiser.logo = Cloudinary::Utils.cloudinary_url(preloaded.identifier)
 
     end
     # if @fundraiser.division_image != params[:division_public_id] and params[:division_public_id].present?
-    #   preloaded = Cloudinary::PreloadedFile.new(params[:division_public_id])         
+    #   preloaded = Cloudinary::PreloadedFile.new(params[:division_public_id])
     #   raise "Invalid upload signature" if !preloaded.valid?
     #   @fundraiser.division_image = preloaded.identifier
     # end
@@ -100,7 +101,7 @@ class Admin::FundraisersController < ApplicationController
 
     @fundraiser = Fundraiser.find(params[:id])
     # if @fundraiser.division_image != params[:division_public_id] and params[:division_public_id].present?
-    #   preloaded = Cloudinary::PreloadedFile.new(params[:division_public_id])         
+    #   preloaded = Cloudinary::PreloadedFile.new(params[:division_public_id])
     #   raise "Invalid upload signature" if !preloaded.valid?
     #   @fundraiser.division_image = preloaded.identifier
     # end
@@ -119,11 +120,11 @@ class Admin::FundraisersController < ApplicationController
     @fundraiser = Fundraiser.find(params[:id])
     @type = FundraiserType.create(:name=>params[:name])
     if params[:image].present?
-      preloaded = Cloudinary::PreloadedFile.new(params[:image])         
+      preloaded = Cloudinary::PreloadedFile.new(params[:image])
       raise "Invalid upload signature" if !preloaded.valid?
-      @type.image =  cl_image_tag(preloaded.identifier)
+      @type.image = Cloudinary::Utils.cloudinary_url(preloaded.identifier)
     end
-         
+
     @fundraiser.fundraiser_types << @type
     render :json => {:obj => @type, :success=>1}.to_json
 
