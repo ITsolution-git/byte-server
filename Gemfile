@@ -65,7 +65,7 @@ gem 'amoeba'
 gem 'slim-rails'
 gem 'decent_exposure'
 gem 'ruby-progressbar'
-gem 'resque', git: 'git://github.com/resque/resque.git', require: 'resque/server'
+gem 'resque', git: 'git://github.com/resque/resque.git', branch: '1-x-stable', require: 'resque/server'
 gem 'resque-status'
 gem 'resque-loner'
 gem 'capistrano-resque', '~> 0.2.2', require: false

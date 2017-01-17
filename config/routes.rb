@@ -34,8 +34,9 @@ Imenu::Application.routes.draw do
       resources :favorites, only: [:index]
       resources :orders, only: [:index]
       resources :contest_actions, only: [:create]
-      post 'get_fundraisers', to: 'fundraisers#get_fundraisers'
-      post 'get_restaurants', to: 'fundraisers#get_restaurants'
+      post 'locations/get_fundraisers', to: 'locations#get_fundraisers'
+      post 'locations/get_locations', to: 'locations#get_locations'
+      post 'rewards/send_code', to:'rewards#send_code'
       post 'orders/:id/remove_order', to: 'orders#remove_order'
 
       post 'locations/:id/favorite/:should_favourite', to: 'locations#favorite'

@@ -82,6 +82,37 @@ module Api
         @locations.uniq{|location| location.id}
       end
 
+      def get_locations
+		    # Determine the parameters
+
+		    # Make the parameters more accessible
+
+		    fundraiser_type_id = params[:fundraiser_type_id]
+        @fundraiser_type = FundraiserType.find_by_id(params[:fundraiser_type_id])
+        @locations = []
+		    @fundraiser_type.locations.each do |l|
+          @locations.push(Location.find(l.id))
+        end
+     	end
+
+      def get_fundraisers
+		    # Determine the parameters
+
+		    # Make the parameters more accessible
+		    fund_ids = params[:fundraiser_ids]
+		    res = []
+		    fund_ids.each do |id|
+		    	fundraiser = Fundraiser.find_by_id(id)#.select(Fundraiser.column_names - ["credit_card_expiration_date", "credit_card_number","credit_card_security_code","credit_card_type"])
+		    	if(fundraiser != nil)
+			  	 	fund = {"fundraiser" => fundraiser, "fundraiser_types" =>fundraiser.fundraiser_types }
+			    	res << fund
+			    end
+		    end
+
+		    render  :json => {:fundraisers => res}
+
+     	end
+
       def show
         @res_location = Location.find(params[:id])
         @res_location.contests=[]

@@ -57,7 +57,12 @@ allow = true
             <%= options_for_status fundraiser.status %>
           </td>
           <td class="aligncenter">
-            <%= fundraiser.locations.count %>
+            <%
+              @sum = 0
+              fundraiser.fundraiser_types.each do |t|
+                @sum += t.locations.count
+              end %>
+            <%=@sum %>
           </td>
           <td class="aligncenter">
             5

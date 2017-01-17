@@ -16,14 +16,14 @@ class Location < ActiveRecord::Base
     :instagram_username,:linked_url, :primary_cuisine, :secondary_cuisine,:com_url, :location_dates,
     :location_dates_attributes, :time_open, :time_close, :days, :customer_id, :logo_id, :logo_url,
     :location_image_photos_attributes, :images_attributes, :skip_primary_cuisine_validation, :service_fee_type, :fee, :contests,
-    :weekly_progress_report, :weekly_progress_email, :fundraisers
+    :weekly_progress_report, :weekly_progress_email, :fundraiser_types
 
 
   #############################
   ###  ASSOCIATIONS
   #############################
 
-  has_and_belongs_to_many :fundraisers
+  has_and_belongs_to_many :fundraiser_types
   belongs_to :info
   belongs_to :owner, class_name: 'User'
   belongs_to :logo, class_name: 'Photo'

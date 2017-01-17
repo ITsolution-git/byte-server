@@ -123,6 +123,17 @@ class RestaurantsController < ApplicationController
       end
     end
 
+    @fundraisers = Fundraiser.all
+    @fundraisers_select = []
+    @fundraisers.each do |f|
+      if f.fundraiser_types.present?
+        f.fundraiser_types.each do |t|
+          @fundraisers_select.push({:name=>f.fundraiser_name+'-'+t.name, :id=>t.id})
+        end
+      else
+      end
+    end
+
     @location_logo = @restaurant.logo
     @location_logo ||= @restaurant.build_logo
     @location_images
@@ -855,13 +866,14 @@ class RestaurantsController < ApplicationController
 
   def add_fundraiser
     @restaurant = Location.find(params[:id]);
-    @fundraiser = Fundraiser.find_by_id(params[:fundraiser_id])
-    if(@restaurant.fundraisers.include?(@fundraiser)) 
-      render :json => {:message => "Existing Fundraiser", :success=>0}.to_json
-    else 
-      @restaurant.fundraisers<<@fundraiser
+    @fundraiser_type = FundraiserType.find_by_id(params[:fundraiser_id])
+    @fundraiser = Fundraiser.find_by_id(@fundraiser_type.fundraiser_id)
+    if(@restaurant.fundraiser_types.include?(@fundraiser_type))
+      render :json => {:message => "Existing Fundraiser Type", :success=>0}.to_json
+    else
+      @restaurant.fundraiser_types<<@fundraiser_type
       if @restaurant.save
-        render :json => {:message => "Fundraiser added", :success=>1, :name=>@fundraiser.name, :id=>@fundraiser.id}.to_json
+        render :json => {:message => "Fundraiser Type added", :success=>1, :fundraiser_name=>@fundraiser.fundraiser_name, :name=>@fundraiser_type.name, :id=>@fundraiser_type.id}.to_json
       else
         render :json => {:message => "Add Failed", :success=>0}.to_json
       end
@@ -869,11 +881,11 @@ class RestaurantsController < ApplicationController
   end
   def delete_fundraiser
     @restaurant = Location.find(params[:id]);
-    @fundraiser = Fundraiser.find_by_id(params[:fundraiser_id])
-    
-    @restaurant.fundraisers.delete @fundraiser
+    @fundraiser_type = FundraiserType.find_by_id(params[:fundraiser_id])
+
+    @restaurant.fundraiser_types.delete @fundraiser_type
     if @restaurant.save
-      render :json => {:message => "Fundraiser removed", :success=>1}.to_json
+      render :json => {:message => "Fundraiser Type removed", :success=>1}.to_json
     else
       render :json => {:message => "Remove Failed", :success=>0}.to_json
     end

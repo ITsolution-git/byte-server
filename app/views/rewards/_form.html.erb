@@ -1,3 +1,8 @@
+
+<script type="text/javascript">
+   $.cloudinary.config({"api_key":"<%=Figaro.env.cloudinary_api_key%>","cloud_name":"<%=Figaro.env.cloudinary_cloud_name%>"});
+</script>
+
 <% if @reward.errors.any? %>
   <div id="error_explanation">
     <h2><%= "#{pluralize(@reward.errors.count, "error")} prohibited this reward from being saved:" %></h2>
@@ -46,13 +51,19 @@
       </div>
     </div>
     <div class="row-fluid">
-      <div class="span4">
-        <%= image_tag @reward.photo, style: "height:150px; weight:150px;", id: "reward-photo" %>
+      <div class="preview_logo span4">
+          <%= cl_image_tag(f.object.photo, :crop => :fill, :width => 150, :height => 150) %>
       </div>
       <div class="span8">
-        <%= f.label :photo %>
-        <%= f.file_field :photo, id: "reward-photo-field" %>
-        <%= f.hidden_field :photo_cache %>
+        <%= cl_image_upload_tag(:logo_public_id,
+          :crop => :limit, :width => 400, :height => 400,
+          # :eager => [{ :crop => :fill, :width => 150, :height => 100 }],
+          :html => { :display => "none",
+          :type => "file" ,
+          :class => "cloudinary-fileupload_logo"}
+               ) %>
+         </label>
+         <input class=" " name="logo_public_id" type="hidden" value="<%=f.object.photo %>"/>
       </div>
     </div>
     <div class="row-fluid">
@@ -126,7 +137,16 @@
     }
   });
 
+
+
   $(".datetimepicker").datetimepicker({
     minDate: 0
+  });
+
+  $('.cloudinary-fileupload_logo').bind('cloudinarydone', function(e, data) {
+      var str  = $.cloudinary.image(data.result.public_id,  { format: data.result.format, version: data.result.version, crop: 'scale', width: 400 })
+      $('.preview_logo').html(str);
+      // $('.image_public_id').val(data.result.public_id);
+    return true;
   });
 </script>

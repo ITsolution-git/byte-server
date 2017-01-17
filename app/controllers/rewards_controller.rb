@@ -45,6 +45,12 @@ class RewardsController < ApplicationController
   def create
     @reward = @restaurant.rewards.build(params[:reward])
 
+    if params[:logo_public_id].present?
+      preloaded = Cloudinary::PreloadedFile.new(params[:logo_public_id])
+      raise "Invalid upload signature" if !preloaded.valid?
+      @reward.photo = Cloudinary::Utils.cloudinary_url(preloaded.identifier)
+    end
+
     respond_to do |format|
       if @reward.save
         format.html { redirect_to restaurant_rewards_path(@restaurant), notice: 'Reward was successfully created.' }
@@ -59,7 +65,12 @@ class RewardsController < ApplicationController
   # PUT /rewards/1
   # PUT /rewards/1.json
   def update
-
+    if params[:logo_public_id].present?
+      preloaded = Cloudinary::PreloadedFile.new(params[:logo_public_id])
+      raise "Invalid upload signature" if !preloaded.valid?
+      @reward.photo = Cloudinary::Utils.cloudinary_url(preloaded.identifier)
+    end
+    
     respond_to do |format|
       if @reward.update_attributes(params[:reward])
         format.html { redirect_to restaurant_rewards_path(@restaurant), notice: 'Reward was successfully updated.' }

@@ -34,6 +34,25 @@ module Api
         end
       end
 
+      def send_code
+        @reward = Reward.where(share_link: params[:code]).first
+        if @reward.present?
+          if (Time.current > @reward.available_from) and (Time.current < @reward.expired_until)
+              UserReward.create(
+                reward_id: @reward.id,
+                sender_id: @user.id,
+                receiver_id: @user.id,
+                location_id: @reward.location_id
+              )
+              render json: { success: "The reward is sent successfully.", data: @reward }, status: 200
+          else
+              render json: { error: "The prize has expired." }, status: 200
+          end
+        else
+          render json: { error: "Invalid prize code please try again" }, status: 200
+        end
+      end
+
       private
 
       def set_reward

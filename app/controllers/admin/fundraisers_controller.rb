@@ -37,7 +37,7 @@ class Admin::FundraisersController < ApplicationController
 
   # GET /fundraisers/1/edit
   def edit
-    @fundraiser = Fundraiser.find(params[:id])
+    @fundraiser = Fundraiser.find(params[:id])    
   end
 
   # POST /fundraisers

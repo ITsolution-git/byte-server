@@ -68,24 +68,49 @@ class PushNotification < ActiveRecord::Base
     # return true
     # dm2EQT55ewY:APA91bF9xk24TPxNedvAvvdqsOIxmKngzjTiIbR6AO1xNUHSB-mrEpvVA0BWllvWMTuYgj4nlTwPGk9wzBNw3wn33trzrHiNetbWcJ_PjDKDM-WhM4nThKMvnfPzbZnwD1fmdvU1JSso,
     # debugger
-    data = {
-      :notification => {
-        :body => message,
-        # :title => "TBD",
-        :icon => "myicon",
-        :sound => 'chime',
-        # :badge => 'Increment',
-        :pushtype=> notification_type,
-        :click_action=> "OpenAction",
-      },
-      :content_available => true,
-      :to=> device_token,
-      :priority => 'high',
-      :data=> {
-        :body => message,
-        :pushtype=> notification_type,
+
+    data = {}
+    if additional_data.present?
+      data = {
+        :notification => {
+          :body => message,
+          # :title => "TBD",
+          :icon => "myicon",
+          :sound => 'chime',
+          # :badge => 'Increment',
+          :pushtype=> notification_type,
+          :locationid=> additional_data[:location_id],
+          :click_action=> "OpenAction",
+        },
+        :content_available => true,
+        :to=> device_token,
+        :priority => 'high',
+        :data=> {
+          :body => message,
+          :pushtype=> notification_type,
+          :locationid=> additional_data[:location_id]
+        }
       }
-    }
+    else
+      data = {
+        :notification => {
+          :body => message,
+          # :title => "TBD",
+          :icon => "myicon",
+          :sound => 'chime',
+          # :badge => 'Increment',
+          :pushtype=> notification_type,
+          :click_action=> "OpenAction",
+        },
+        :content_available => true,
+        :to=> device_token,
+        :priority => 'high',
+        :data=> {
+          :body => message,
+          :pushtype=> notification_type,
+        }
+      }
+    end
 
     # data.merge!(additional_data) if additional_data.present?
     url = URI.parse('https://fcm.googleapis.com/fcm/send')
@@ -133,6 +158,7 @@ class PushNotification < ActiveRecord::Base
     #   additional_data: additional_data_hash
     # }).dispatch
     return false unless self.resource_is_valid?(resource)
+    
     resource.push_notifications.create({
       notification_type: notification_type,
       message: message,

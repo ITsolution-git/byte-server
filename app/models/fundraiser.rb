@@ -1,11 +1,11 @@
 class Fundraiser < ActiveRecord::Base
   attr_accessible :address, :alt_email, :city, :credit_card_expiration_date, :credit_card_number, :credit_card_security_code, :credit_card_type,  :email, :fundraiser_name, :name, :phone, :state, :status, :url, :url, :zipcode, :locations,:fundraiser_types
 
-  has_and_belongs_to_many :locations
+  # has_and_belongs_to_many :locations
   has_many :fundraiser_types
 
-  validates :name, :presence => true  
-  validates :fundraiser_name, :presence => true  
+  validates :name, :presence => true
+  validates :fundraiser_name, :presence => true
   validates :email, presence: { message: "can't be blank" }
 
   # validates_format_of :url, :with => /^[w]{3}\.[\S]+\.[\S]+/, :allow_blank=> true

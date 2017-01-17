@@ -29,7 +29,8 @@ class UserPrize < ActiveRecord::Base
 
   def send_push_notification_to_recipient
     message = "You have received a prize from #{location.name}"
-    PushNotification.dispatch_message_to_resource_subscribers('prize_received', message, user)
+    hash = {location_id: location.id}
+    PushNotification.dispatch_message_to_resource_subscribers('prize_received', message, user, hash)
   end
 
 
@@ -37,5 +38,5 @@ class UserPrize < ActiveRecord::Base
   ###  CLASS METHODS
   #############################
 
-  
+
 end

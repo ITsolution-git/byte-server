@@ -8,7 +8,7 @@ class Reward < ActiveRecord::Base
 
   validates :name, :available_from, :expired_until, :timezone, :quantity, :description, presence: true
 
-  mount_uploader :photo, RewardUploader
+  # mount_uploader :photo, RewardUploader
 
   before_create :add_default_stats
 

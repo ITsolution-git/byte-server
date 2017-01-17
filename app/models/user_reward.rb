@@ -12,6 +12,9 @@ class UserReward < ActiveRecord::Base
 
   def send_push_notification_to_recipient
     message = "You have received a reward from #{location.present? ? location.name : sender.name}"
-    PushNotification.dispatch_message_to_resource_subscribers('reward_received', message, receiver)
+    hash = {location_id: location.id}
+    if receiver.id != sender.id
+      PushNotification.dispatch_message_to_resource_subscribers('reward_received', message, receiver, hash)
+    end
   end
 end

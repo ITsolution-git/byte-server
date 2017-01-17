@@ -2,7 +2,7 @@ object @user_reward
 node(:id) { |r| r.id }
 node(:reward_id) { |r| r.reward_id }
 node(:name) { |r| r.reward.name }
-node(:photo) { |r| r.reward.photo.url }
+node(:photo) { |r| r.reward.photo }
 node(:available_from) { |r| r.reward.available_from }
 node(:expired_until) { |r| r.reward.expired_until }
 node(:timezone) { |r| r.reward.timezone }

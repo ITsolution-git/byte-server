@@ -53,6 +53,8 @@ class Admin::ProfilesController < ApplicationController
     @contests = Contest.all
     @fundraisers = Fundraiser.all
     @profiles = UserProfile.where(:user_id => current_user.id)
+
+    # binding.pry
   end
 
   # POST /admin/pages
