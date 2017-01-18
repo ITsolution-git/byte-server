@@ -11,7 +11,7 @@
   <div class="row-fluid">
     <div class="span5" style="margin-left: 700px;">
       <% if @restaurant.present? && @restaurant.name.present? %>
-        <div class="span2"><%= link_to image_tag("loyalty.png"), prize_points_path(@restaurant, :status_prize_id => 0) %></div>
+<!--         <div class="span2"><%#= link_to image_tag("loyalty.png"), prize_points_path(@restaurant, :status_prize_id => 0) %></div> -->
         <div class="icon-reward span2">
           <%= link_to image_tag("social_prize.png"), socical_points_path(restaurant_id: @restaurant.id) %>
         </div>
