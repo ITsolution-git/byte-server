@@ -1,7 +1,6 @@
-h4 Rewards
-hr
-- if @rewards.present?
-  - @rewards.each do |reward|
+
+- if data.present?
+  - data.each do |reward|
     .reward-item style="height:100px;" id="reward-#{reward.id}"
       .reward-photo style="float:left;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<p>Redeemed: #{reward.stats}</p><p>UnRedeemed: #{unredeemed(reward.quantity)}</p>" data-placement="top"
         = image_tag reward.photo, style: "height:75px;width:75px;"

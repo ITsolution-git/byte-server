@@ -85,6 +85,7 @@ gem 'wicked_pdf'
 gem 'wkhtmltopdf-binary'
 gem 'fcm', '~> 0.0.2'
 
+gem 'zip-codes'
 
 group :assets do
   gem 'sass-rails', '~> 3.2.3'

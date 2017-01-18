@@ -1,7 +1,7 @@
 # require 'rqrcode'
 
 class RewardsController < ApplicationController
-  before_filter :authenticate_user!, :set_restaurant, :set_rewards, :populate_timezones
+  before_filter :authenticate_user!, :set_restaurant, :set_rewards, :populate_array
   before_filter :adjust_timezone, only: [:create, :update]
   before_filter :fetch_reward, only: [:show, :edit, :update, :destroy, :print_qr_code]
 
@@ -98,18 +98,26 @@ class RewardsController < ApplicationController
   def set_restaurant
     @restaurant = Location.find(params[:restaurant_id])
   end
-
+  #prize_type 0:custom ,1:loyalty, 2:deals near me. refer to @prizeTypes in populate_array
   def set_rewards
     @rewards = Reward.where(location_id: @restaurant.id)
+    @rewards_loyalty = Reward.where(location_id: @restaurant.id, prize_type: 1)
+    @rewards_dealnearme = Reward.where(location_id: @restaurant.id, prize_type: 2)
+    @rewards_custom = Reward.where(location_id: @restaurant.id, prize_type: 0)
   end
 
-  def populate_timezones
+  def populate_array
     @timezones = [
       ["Default (UTC)", "UTC"],
       ["Pacific", "Pacific Time (US & Canada)"],
       ["Mountain", "Mountain Time (US & Canada)"],
       ["Central", "Central Time (US & Canada)"],
       ["Eastern", "Eastern Time (US & Canada)"]
+    ]
+    @prizeTypes = [
+      ["Custom" ,0],
+      ["Loyalty", 1],
+      ["Deals Near Me", 2],
     ]
   end
 

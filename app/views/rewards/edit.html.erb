@@ -28,6 +28,12 @@
   <hr>
   <%= render "form" %>
 </div>
+
 <div class="span4">
-  <%= render "listing" %>
+  <h4 class="reward_list_title">Loyality Prizes</h4>
+  <%= render "listing", :data=>@rewards_loyalty %>
+  <h4 class="reward_list_title">Deals Near Me Prizes</h4>
+  <%= render "listing", :data=>@rewards_dealnearme %>
+  <h4 class="reward_list_title">Custom Prizes</h4>
+  <%= render "listing", :data=>@rewards_custom %>
 </div>

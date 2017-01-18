@@ -1,7 +1,8 @@
 class Admin::ProfilesController < ApplicationController
   before_filter :authenticate_user!
+  before_filter :arrage_profile
+  
   def index
-    @profiles = UserProfile.where(:user_id => current_user.id)
   end
 
   # GET /admin/pages/1
@@ -110,4 +111,24 @@ class Admin::ProfilesController < ApplicationController
     @order = params[:profile_order]
     render json: @order
   end
+
+  def arrage_profile    
+    @profiles = UserProfile.where(:user_id => current_user.id)
+    profileTemp = Hash.new()
+    @profiles.each do |p|
+      zip = ZipCodes.identify(p.zipcode.split("-")[0])
+      unless zip
+        next
+      end
+      key = zip[:city].to_s+"-"+zip[:state_code].to_s
+      if profileTemp.has_key?(key)
+        profileTemp[key] << p
+      else
+        profileTemp[key] = [ p ]
+      end
+    end
+    @profileByCity = Hash.new ()
+    profileTemp.keys.sort.map {|k| @profileByCity[k] = profileTemp[k]}
+  end
+
 end

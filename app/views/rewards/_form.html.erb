@@ -17,9 +17,12 @@
 <div>
   <%= form_for @reward, url: (@reward.persisted? ? restaurant_reward_path : restaurant_rewards_path), html: { multipart: true } do |f| %>
     <div class="row-fluid">
-      <div class="span6">
+      <div class="span6"> 
         <%= f.label :name %>
         <%= f.text_field :name %>
+        <%= f.label :prize_type %>
+        <%= f.select( :prize_type, options_for_select(@prizeTypes, @reward.prize_type), {:prompt=>"Select Prize Type"}) %>
+
       </div>
       <div class="span6">
         <%= f.label :prize_code %>
@@ -63,7 +66,7 @@
           :class => "cloudinary-fileupload_logo"}
                ) %>
          </label>
-         <input class=" " name="logo_public_id" type="hidden" value="<%=f.object.photo %>"/>
+         <input class=" " name="logo_public_id" type="hidden" value=""/>
       </div>
     </div>
     <div class="row-fluid">
@@ -92,6 +95,12 @@
         <%= f.label :description %>
         <%= f.text_area :description, rows: 6, maxlength: 140 %>
         <div class="help-block">* Max. 140 Characters</div>
+
+        <%= f.label :weekly_reward_email %>
+        <%= f.text_area :weekly_reward_email, rows: 3 %>
+        <% if @reward.persisted? && @reward.weekly_reward_email.present? %>
+          <%= link_to "Send weekly prize report", send_weekly_prize_report_path(reward_id: @reward.id), method: :post, class: "btn" %>
+        <% end %>
       </div>
       <div class="span6">
         <% if @reward.persisted? %>
@@ -107,18 +116,21 @@
             </tr>
           </table>
         <% end %>
+        <div id = "points_redeem">
+        <div class="row-fluid" style="width:220px;margin-top:40px">
+          <%= f.number_field(:points_to_unlock, min: 0,  class: "span6")  %>
+          <%= f.label :points_to_unlock,  class: "span6" %>
+        </div>
+
+
+        <div class="row-fluid" style="width:220px;">
+          <%= label_tag :redeem_confirm_msg,  "Redeem Confirmation Message", {class: "span12"} %>
+          <%= f.text_area :redeem_confirm_msg, rows: 2, maxlength: 140 %>
+        </div>
+        </div>
       </div>
     </div>
     <div class="row-fluid">
-      <div class="span6">
-        <%= f.label :weekly_reward_email %>
-        <%= f.text_area :weekly_reward_email, rows: 3 %>
-      </div>
-      <% if @reward.persisted? && @reward.weekly_reward_email.present? %>
-        <div class="span6">
-          <%= link_to "Send weekly prize report", send_weekly_prize_report_path(reward_id: @reward.id), method: :post, class: "btn" %>
-        </div>
-      <% end %>
     </div>
     <div class="text-center">
       <%= f.submit nil, class: "btn btn-primary" %>
@@ -137,8 +149,20 @@
     }
   });
 
-
-
+  $(document).ready(function(){
+    if(<%=@reward.prize_type%>==0)
+      $("#points_redeem").hide();
+    else
+      $("#points_redeem").show();
+  });
+  $("#reward_prize_type").change(function(){
+    if($(this).val()==0){
+      $("#points_redeem").hide();
+    }
+    if($(this).val()>0){
+      $("#points_redeem").show();
+    }
+  })
   $(".datetimepicker").datetimepicker({
     minDate: 0
   });

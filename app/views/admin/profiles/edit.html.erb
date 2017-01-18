@@ -30,22 +30,32 @@
                     <%= f.radio_button :show_type, 'restaurant', :checked => true %> Home > Restaurant > Menu Item<br>
                     <%= f.radio_button :show_type, 'menuitem' %> Home > Menu Item > Restaurant<br>
                     <%= f.radio_button :show_type, 'contest' %> Photo Contest<br>
-                    <%= f.radio_button :show_type, 'fundraiser' %> Fundraiser
+                    <%= f.radio_button :show_type, 'fundraiser' %> Fundraiser<br>
+                    <%= f.radio_button :show_type, 'deals_near_me' %> Deals Near Me
                 <% elsif @profile.show_type =="menuitem" %>
                     <%= f.radio_button :show_type, 'restaurant' %> Home > Restaurant > Menu Item<br>
                     <%= f.radio_button :show_type, 'menuitem',:checked => true %> Home > Menu Item > Restaurant<br>
                     <%= f.radio_button :show_type, 'contest' %> Photo Contest<br>
-                    <%= f.radio_button :show_type, 'fundraiser' %> Fundraiser
+                    <%= f.radio_button :show_type, 'fundraiser' %> Fundraiser<br>
+                    <%= f.radio_button :show_type, 'deals_near_me' %> Deals Near Me
                 <% elsif @profile.show_type == "contest" %>
                     <%= f.radio_button :show_type, 'restaurant' %> Home > Restaurant > Menu Item<br>
                     <%= f.radio_button :show_type, 'menuitem' %> Home > Menu Item > Restaurant<br>
                     <%= f.radio_button :show_type, 'contest',:checked => true %> Photo Contest<br>
-                    <%= f.radio_button :show_type, 'fundraiser' %> Fundraiser
+                    <%= f.radio_button :show_type, 'fundraiser' %> Fundraiser<br>
+                    <%= f.radio_button :show_type, 'deals_near_me' %> Deals Near Me
                 <% elsif @profile.show_type == "fundraiser" %>
                     <%= f.radio_button :show_type, 'restaurant' %> Home > Restaurant > Menu Item<br>
                     <%= f.radio_button :show_type, 'menuitem' %> Home > Menu Item > Restaurant<br>
                     <%= f.radio_button :show_type, 'contest' %> Photo Contest<br>
-                    <%= f.radio_button :show_type, 'fundraiser',:checked => true %> Fundraiser
+                    <%= f.radio_button :show_type, 'fundraiser',:checked => true %> Fundraiser<br>
+                    <%= f.radio_button :show_type, 'deals_near_me' %> Deals Near Me
+                <% elsif @profile.show_type == "deals_near_me" %>
+                    <%= f.radio_button :show_type, 'restaurant' %> Home > Restaurant > Menu Item<br>
+                    <%= f.radio_button :show_type, 'menuitem' %> Home > Menu Item > Restaurant<br>
+                    <%= f.radio_button :show_type, 'contest' %> Photo Contest<br>
+                    <%= f.radio_button :show_type, 'fundraiser' %> Fundraiser<br>
+                    <%= f.radio_button :show_type, 'deals_near_me',:checked => true %> Deals Near Me
                 <% end %>
               </div>
             </div>

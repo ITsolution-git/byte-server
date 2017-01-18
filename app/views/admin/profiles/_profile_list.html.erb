@@ -1,5 +1,5 @@
 <ul class="profile_list" style="max-height: 500px; overflow: auto;">
-  <% @profiles.each do |p| %>
+  <% data.each do |p| %>
       <li class="row-fluid" data-id="<%=p.id%>">
         <div class="span4">
           <img src="<%= p.image %>" style="height:50px; width:auto;">
@@ -58,3 +58,60 @@
       </li>
   <% end %>
 </ul>
+
+
+<script type="text/javascript">
+
+    $(document).on("page:load ready", function(){
+        $( ".profile_list" ).sortable({
+            stop: function(event, ui) {
+                change_order();
+            }
+        });
+
+        $(".unpublish-profile").click(function() {
+            change_status($(this).closest("li").attr("data-id"), 0);
+        })
+        $(".publish-profile").click(function() {
+            change_status($(this).closest("li").attr("data-id"), 1);
+        })
+        $(".delete-profile").click(function() {
+            if(confirm("You're gonna remove this profile. right?"))
+                change_status($(this).closest("li").attr("data-id"), 2);
+        })
+        function change_status(profileid, status) {
+            $.ajax({
+                url: '/admin/profiles/show',
+                data: {
+                    status: profileid+"_"+status,
+                },
+                error: function() {
+                },
+                success: function(data) {
+                    setTimeout(function() {
+                        location.href = 'profiles';
+                    }, 500)
+
+                },
+                type: 'GET'
+            });
+        }
+        function change_order() {
+            var profile_order = [];
+            $( ".profile_list li").each(function() {
+                profile_order.push($(this).attr("data-id"))
+            })
+            $.ajax({
+                url: '/admin/profiles/show',
+                data: {
+                    profile_order: profile_order
+                },
+                error: function() {
+                },
+                success: function(data) {
+                },
+                type: 'GET'
+            });
+        }
+    });
+</script>
