@@ -25,7 +25,7 @@
               </div>
             </div>
             <div class="row-fluid">
-              <div class="span6">
+              <div class="span6" id = "screenTypeCheckGroup" >
                 <% if @profile.show_type == "restaurant" %>
                     <%= f.radio_button :show_type, 'restaurant', :checked => true %> Home > Restaurant > Menu Item<br>
                     <%= f.radio_button :show_type, 'menuitem' %> Home > Menu Item > Restaurant<br>
@@ -109,7 +109,7 @@
                 </div>
               </div>
             </div>
-            <div class="row-fluid top10">
+            <div class="row-fluid top10" id = "tagsBox" style="display:<%=@profile.show_type == 'deals_near_me'?'none':'block'%> ">
               <div class="span2">
 
                 <%= f.label :tags, "Tags:"%>
@@ -277,6 +277,16 @@
                     type: 'GET'
                 });
             }
+        })
+
+        $("#screenTypeCheckGroup input[type=radio]").click(function(){
+          if($(this).val() == "deals_near_me")
+          {
+            $("#tagsBox").hide();
+          }
+          else{
+            $("#tagsBox").show();
+          }
         })
     });
 

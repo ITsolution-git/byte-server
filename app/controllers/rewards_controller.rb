@@ -1,9 +1,10 @@
 # require 'rqrcode'
 
 class RewardsController < ApplicationController
-  before_filter :authenticate_user!, :set_restaurant, :set_rewards, :populate_array
+  before_filter :authenticate_user!
+  before_filter :set_restaurant, :set_rewards
+  before_filter :fetch_reward, :populate_array, only: [:show, :edit, :update, :destroy, :print_qr_code]
   before_filter :adjust_timezone, only: [:create, :update]
-  before_filter :fetch_reward, only: [:show, :edit, :update, :destroy, :print_qr_code]
 
   # GET /rewards
   # GET /rewards.json
@@ -116,9 +117,14 @@ class RewardsController < ApplicationController
     ]
     @prizeTypes = [
       ["Custom" ,0],
-      ["Loyalty", 1],
-      ["Deals Near Me", 2],
     ]
+    if @rewards_loyalty.count == 0 || @reward.prize_type == 1
+      @prizeTypes << ["Loyalty", 1]
+    end
+    if @rewards_dealnearme.count == 0 || @reward.prize_type == 2
+      @prizeTypes << ["Deals Near Me", 2]
+    end
+      
   end
 
   def adjust_timezone
