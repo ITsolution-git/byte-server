@@ -115,13 +115,13 @@ class RewardsController < ApplicationController
       ["Central", "Central Time (US & Canada)"],
       ["Eastern", "Eastern Time (US & Canada)"]
     ]
-    if params[:action] == "index"
+    if params[:action] == "index" ||  params[:action] == "create"
       @prizeTypes = [
         ["Custom" ,0],
         ["Loyalty", 1],
         ["Deals Near Me", 2]
       ]
-    elsif params[:action] == "new"
+    elsif params[:action] == "new" 
       @prizeTypes = [
         ["Custom" ,0],
       ]
