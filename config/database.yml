@@ -1,0 +1,30 @@
+
+development:
+  adapter: mysql2
+  encoding: utf8
+  reconnect: false
+  database: mymenu_db_dev
+  pool: 8
+  username: root
+  password: root
+  host: localhost
+
+staging:
+  adapter: mysql2
+  encoding: utf8
+  reconnect: false
+  database: mymenu_staging
+  pool: 8
+  username: deploy
+  password: CHuEryTKkC7jNcDeCEfPnETWFMa4
+  host: localhost
+
+production:
+  adapter: mysql2
+  encoding: utf8
+  reconnect: false
+  database: mymenu_db
+  pool: 8
+  username: <%= ENV['DB_USERNAME'] %>
+  password: <%= ENV['DB_PASSWORD'] %>
+  host: 169.55.50.166

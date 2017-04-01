@@ -1,0 +1,49 @@
+defaults: &defaults
+  BUNGSNAG_KEY: "f4a75bbf563be6953a5a8f6fc68ba56b"
+  API_SCOPE: 'https://www.google.com/m8/feeds https://www.googleapis.com/auth/userinfo.email'
+  ADMIN_SDK_SCOPE: 'https://www.googleapis.com/auth/admin.directory.user'
+  REFRESH_TIME: 3500
+  MYMENU_ADMIN_NAME: 'mytrip'
+  MYMENU_ADMIN_EMAIL: 'mike.little@mymenu.us'
+  S3_BUCKET: "byteprod"
+  S3_KEY: 'AKIAIFRE5QPAJ3TPPC2A'
+  S3_SECRET: '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'
+
+development:
+  CLIENT_ID: '81676428994-i6374ph5m6pif1inhonh0ku51h2uu8fr.apps.googleusercontent.com'
+  CLIENT_SECRET: 'Q4UpFFAxJxEI7n6dnI6mxr85'
+  REDIRECT_URL: 'http://staging.mybyteapp.com/oauth2callback'
+  MERCHANT_ID: 'bjtdmknq6td7g8yt'
+  PUBLIC_KEY: 'cn9rtc665pq57c44'
+  PRIVATE_KEY: '46af918cc29ea5c55a8a673ea147be47'
+  CLIENT_SIDE_ENCRYPTION_KEY: 'MIIBCgKCAQEA3BqH8/Uc4bAo+6A/lF5STj2YE7vcfHmo5sTJX0K4fDk7u7J9glsF9xBE9T4hl9MUW33HdL/Gi3Zmrgs7vOZsSgm/29hGI4hV8OLL1+esEkggVw5e/OSDu+2ANqa1jzKBdM3ItmmvkeusyHqWrYOzrMkJpDh0WiRCApQx7PAVUIVhvu2mTdift70s8dFH/iYd3+YwD6uxl4HnNmciCFaWvmnWa4MWZzOsXXtxwBoGjYawq5JVXsztj3sCq7nD4If1H6x/uSrwMOjk5CrqNGs6tfspoowBOdXrbr6fs+bu9wJtHOACw1uMx0Wz72s+gAUZduiDDbWMFE7txluqEOCMyQIDAQAB'
+  PARSE_API_KEY: alJX29Ca8MASpfObqOABUC6JWj9N6aTwLdo3qgt6
+  PARSE_APP_ID:  NLwI4aw8Km3a2C9vlgfWKqUQVcgYmlLrAsJkNZKI
+  <<: *defaults
+
+staging: &staging
+  CLIENT_ID: '81676428994-i6374ph5m6pif1inhonh0ku51h2uu8fr.apps.googleusercontent.com'
+  CLIENT_SECRET: 'Q4UpFFAxJxEI7n6dnI6mxr85'
+  REDIRECT_URL: 'http://staging.mybyteapp.com/oauth2callback'
+  MERCHANT_ID: '433svmg3vhmkk6jg'
+  PUBLIC_KEY: 'rnqy7fng4vnjvcys'
+  PRIVATE_KEY: '149f503c1aace7520a06f5f642c2a8ab'
+  CLIENT_SIDE_ENCRYPTION_KEY: 'MIIBCgKCAQEAx97zgH+kjhnV9y1pPGRt3ogNYGB4VpDeTr/JoY6tQEo3xs7jUE2lyoZ/3OEJN+ZgY9V5qjDWySbBrpmp+F6Im9oCIq1wdSbgTnGrtuKVkerbpz06GC/4PBlJW4qBv/IUi3uGs+0ypFBuZ0UKrmeB7CB7Ivt3bK2cd5VGo642i2s+fXOt/235veNLQqrVGSLkKIm1Ujnom8SXPsTLEjZCxSv2b9QjlCLsGtvVGarJ/IJWCpocL93e9/ZulGyfZdq8msp6UPsXjYjLxT5Gl1ZO4suE/S1kr5Myg4+He6hj4AmBR00LoEPYlDknuGXGuNCrctpXkyGn0+lPByyxC6EblwIDAQAB'
+  PARSE_API_KEY: alJX29Ca8MASpfObqOABUC6JWj9N6aTwLdo3qgt6
+  PARSE_APP_ID:  NLwI4aw8Km3a2C9vlgfWKqUQVcgYmlLrAsJkNZKI
+  <<: *defaults
+
+production:
+  CLIENT_ID: "527039880274-okchpkbv4c6uqhh3mi4r1ds37l86h449.apps.googleusercontent.com"
+  CLIENT_SECRET: "Tkg7yeSm-z1O5KqKRpaMlY3n"
+  REDIRECT_URL: 'http://app.mybyteapp.com/oauth2callback'
+  S3_KEY: 'AKIAIFRE5QPAJ3TPPC2A'
+  S3_SECRET: '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'
+  MERCHANT_ID: '433svmg3vhmkk6jg'
+  PUBLIC_KEY: 'rnqy7fng4vnjvcys'
+  PRIVATE_KEY: '149f503c1aace7520a06f5f642c2a8ab'
+  CLIENT_SIDE_ENCRYPTION_KEY: 'MIIBCgKCAQEAx97zgH+kjhnV9y1pPGRt3ogNYGB4VpDeTr/JoY6tQEo3xs7jUE2lyoZ'
+  PARSE_API_KEY: a2SrA3oA1y2TDUksNVylVAVDmsn1GnkUSNPk6vBk
+  PARSE_APP_ID:  UaJpYQsbLBYakgVws8Bk5gotYetMHmvGyaZelqVk
+  <<: *defaults
+
